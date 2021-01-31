@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FundSearcher", "FundSearcher\FundSearcher.csproj", "{3E1E233F-AD63-486C-B88B-E08A899E1EFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crawler.SimpleCrawler", "Crawler.SimpleCrawler\Crawler.SimpleCrawler.csproj", "{F78B4DD9-CDCF-4999-991C-F614C6447097}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3E1E233F-AD63-486C-B88B-E08A899E1EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E1E233F-AD63-486C-B88B-E08A899E1EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E1E233F-AD63-486C-B88B-E08A899E1EFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F78B4DD9-CDCF-4999-991C-F614C6447097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F78B4DD9-CDCF-4999-991C-F614C6447097}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F78B4DD9-CDCF-4999-991C-F614C6447097}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F78B4DD9-CDCF-4999-991C-F614C6447097}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
