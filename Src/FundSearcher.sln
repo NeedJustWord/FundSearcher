@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FundSearcher", "FundSearche
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crawler.SimpleCrawler", "Crawler.SimpleCrawler\Crawler.SimpleCrawler.csproj", "{F78B4DD9-CDCF-4999-991C-F614C6447097}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crawler.DataHandler", "Crawler.DataHandler\Crawler.DataHandler.csproj", "{0E2C9E35-9B43-409D-8182-B275CE6F87BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F78B4DD9-CDCF-4999-991C-F614C6447097}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F78B4DD9-CDCF-4999-991C-F614C6447097}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F78B4DD9-CDCF-4999-991C-F614C6447097}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E2C9E35-9B43-409D-8182-B275CE6F87BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E2C9E35-9B43-409D-8182-B275CE6F87BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E2C9E35-9B43-409D-8182-B275CE6F87BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E2C9E35-9B43-409D-8182-B275CE6F87BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
