@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FundSearcher", "FundSearcher\FundSearcher.csproj", "{3E1E233F-AD63-486C-B88B-E08A899E1EFD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E1E233F-AD63-486C-B88B-E08A899E1EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E1E233F-AD63-486C-B88B-E08A899E1EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E1E233F-AD63-486C-B88B-E08A899E1EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E1E233F-AD63-486C-B88B-E08A899E1EFD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {539E6DAF-C3C5-4E53-881C-33E2413221EC}
+	EndGlobalSection
+EndGlobal
