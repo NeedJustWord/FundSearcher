@@ -54,6 +54,28 @@ namespace Crawler.DataHandler.Extensions
         {
             return HtmlDecode.GetHtmlTagValue(input, htmlTag, index);
         }
+
+        /// <summary>
+        /// 获取第一个指定标签
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="htmlTag"></param>
+        /// <returns></returns>
+        public static Match GetFirstHtmlTag(this string input, string htmlTag)
+        {
+            return HtmlDecode.GetFirstHtmlTag(input, htmlTag);
+        }
+
+        /// <summary>
+        /// 获取第一个指定标签
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="htmlTag"></param>
+        /// <returns></returns>
+        public static string GetFirstHtmlTagValue(string input, string htmlTag)
+        {
+            return HtmlDecode.GetFirstHtmlTagValue(input, htmlTag);
+        }
         #endregion
 
         #region 获取具有指定属性键值对的指定标签
@@ -109,6 +131,32 @@ namespace Crawler.DataHandler.Extensions
         public static string GetHtmlTagValueByAttri(this string input, string htmlTag, string attriName, string attriValue, int index)
         {
             return HtmlDecode.GetHtmlTagValueByAttri(input, htmlTag, attriName, attriValue, index);
+        }
+
+        /// <summary>
+        /// 获取第一个具有指定属性键值对的指定标签
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="htmlTag"></param>
+        /// <param name="attriName"></param>
+        /// <param name="attriValue"></param>
+        /// <returns></returns>
+        public static Match GetFirstHtmlTagByAttri(string input, string htmlTag, string attriName, string attriValue)
+        {
+            return HtmlDecode.GetFirstHtmlTagByAttri(input, htmlTag, attriName, attriValue);
+        }
+
+        /// <summary>
+        /// 获取第一个具有指定属性键值对的指定标签
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="htmlTag"></param>
+        /// <param name="attriName"></param>
+        /// <param name="attriValue"></param>
+        /// <returns></returns>
+        public static string GetFirstHtmlTagValueByAttri(string input, string htmlTag, string attriName, string attriValue)
+        {
+            return HtmlDecode.GetFirstHtmlTagValueByAttri(input, htmlTag, attriName, attriValue);
         }
         #endregion
 

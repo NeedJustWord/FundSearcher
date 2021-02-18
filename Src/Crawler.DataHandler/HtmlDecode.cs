@@ -57,7 +57,31 @@ namespace Crawler.DataHandler
         /// <returns></returns>
         public static string GetHtmlTagValue(string input, string htmlTag, int index)
         {
-            return GetHtmlTag(input, htmlTag, index)?.Value;
+            var match = GetHtmlTag(input, htmlTag, index);
+            return match != null && match.Success ? match.Value : string.Empty;
+        }
+
+        /// <summary>
+        /// 获取第一个指定标签
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="htmlTag"></param>
+        /// <returns></returns>
+        public static Match GetFirstHtmlTag(string input, string htmlTag)
+        {
+            return Regex.Match(input, RegexHelper.GetHtmlTagPattern(htmlTag));
+        }
+
+        /// <summary>
+        /// 获取第一个指定标签
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="htmlTag"></param>
+        /// <returns></returns>
+        public static string GetFirstHtmlTagValue(string input, string htmlTag)
+        {
+            var match = GetFirstHtmlTag(input, htmlTag);
+            return match != null && match.Success ? match.Value : string.Empty;
         }
         #endregion
 
@@ -116,7 +140,35 @@ namespace Crawler.DataHandler
         /// <returns></returns>
         public static string GetHtmlTagValueByAttri(string input, string htmlTag, string attriName, string attriValue, int index)
         {
-            return GetHtmlTagByAttri(input, htmlTag, attriName, attriValue, index)?.Value;
+            var match = GetHtmlTagByAttri(input, htmlTag, attriName, attriValue, index);
+            return match != null && match.Success ? match.Value : string.Empty;
+        }
+
+        /// <summary>
+        /// 获取第一个具有指定属性键值对的指定标签
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="htmlTag"></param>
+        /// <param name="attriName"></param>
+        /// <param name="attriValue"></param>
+        /// <returns></returns>
+        public static Match GetFirstHtmlTagByAttri(string input, string htmlTag, string attriName, string attriValue)
+        {
+            return Regex.Match(input, RegexHelper.GetHtmlTagPattern(htmlTag, attriName, attriValue));
+        }
+
+        /// <summary>
+        /// 获取第一个具有指定属性键值对的指定标签
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="htmlTag"></param>
+        /// <param name="attriName"></param>
+        /// <param name="attriValue"></param>
+        /// <returns></returns>
+        public static string GetFirstHtmlTagValueByAttri(string input, string htmlTag, string attriName, string attriValue)
+        {
+            var match = GetFirstHtmlTagByAttri(input, htmlTag, attriName, attriValue);
+            return match != null && match.Success ? match.Value : string.Empty;
         }
         #endregion
 
@@ -127,7 +179,8 @@ namespace Crawler.DataHandler
         /// <returns></returns>
         public static string GetHtmlTagContent(string input)
         {
-            return Regex.Match(input, RegexHelper.GetHtmlTagContentPattern()).Value;
+            var match = Regex.Match(input, RegexHelper.GetHtmlTagContentPattern());
+            return match != null && match.Success ? match.Value : string.Empty;
         }
     }
 }
