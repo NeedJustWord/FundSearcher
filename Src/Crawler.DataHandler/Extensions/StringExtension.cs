@@ -72,7 +72,7 @@ namespace Crawler.DataHandler.Extensions
         /// <param name="input"></param>
         /// <param name="htmlTag"></param>
         /// <returns></returns>
-        public static string GetFirstHtmlTagValue(string input, string htmlTag)
+        public static string GetFirstHtmlTagValue(this string input, string htmlTag)
         {
             return HtmlDecode.GetFirstHtmlTagValue(input, htmlTag);
         }
@@ -141,7 +141,7 @@ namespace Crawler.DataHandler.Extensions
         /// <param name="attriName"></param>
         /// <param name="attriValue"></param>
         /// <returns></returns>
-        public static Match GetFirstHtmlTagByAttri(string input, string htmlTag, string attriName, string attriValue)
+        public static Match GetFirstHtmlTagByAttri(this string input, string htmlTag, string attriName, string attriValue)
         {
             return HtmlDecode.GetFirstHtmlTagByAttri(input, htmlTag, attriName, attriValue);
         }
@@ -154,7 +154,7 @@ namespace Crawler.DataHandler.Extensions
         /// <param name="attriName"></param>
         /// <param name="attriValue"></param>
         /// <returns></returns>
-        public static string GetFirstHtmlTagValueByAttri(string input, string htmlTag, string attriName, string attriValue)
+        public static string GetFirstHtmlTagValueByAttri(this string input, string htmlTag, string attriName, string attriValue)
         {
             return HtmlDecode.GetFirstHtmlTagValueByAttri(input, htmlTag, attriName, attriValue);
         }

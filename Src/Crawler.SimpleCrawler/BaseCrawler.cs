@@ -27,6 +27,17 @@ namespace Crawler.SimpleCrawler
         /// <summary>
         /// 异步爬虫
         /// </summary>
+        /// <param name="uriString">爬虫URL地址</param>
+        /// <param name="proxy">代理服务器</param>
+        /// <returns>网页源代码</returns>
+        public async Task<string> Start(string uriString, string proxy = null)
+        {
+            return await Start(new Uri(uriString), proxy);
+        }
+
+        /// <summary>
+        /// 异步爬虫
+        /// </summary>
         /// <param name="uri">爬虫URL地址</param>
         /// <param name="proxy">代理服务器</param>
         /// <returns>网页源代码</returns>
