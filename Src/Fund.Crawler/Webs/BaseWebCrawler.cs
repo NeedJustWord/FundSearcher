@@ -49,21 +49,22 @@ namespace Fund.Crawler.Webs
         /// 使用简单爬虫爬取<paramref name="url"/>
         /// </summary>
         /// <param name="url">爬虫URL地址</param>
-        /// <param name="action">页面源码处理</param>
+        /// <param name="fundInfo">基金信息</param>
+        /// <param name="action">页面源码处理方法</param>
         /// <returns></returns>
-        protected async Task<string> StartSimpleCrawler(string url, Action<string> action)
+        protected async Task<string> StartSimpleCrawler(string url, FundInfo fundInfo, Action<string, FundInfo> action)
         {
             var crawler = new SimpleCrawler();
             crawler.OnStartEvent += (sender, args) =>
             {
                 WriteLog($"{args.ThreadId} 开始休眠");
-                RandomSleep(3, 30);
+                RandomSleep(3, 15);
                 WriteLog($"{args.ThreadId} 休眠结束，开始爬取");
             };
             crawler.OnCompletedEvent += (sender, args) =>
             {
                 WriteLog($"{args.ThreadId} 爬取结束，开始处理");
-                action?.Invoke(args.PageSource);
+                action?.Invoke(args.PageSource, fundInfo);
                 WriteLog($"{args.ThreadId} 处理结束");
             };
             return await crawler.Start(url);

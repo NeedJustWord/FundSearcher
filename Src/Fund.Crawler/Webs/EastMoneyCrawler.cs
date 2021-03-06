@@ -12,7 +12,9 @@ namespace Fund.Crawler.Webs
     /// </summary>
     public class EastMoneyCrawler : BaseWebCrawler
     {
-        public EastMoneyCrawler() : base("天天基金")
+        public const string SourceNameKey = "天天基金";
+
+        public EastMoneyCrawler() : base(SourceNameKey)
         {
         }
 
@@ -41,10 +43,7 @@ namespace Fund.Crawler.Webs
         private async Task GetBaseInfo(string fundId, FundInfo fundInfo)
         {
             var url = $"http://fundf10.eastmoney.com/jbgk_{fundId}.html";
-            await StartSimpleCrawler(url, pageSource =>
-            {
-                HandlerBaseInfoSource(pageSource, fundInfo);
-            });
+            await StartSimpleCrawler(url, fundInfo, HandlerBaseInfoSource);
         }
 
         private void HandlerBaseInfoSource(string pageSource, FundInfo fundInfo)
@@ -106,10 +105,7 @@ namespace Fund.Crawler.Webs
         private async Task GetTransactionInfo(string fundId, FundInfo fundInfo)
         {
             var url = $"http://fundf10.eastmoney.com/jjfl_{fundId}.html";
-            await StartSimpleCrawler(url, pageSource =>
-            {
-                HandleTransactionInfoSource(pageSource, fundInfo);
-            });
+            await StartSimpleCrawler(url, fundInfo, HandleTransactionInfoSource);
         }
 
         private void HandleTransactionInfoSource(string pageSource, FundInfo fundInfo)

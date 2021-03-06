@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crawler.DataHandler", "Craw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fund.Crawler", "Fund.Crawler\Fund.Crawler.csproj", "{647E6585-6FF1-42A5-A7A8-12EE67CA44C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fund.DataBase", "Fund.DataBase\Fund.DataBase.csproj", "{247BE1C6-0033-4175-98EA-9853A0E412A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{647E6585-6FF1-42A5-A7A8-12EE67CA44C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{647E6585-6FF1-42A5-A7A8-12EE67CA44C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{647E6585-6FF1-42A5-A7A8-12EE67CA44C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{247BE1C6-0033-4175-98EA-9853A0E412A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{247BE1C6-0033-4175-98EA-9853A0E412A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{247BE1C6-0033-4175-98EA-9853A0E412A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{247BE1C6-0033-4175-98EA-9853A0E412A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
