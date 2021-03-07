@@ -11,33 +11,42 @@ namespace Fund.DataBase
     {
         private Dictionary<string, FundCrawler> crawlerDict = new Dictionary<string, FundCrawler>();
         private Dictionary<FundKey, FundInfo> fundInfoDict = new Dictionary<FundKey, FundInfo>();
+        private bool isIniting;
 
         /// <summary>
         /// 基金列表
         /// </summary>
         public List<FundInfo> FundInfos => fundInfoDict.Values.ToList();
 
-        public FundUpdate() : this(null)
-        {
-        }
+        /// <summary>
+        /// 基金列表是否有更新
+        /// </summary>
+        public bool HasUpdate { get; private set; }
 
-        public FundUpdate(IEnumerable<FundInfo> fundInfos)
+        public FundUpdate()
         {
             crawlerDict.Add(EastMoneyCrawler.SourceNameKey, new FundCrawler(new EastMoneyCrawler()));
+        }
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <param name="fundInfos"></param>
+        public void Init(IEnumerable<FundInfo> fundInfos)
+        {
+            isIniting = true;
+            fundInfoDict.Clear();
             Add(fundInfos);
+            isIniting = false;
+            HasUpdate = false;
         }
 
         /// <summary>
         /// 添加基金
         /// </summary>
         /// <param name="fundInfos"></param>
-        /// <param name="isClear">是否先清空</param>
-        public void Add(IEnumerable<FundInfo> fundInfos, bool isClear = false)
+        private void Add(IEnumerable<FundInfo> fundInfos)
         {
-            if (isClear)
-            {
-                fundInfoDict.Clear();
-            }
             if (fundInfos != null)
             {
                 foreach (var fundInfo in fundInfos)
@@ -45,6 +54,10 @@ namespace Fund.DataBase
                     if (fundInfo != null)
                     {
                         fundInfoDict[(FundKey)fundInfo] = fundInfo;
+                        if (HasUpdate == false && isIniting == false)
+                        {
+                            HasUpdate = true;
+                        }
                     }
                 }
             }

@@ -8,6 +8,9 @@ using Fund.Crawler.Webs;
 
 namespace Fund.DataBase
 {
+    /// <summary>
+    /// 基金数据库
+    /// </summary>
     public class FundDataBase
     {
         private FundUpdate fundUpdate = new FundUpdate();
@@ -34,7 +37,7 @@ namespace Fund.DataBase
                 {
                     var json = File.ReadAllText(dbFileName);
                     var list = json.FromJson<List<FundInfo>>();
-                    fundUpdate.Add(list, true);
+                    fundUpdate.Init(list);
                 }
                 catch (Exception)
                 {
@@ -47,7 +50,10 @@ namespace Fund.DataBase
         /// </summary>
         public void Save()
         {
-            File.WriteAllText(dbFileName, fundUpdate.FundInfos.ToJson());
+            if (fundUpdate.HasUpdate)
+            {
+                File.WriteAllText(dbFileName, fundUpdate.FundInfos.ToJson());
+            }
         }
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace Crawler.DataHandler
         public static string GetHtmlTagValue(string input, string htmlTag, int index)
         {
             var match = GetHtmlTag(input, htmlTag, index);
-            return match != null && match.Success ? match.Value : string.Empty;
+            return match != null && match.Success ? match.Value : null;
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Crawler.DataHandler
         public static string GetFirstHtmlTagValue(string input, string htmlTag)
         {
             var match = GetFirstHtmlTag(input, htmlTag);
-            return match != null && match.Success ? match.Value : string.Empty;
+            return match != null && match.Success ? match.Value : null;
         }
         #endregion
 
@@ -141,7 +141,7 @@ namespace Crawler.DataHandler
         public static string GetHtmlTagValueByAttri(string input, string htmlTag, string attriName, string attriValue, int index)
         {
             var match = GetHtmlTagByAttri(input, htmlTag, attriName, attriValue, index);
-            return match != null && match.Success ? match.Value : string.Empty;
+            return match != null && match.Success ? match.Value : null;
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Crawler.DataHandler
         public static string GetFirstHtmlTagValueByAttri(string input, string htmlTag, string attriName, string attriValue)
         {
             var match = GetFirstHtmlTagByAttri(input, htmlTag, attriName, attriValue);
-            return match != null && match.Success ? match.Value : string.Empty;
+            return match != null && match.Success ? match.Value : null;
         }
         #endregion
 
@@ -180,7 +180,7 @@ namespace Crawler.DataHandler
         public static string GetHtmlTagContent(string input)
         {
             var match = Regex.Match(input, RegexHelper.GetHtmlTagContentPattern());
-            return match != null && match.Success ? match.Value : string.Empty;
+            return match != null && match.Success ? match.Value : null;
         }
     }
 }

@@ -115,10 +115,10 @@ namespace Fund.Crawler.Webs
             var keyValues = pageSource.GetHtmlTagValueByAttri("div", "class", "boxitem w790")
             .Select(t =>
             {
-                var key = t.GetFirstHtmlTagValueByAttri("label", "class", "left").GetHtmlTagContent();
+                var key = t.GetFirstHtmlTagValueByAttri("label", "class", "left")?.GetHtmlTagContent();
                 return new KeyValuePair<string, string>(key, t);
             })
-            .Where(t => string.IsNullOrEmpty(t.Key) == false);
+            .Where(t => t.Key != null);
 
             foreach (var item in keyValues)
             {
