@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Fund.Crawler.Models
 {
@@ -8,9 +9,19 @@ namespace Fund.Crawler.Models
     public class FundInfo
     {
         /// <summary>
-        /// 创建时间
+        /// 是否选中
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        [JsonIgnore]
+        public bool IsChecked { get; set; }
+        /// <summary>
+        /// 序号
+        /// </summary>
+        [JsonIgnore]
+        public int OrderNumber { get; set; }
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime UpdateTime { get; set; }
         /// <summary>
         /// 基金信息来源
         /// </summary>
@@ -34,19 +45,31 @@ namespace Fund.Crawler.Models
         /// <summary>
         /// 发行日期
         /// </summary>
-        public string IssueDay { get; set; }
+        public DateTime IssueDay { get; set; }
         /// <summary>
-        /// 成立日期/规模
+        /// 成立日期
         /// </summary>
-        public string BirthStatus { get; set; }
+        public DateTime BirthDay { get; set; }
         /// <summary>
-        /// 资产规模
+        /// 成立规模(亿份)
         /// </summary>
-        public string FundAmount { get; set; }
+        public double? BirthSize { get; set; }
         /// <summary>
-        /// 份额规模
+        /// 资产规模(亿元)
         /// </summary>
-        public string FundCount { get; set; }
+        public double AssetSize { get; set; }
+        /// <summary>
+        /// 资产规模截止日
+        /// </summary>
+        public DateTime AssetDeadline { get; set; }
+        /// <summary>
+        /// 份额规模(亿份)
+        /// </summary>
+        public double ShareSize { get; set; }
+        /// <summary>
+        /// 份额规模截止日
+        /// </summary>
+        public DateTime ShareDeadline { get; set; }
         /// <summary>
         /// 跟踪标的
         /// </summary>

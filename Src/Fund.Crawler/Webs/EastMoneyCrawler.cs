@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -79,16 +80,22 @@ namespace Fund.Crawler.Webs
                         fundInfo.FundType = value;
                         break;
                     case "发行日期":
-                        fundInfo.IssueDay = value;
+                        fundInfo.IssueDay = DateTime.Parse(value);
                         break;
                     case "成立日期/规模":
-                        fundInfo.BirthStatus = value;
+                        {
+                            var tmp = value.Split('/');
+                            fundInfo.BirthDay = DateTime.Parse(tmp[0].TrimEnd());
+                            fundInfo.BirthSize = tmp[1].Contains("--") ? (double?)null : GetSize(tmp[1].TrimStart());
+                        }
                         break;
                     case "资产规模":
-                        fundInfo.FundAmount = value;
+                        fundInfo.AssetSize = GetSize(value);
+                        fundInfo.AssetDeadline = GetDeadline(value);
                         break;
                     case "份额规模":
-                        fundInfo.FundCount = value;
+                        fundInfo.ShareSize = GetSize(value);
+                        fundInfo.ShareDeadline = GetDeadline(value);
                         break;
                     case "跟踪标的":
                         fundInfo.TrackingTarget = value;
@@ -131,9 +138,9 @@ namespace Fund.Crawler.Webs
                         break;
                     case "运作费用":
                         temp = item.Value.GetHtmlTagValue("td").ToList();
-                        info.ManageRate = temp[1].GetHtmlTagContent();
-                        info.HostingRate = temp[3].GetHtmlTagContent();
-                        info.SalesServiceRate = temp[5].GetHtmlTagContent();
+                        info.ManageRate = GetRate(temp[1].GetHtmlTagContent());
+                        info.HostingRate = GetRate(temp[3].GetHtmlTagContent());
+                        info.SalesServiceRate = GetRate(temp[5].GetHtmlTagContent());
                         break;
                     default:
                         if (item.Key.Contains("认购费率"))
@@ -231,6 +238,24 @@ namespace Fund.Crawler.Webs
             }
 
             return result;
+        }
+
+        private double GetSize(string str)
+        {
+            return double.Parse(str.Substring(0, str.IndexOf("亿")));
+        }
+
+        private DateTime GetDeadline(string str)
+        {
+            var index = str.IndexOf("：");
+            return DateTime.Parse(str.Substring(index + 1, 11));
+        }
+
+        private double GetRate(string str)
+        {
+            if (str == "---") return 0;
+            if (str.IndexOf("每年") == -1) return -1;
+            return double.Parse(str.Substring(0, str.IndexOf('%'))) / 100;
         }
     }
 }

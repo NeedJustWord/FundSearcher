@@ -41,7 +41,7 @@ namespace Fund.Crawler.Webs
             {
                 FundInfoSource = SourceName,
                 FundId = fundId,
-                CreateTime = DateTime.Now,
+                UpdateTime = DateTime.Now,
             };
         }
 

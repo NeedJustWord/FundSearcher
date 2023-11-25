@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Fund.Crawler.Models
 {
@@ -16,17 +17,22 @@ namespace Fund.Crawler.Models
         /// </summary>
         public string SellConfirmDate { get; set; }
         /// <summary>
-        /// 管理费率
+        /// 管理费率(每年)
         /// </summary>
-        public string ManageRate { get; set; }
+        public double ManageRate { get; set; }
         /// <summary>
-        /// 托管费率
+        /// 托管费率(每年)
         /// </summary>
-        public string HostingRate { get; set; }
+        public double HostingRate { get; set; }
         /// <summary>
-        /// 销售服务费率
+        /// 销售服务费率(每年)
         /// </summary>
-        public string SalesServiceRate { get; set; }
+        public double SalesServiceRate { get; set; }
+        /// <summary>
+        /// 运作费率(每年)
+        /// </summary>
+        [JsonIgnore]
+        public double RunningRate => ManageRate + HostingRate + SalesServiceRate;
         /// <summary>
         /// 认购费率
         /// </summary>

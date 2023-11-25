@@ -14,7 +14,7 @@ namespace Fund.Crawler.Models
         /// <returns></returns>
         public static bool IsNeedUpdate(this FundInfo fundInfo)
         {
-            return fundInfo == null || fundInfo.CreateTime < DateTime.Now.AddDays(-30);
+            return fundInfo == null || fundInfo.UpdateTime < DateTime.Now.AddDays(-30);
         }
     }
 }

@@ -16,6 +16,11 @@ namespace Fund.DataBase
         private FundUpdate fundUpdate = new FundUpdate();
         private string dbFileName;
 
+        /// <summary>
+        /// 基金列表
+        /// </summary>
+        public List<FundInfo> FundInfos => fundUpdate.FundInfos;
+
         public FundDataBase() : this("FundInfos.txt")
         {
         }
