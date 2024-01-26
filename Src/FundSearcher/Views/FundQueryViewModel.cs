@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using Fund.Crawler.Models;
 using Fund.DataBase;
+using Prism.Commands;
 using Prism.Regions;
 
 namespace FundSearcher.Views
@@ -30,9 +32,12 @@ namespace FundSearcher.Views
         }
         #endregion
 
+        public DelegateCommand RefreshCommand { get; private set; }
+
         public FundQueryViewModel(IRegionManager regionManager, FundDataBase dataBase) : base(regionManager, RegionName.FundRegion)
         {
             fundDataBase = dataBase;
+            RefreshCommand = new DelegateCommand(Refresh);
         }
 
         protected async override void Query()
@@ -55,6 +60,25 @@ namespace FundSearcher.Views
                 item.OrderNumber = order++;
             }
             SetItemsSource(data);
+        }
+
+        private async void Refresh()
+        {
+            var fundIds = fundInfos.Where(t => t.IsChecked).Select(t => t.FundId).ToArray();
+            if (fundIds.Length == 0)
+            {
+                MessageBox.Show("请勾选需要刷新的基金", "基金检索工具", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            List<FundInfo> list = await fundDataBase.GetFundInfos(true, fundIds);
+            foreach (var item in list)
+            {
+                for (int i = 0; i < FundInfos.Count; i++)
+                {
+                    if (FundInfos[i].FundId == item.FundId) FundInfos[i] = item;
+                }
+            }
         }
 
         private void SetItemsSource(IEnumerable<FundInfo> infos)

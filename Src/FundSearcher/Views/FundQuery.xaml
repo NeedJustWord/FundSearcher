@@ -70,6 +70,8 @@
             <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                 <Button Content="查询" Style="{StaticResource QueryButton}"
                         Command="{Binding QueryCommand}"/>
+                <Button Content="刷新" Style="{StaticResource QueryButton}"
+                        Command="{Binding RefreshCommand}"/>
                 <Button Content="比较" Style="{StaticResource QueryButton}"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="{x:Static local:RegionName.FundCompareNavigate}"/>

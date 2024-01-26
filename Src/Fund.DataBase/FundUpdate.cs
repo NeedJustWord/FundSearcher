@@ -68,14 +68,14 @@ namespace Fund.DataBase
         /// </summary>
         /// <param name="fundKeys"></param>
         /// <returns></returns>
-        public async Task<List<FundInfo>> Update(IEnumerable<FundKey> fundKeys)
+        public async Task<List<FundInfo>> Update(IEnumerable<FundKey> fundKeys, bool forceUpdate)
         {
             return await Task.Run(() =>
             {
                 Dictionary<string, List<string>> updateDict = new Dictionary<string, List<string>>();
                 foreach (var key in fundKeys)
                 {
-                    if (fundInfoDict.TryGetValue(key, out var value) == false || value.IsNeedUpdate())
+                    if (forceUpdate || fundInfoDict.TryGetValue(key, out var value) == false || value.IsNeedUpdate())
                     {
                         if (updateDict.TryGetValue(key.FundInfoSource, out var list) == false)
                         {

@@ -68,9 +68,9 @@ namespace Fund.DataBase
         /// <param name="sourceName">基金代码</param>
         /// <param name="separator">分隔符</param>
         /// <returns></returns>
-        public async Task<List<FundInfo>> GetFundInfos(string fundIds, string sourceName = EastMoneyCrawler.SourceNameKey, char separator = ',')
+        public async Task<List<FundInfo>> GetFundInfos(string fundIds, string sourceName = EastMoneyCrawler.SourceNameKey, char separator = ',', bool forceUpdate = false)
         {
-            return await GetFundInfos(sourceName, fundIds == null ? new string[0] : fundIds.Split(separator));
+            return await GetFundInfos(sourceName, forceUpdate, fundIds == null ? new string[0] : fundIds.Split(separator));
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace Fund.DataBase
         /// </summary>
         /// <param name="fundIds">基金代码</param>
         /// <returns></returns>
-        public async Task<List<FundInfo>> GetFundInfos(params string[] fundIds)
+        public async Task<List<FundInfo>> GetFundInfos(bool forceUpdate = false, params string[] fundIds)
         {
-            return await GetFundInfos(EastMoneyCrawler.SourceNameKey, fundIds);
+            return await GetFundInfos(EastMoneyCrawler.SourceNameKey, forceUpdate, fundIds);
         }
 
         /// <summary>
@@ -89,20 +89,20 @@ namespace Fund.DataBase
         /// <param name="sourceName">基金信息来源</param>
         /// <param name="fundIds">基金代码</param>
         /// <returns></returns>
-        public async Task<List<FundInfo>> GetFundInfos(string sourceName, params string[] fundIds)
+        public async Task<List<FundInfo>> GetFundInfos(string sourceName, bool forceUpdate = false, params string[] fundIds)
         {
             var keys = fundIds == null ? new FundKey[0] : fundIds.Select(t => new FundKey(t, sourceName));
-            return await GetFundInfos(keys);
+            return await GetFundInfos(keys, forceUpdate);
         }
 
-        private async Task<List<FundInfo>> GetFundInfos(IEnumerable<FundKey> keys)
+        private async Task<List<FundInfo>> GetFundInfos(IEnumerable<FundKey> keys, bool forceUpdate)
         {
             return await Task.Run(() =>
             {
                 List<FundInfo> fundInfos = new List<FundInfo>();
                 if (keys != null)
                 {
-                    fundInfos.AddRange(fundUpdate.Update(keys).Result);
+                    fundInfos.AddRange(fundUpdate.Update(keys, forceUpdate).Result);
                 }
                 return fundInfos;
             });
