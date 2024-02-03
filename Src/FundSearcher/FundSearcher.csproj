@@ -59,14 +59,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BaseQueryViewModel.cs" />
+    <Compile Include="BaseFundViewModel.cs" />
     <Compile Include="BaseViewModel.cs" />
     <Compile Include="BaseWindowViewModel.cs" />
+    <Compile Include="Consts\CommandName.cs" />
+    <Compile Include="Consts\NavigateName.cs" />
+    <Compile Include="Consts\RegionName.cs" />
     <Compile Include="Converters\DictRateConverter.cs" />
     <Compile Include="Converters\FundSizeConverter.cs" />
     <Compile Include="Extensions\DependencyObjectExtension.cs" />
     <Compile Include="Module.cs" />
-    <Compile Include="RegionName.cs" />
     <Compile Include="Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>

@@ -1,4 +1,6 @@
-﻿using Prism.Commands;
+﻿using System;
+using System.Collections.Generic;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 
@@ -6,6 +8,8 @@ namespace FundSearcher
 {
     class BaseViewModel : BindableBase, INavigationAware
     {
+        private readonly Dictionary<string, Action<object>> dictDelegateCommand;
+
         protected readonly IRegionManager regionManager;
         protected readonly string regionName;
         protected IRegionNavigationJournal journal;
@@ -13,15 +17,19 @@ namespace FundSearcher
         public DelegateCommand LoadedCommand { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
         public DelegateCommand GoBackCommand { get; private set; }
+        public DelegateCommand<object> DictCommand { get; private set; }
 
         public BaseViewModel(IRegionManager regionManager, string regionName)
         {
+            dictDelegateCommand = new Dictionary<string, Action<object>>();
+
             this.regionManager = regionManager;
             this.regionName = regionName;
 
             LoadedCommand = new DelegateCommand(OnLoaded);
             NavigateCommand = new DelegateCommand<string>(Navigate);
             GoBackCommand = new DelegateCommand(GoBack);
+            DictCommand = new DelegateCommand<object>(Dict);
         }
 
         protected virtual void OnLoaded()
@@ -36,6 +44,28 @@ namespace FundSearcher
         private void GoBack()
         {
             journal.GoBack();
+        }
+
+        private void Dict(object obj)
+        {
+            if (obj is string commandName)
+            {
+                if (dictDelegateCommand.TryGetValue(commandName, out var action))
+                {
+                    action(null);
+                }
+                return;
+            }
+        }
+
+        public void RegisterCommand(string commandName, Action action)
+        {
+            RegisterCommand(commandName, o => action());
+        }
+
+        public void RegisterCommand(string commandName, Action<object> action)
+        {
+            dictDelegateCommand[commandName] = action;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

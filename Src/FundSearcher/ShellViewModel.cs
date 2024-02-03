@@ -1,4 +1,5 @@
 ﻿using Fund.DataBase;
+using FundSearcher.Consts;
 using Prism.Regions;
 
 namespace FundSearcher
@@ -14,7 +15,7 @@ namespace FundSearcher
             set { SetProperty(ref title, value); }
         }
 
-        public ShellViewModel(IRegionManager regionManager, FundDataBase dataBase) : base(regionManager, RegionName.MainRegion)
+        public ShellViewModel(IRegionManager regionManager, FundDataBase dataBase) : base(regionManager, RegionName.Main)
         {
             fundDataBase = dataBase;
         }

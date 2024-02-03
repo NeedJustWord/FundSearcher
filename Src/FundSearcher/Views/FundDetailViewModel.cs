@@ -2,9 +2,9 @@
 
 namespace FundSearcher.Views
 {
-    class FundDetailViewModel : BaseViewModel
+    class FundDetailViewModel : BaseFundViewModel
     {
-        public FundDetailViewModel(IRegionManager regionManager) : base(regionManager, RegionName.FundRegion)
+        public FundDetailViewModel(IRegionManager regionManager) : base(regionManager)
         {
         }
     }

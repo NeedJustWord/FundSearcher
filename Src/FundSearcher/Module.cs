@@ -1,4 +1,5 @@
-﻿using FundSearcher.Views;
+﻿using FundSearcher.Consts;
+using FundSearcher.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
@@ -10,16 +11,16 @@ namespace FundSearcher
         public void OnInitialized(IContainerProvider containerProvider)
         {
             var regionManager = containerProvider.Resolve<IRegionManager>();
-            regionManager.RequestNavigate(RegionName.MainRegion, RegionName.FundManagerNavigate);
-            regionManager.RequestNavigate(RegionName.FundRegion, RegionName.FundQueryNavigate);
+            regionManager.RequestNavigate(RegionName.Main, NavigateName.FundManager);
+            regionManager.RequestNavigate(RegionName.Fund, NavigateName.FundQuery);
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation<FundManager>(RegionName.FundManagerNavigate);
-            containerRegistry.RegisterForNavigation<FundQuery>(RegionName.FundQueryNavigate);
-            containerRegistry.RegisterForNavigation<FundDetail>(RegionName.FundDetailNavigate);
-            containerRegistry.RegisterForNavigation<FundCompare>(RegionName.FundCompareNavigate);
+            containerRegistry.RegisterForNavigation<FundManager>(NavigateName.FundManager);
+            containerRegistry.RegisterForNavigation<FundQuery>(NavigateName.FundQuery);
+            containerRegistry.RegisterForNavigation<FundDetail>(NavigateName.FundDetail);
+            containerRegistry.RegisterForNavigation<FundCompare>(NavigateName.FundCompare);
         }
     }
 }

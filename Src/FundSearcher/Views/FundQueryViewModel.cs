@@ -4,12 +4,12 @@ using System.Linq;
 using System.Windows;
 using Fund.Crawler.Models;
 using Fund.DataBase;
-using Prism.Commands;
+using FundSearcher.Consts;
 using Prism.Regions;
 
 namespace FundSearcher.Views
 {
-    class FundQueryViewModel : BaseQueryViewModel
+    class FundQueryViewModel : BaseFundViewModel
     {
         private readonly FundDataBase fundDataBase;
 
@@ -32,15 +32,14 @@ namespace FundSearcher.Views
         }
         #endregion
 
-        public DelegateCommand RefreshCommand { get; private set; }
-
-        public FundQueryViewModel(IRegionManager regionManager, FundDataBase dataBase) : base(regionManager, RegionName.FundRegion)
+        public FundQueryViewModel(IRegionManager regionManager, FundDataBase dataBase) : base(regionManager)
         {
             fundDataBase = dataBase;
-            RefreshCommand = new DelegateCommand(Refresh);
+            RegisterCommand(CommandName.Query, Query);
+            RegisterCommand(CommandName.Refresh, Refresh);
         }
 
-        protected async override void Query()
+        private async void Query()
         {
             List<FundInfo> list;
             if (string.IsNullOrWhiteSpace(queryFundId))
