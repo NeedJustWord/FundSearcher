@@ -133,8 +133,11 @@ namespace Fund.Crawler.Webs
                 {
                     case "交易确认日":
                         var temp = item.Value.GetHtmlTagValue("td").ToList();
-                        info.BuyConfirmDate = temp[1].GetHtmlTagContent();
-                        info.SellConfirmDate = temp[3].GetHtmlTagContent();
+                        if (temp.Count > 0)
+                        {
+                            info.BuyConfirmDate = temp[1].GetHtmlTagContent();
+                            info.SellConfirmDate = temp[3].GetHtmlTagContent();
+                        }
                         break;
                     case "运作费用":
                         temp = item.Value.GetHtmlTagValue("td").ToList();
@@ -164,6 +167,9 @@ namespace Fund.Crawler.Webs
 
         private List<TransactionRate> GetTransactionRates(string input)
         {
+            var result = new List<TransactionRate>();
+            if (input.Contains("table") == false) return result;
+
             var rateName = input.GetFirstHtmlTagValue("label").GetHtmlTagContent();
             bool? isFront = null;
             if (rateName.Contains("前端"))
@@ -204,7 +210,6 @@ namespace Fund.Crawler.Webs
                 columns = list.ToArray();
             }
 
-            var result = new List<TransactionRate>();
             var rows = input.GetFirstHtmlTagValue("tbody").GetHtmlTagValue("tr");
             foreach (var row in rows)
             {
