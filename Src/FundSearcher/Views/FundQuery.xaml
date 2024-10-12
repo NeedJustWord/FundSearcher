@@ -9,7 +9,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1800">
     <UserControl.Resources>
         <system:Byte x:Key="Byte2">2</system:Byte>
         <system:Byte x:Key="Byte4">4</system:Byte>
@@ -93,6 +93,7 @@
                 <DataGridTemplateColumn Width="50" HeaderStyle="{StaticResource dtNumHeader}" CellStyle="{StaticResource dtNum}"/>
                 <DataGridTextColumn Header="基金代码" Width="60" IsReadOnly="True" Binding="{Binding FundId}"/>
                 <DataGridTextColumn Header="基金简称" Width="360" IsReadOnly="True" Binding="{Binding FundName}"/>
+                <DataGridTextColumn Header="跟踪标的" Width="120" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
                 <DataGridTextColumn Header="成立日期" Width="80" IsReadOnly="True" Binding="{Binding BirthDay,StringFormat=yyyy-MM-dd}"/>
                 <DataGridTextColumn Header="资产规模(亿元)" Width="160" IsReadOnly="True">
                     <DataGridTextColumn.Binding>

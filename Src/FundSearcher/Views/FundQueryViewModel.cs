@@ -52,7 +52,7 @@ namespace FundSearcher.Views
                 list = await fundInfos;
             }
 
-            var data = list.OrderBy(t => t.FundId).ToList();
+            var data = list.OrderBy(t => t.TransactionInfo.RunningRate).ThenByDescending(t => t.AssetSize).ThenBy(t => t.BirthDay).ThenBy(t => t.FundId).ToList();
             int order = 1;
             foreach (var item in data)
             {
