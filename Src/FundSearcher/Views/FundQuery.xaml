@@ -64,7 +64,9 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Content="基金代码：" Style="{StaticResource QueryLabel}"/>
+            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource QueryLabelBorder}">
+                <Label Content="基金代码：" Style="{StaticResource QueryLabel}"/>
+            </Border>
             <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding QueryFundId}"/>
 
             <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
