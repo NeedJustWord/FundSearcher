@@ -39,6 +39,11 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.Refresh, Refresh);
         }
 
+        protected override void OnLoaded()
+        {
+            Query();
+        }
+
         private async void Query()
         {
             List<FundInfo> list;

@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="FundSearcher.Views.FundQuery"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -8,8 +9,13 @@
              xmlns:converters="clr-namespace:FundSearcher.Converters"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1800">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <UserControl.Resources>
         <system:Byte x:Key="Byte2">2</system:Byte>
         <system:Byte x:Key="Byte4">4</system:Byte>
