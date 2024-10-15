@@ -34,6 +34,11 @@ namespace Fund.Crawler.Models
         [JsonIgnore]
         public double RunningRate => ManageRate + HostingRate + SalesServiceRate;
         /// <summary>
+        /// 运作费率字符串(每年)
+        /// </summary>
+        [JsonIgnore]
+        public string RunningRateStr => RunningRate.ToString("F4");
+        /// <summary>
         /// 认购费率
         /// </summary>
         public List<TransactionRate> ApplyRates { get; set; }

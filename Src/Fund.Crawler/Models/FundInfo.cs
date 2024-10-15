@@ -1,5 +1,4 @@
 ﻿using System;
-using Newtonsoft.Json;
 
 namespace Fund.Crawler.Models
 {
@@ -8,16 +7,6 @@ namespace Fund.Crawler.Models
     /// </summary>
     public class FundInfo
     {
-        /// <summary>
-        /// 是否选中
-        /// </summary>
-        [JsonIgnore]
-        public bool IsChecked { get; set; }
-        /// <summary>
-        /// 序号
-        /// </summary>
-        [JsonIgnore]
-        public int OrderNumber { get; set; }
         /// <summary>
         /// 更新时间
         /// </summary>

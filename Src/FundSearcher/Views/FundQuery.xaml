@@ -64,6 +64,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -75,7 +77,15 @@
             </Border>
             <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding QueryFundId}"/>
 
-            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Label Grid.Row="1" Grid.Column="0" Content="跟踪标的：" Style="{StaticResource QueryLabel}"/>
+            <ListView Grid.Row="1" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                      ItemsSource="{Binding TrackingTargets}" SelectedItem="{Binding SelectTrackingTarget}"/>
+
+            <Label Grid.Row="2" Grid.Column="0" Content="运作费率：" Style="{StaticResource QueryLabel}"/>
+            <ListView Grid.Row="2" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                      ItemsSource="{Binding RunningRates}" SelectedItem="{Binding SelectRunningRate}"/>
+
+            <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                 <Button Content="查询" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Query}"/>
@@ -130,6 +140,18 @@
                 <DataGridTextColumn Header="信息来源" Width="60" IsReadOnly="True" Binding="{Binding FundInfoSource}"/>
                 <DataGridTextColumn Header="更新时间" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
             </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsShow}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsShow}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <Grid>
