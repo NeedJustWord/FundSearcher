@@ -7,6 +7,8 @@ using Fund.DataBase;
 using FundSearcher.Consts;
 using FundSearcher.Extensions;
 using FundSearcher.Models;
+using FundSearcher.PubSubEvents;
+using Prism.Events;
 using Prism.Regions;
 
 namespace FundSearcher.Views
@@ -99,9 +101,10 @@ namespace FundSearcher.Views
         #endregion
         #endregion
 
-        public FundQueryViewModel(IRegionManager regionManager, FundDataBase dataBase) : base(regionManager)
+        public FundQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator)
         {
             fundDataBase = dataBase;
+            Subscribe<FundQueryCheckAllEvent>(CheckAll);
             RegisterCommand(CommandName.Query, Query);
             RegisterCommand(CommandName.Refresh, Refresh);
         }
@@ -109,6 +112,15 @@ namespace FundSearcher.Views
         protected override void OnLoaded()
         {
             Query();
+        }
+
+        private void CheckAll()
+        {
+            var value = !FundInfos.Where(t => t.IsShow).All(t => t.IsChecked);
+            foreach (var item in FundInfos.Where(t => t.IsShow))
+            {
+                item.IsChecked = value;
+            }
         }
 
         private async void Query()

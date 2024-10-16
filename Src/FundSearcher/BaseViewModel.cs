@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 
@@ -9,6 +10,7 @@ namespace FundSearcher
     class BaseViewModel : BindableBase, INavigationAware
     {
         private readonly Dictionary<string, Action<object>> dictDelegateCommand;
+        private readonly IEventAggregator eventAggregator;
 
         protected readonly IRegionManager regionManager;
         protected readonly string regionName;
@@ -19,12 +21,13 @@ namespace FundSearcher
         public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand<object> DictCommand { get; private set; }
 
-        public BaseViewModel(IRegionManager regionManager, string regionName)
+        public BaseViewModel(IRegionManager regionManager, string regionName, IEventAggregator eventAggregator = null)
         {
             dictDelegateCommand = new Dictionary<string, Action<object>>();
 
             this.regionManager = regionManager;
             this.regionName = regionName;
+            this.eventAggregator = eventAggregator;
 
             LoadedCommand = new DelegateCommand(OnLoaded);
             NavigateCommand = new DelegateCommand<string>(Navigate);
@@ -81,5 +84,17 @@ namespace FundSearcher
         {
             journal = navigationContext.NavigationService.Journal;
         }
+
+        #region 消息订阅
+        protected void Subscribe<TEventType>(Action action) where TEventType : PubSubEvent, new()
+        {
+            eventAggregator.GetEvent<TEventType>().Subscribe(action);
+        }
+
+        protected void Subscribe<TEventType, TMessage>(Action<TMessage> action) where TEventType : PubSubEvent<TMessage>, new()
+        {
+            eventAggregator.GetEvent<TEventType>().Subscribe(action);
+        }
+        #endregion
     }
 }

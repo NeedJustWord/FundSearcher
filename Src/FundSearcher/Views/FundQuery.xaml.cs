@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using FundSearcher.Extensions;
+using FundSearcher.PubSubEvents;
+using Prism.Events;
 
 namespace FundSearcher.Views
 {
@@ -9,9 +11,17 @@ namespace FundSearcher.Views
     /// </summary>
     public partial class FundQuery : UserControl
     {
-        public FundQuery()
+        private readonly IEventAggregator aggregator;
+
+        public FundQuery(IEventAggregator aggregator)
         {
             InitializeComponent();
+            this.aggregator = aggregator;
+        }
+
+        private void BtnCheckAll_Click(object sender, RoutedEventArgs e)
+        {
+            aggregator.GetEvent<FundQueryCheckAllEvent>().Publish();
         }
 
         private void BtnAllCollapsed_Click(object sender, RoutedEventArgs e)

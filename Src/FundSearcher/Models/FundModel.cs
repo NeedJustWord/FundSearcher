@@ -5,10 +5,21 @@ namespace FundSearcher.Models
 {
     class FundModel : FundInfo, INotifyPropertyChanged
     {
+        private bool isChecked;
         /// <summary>
         /// 是否选中
         /// </summary>
-        public bool IsChecked { get; set; }
+        public bool IsChecked
+        {
+            get { return isChecked; }
+            set
+            {
+                if (isChecked == value) return;
+
+                isChecked = value;
+                NotifyPropertyChanged(nameof(IsChecked));
+            }
+        }
 
         private bool isShow;
         /// <summary>

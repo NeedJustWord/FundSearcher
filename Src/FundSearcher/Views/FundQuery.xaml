@@ -26,6 +26,18 @@
         <system:String x:Key="RateSell">赎回费率</system:String>
         <converters:DictRateConverter x:Key="DictRateConverter"/>
         <converters:FundSizeConverter x:Key="FundSizeConverter"/>
+        <Style x:Key="dtCheckHeader" TargetType="DataGridColumnHeader">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Button BorderBrush="Transparent" Background="Transparent"
+                                Style="{x:Null}" Click="BtnCheckAll_Click">
+                            <TextBlock Text="#"/>
+                        </Button>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="dtNumHeader" TargetType="DataGridColumnHeader">
             <Setter Property="Template">
                 <Setter.Value>
@@ -101,7 +113,7 @@
         <DataGrid Grid.Row="1" x:Name="dgFundInfos" Margin="3" CanUserAddRows="False" AutoGenerateColumns="False"
                   RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding FundInfos}">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Header="#" Width="30" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                <DataGridCheckBoxColumn Width="30" HeaderStyle="{StaticResource dtCheckHeader}" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center"/>

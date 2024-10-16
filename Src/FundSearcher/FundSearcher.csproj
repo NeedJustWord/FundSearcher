@@ -74,6 +74,7 @@
     <Compile Include="Models\FilterModel.cs" />
     <Compile Include="Models\FundModel.cs" />
     <Compile Include="Module.cs" />
+    <Compile Include="PubSubEvents\FundQueryCheckAllEvent.cs" />
     <Compile Include="Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
