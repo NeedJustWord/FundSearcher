@@ -136,7 +136,7 @@ namespace FundSearcher.Views
                 list = await fundInfos;
             }
 
-            InitFilterData();
+            InitFilterData(false);
             var data = list.Select(t => t.Map<FundInfo, FundModel>()).OrderBy(t => t.TransactionInfo.RunningRate).ThenByDescending(t => t.AssetSize).ThenBy(t => t.BirthDay).ThenBy(t => t.FundId).ToList();
             SetItemsSource(data);
             Filter();
@@ -144,7 +144,7 @@ namespace FundSearcher.Views
 
         private async void Refresh()
         {
-            var fundIds = fundInfos.Where(t => t.IsChecked).Select(t => t.FundId).ToArray();
+            var fundIds = fundInfos.Where(t => t.IsShow && t.IsChecked).Select(t => t.FundId).ToArray();
             if (fundIds.Length == 0)
             {
                 MessageBox.Show("请勾选需要刷新的基金", "基金检索工具", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -152,7 +152,7 @@ namespace FundSearcher.Views
             }
 
             List<FundInfo> list = await fundDataBase.GetFundInfos(true, fundIds);
-            InitFilterData();
+            InitFilterData(true);
             foreach (var item in list)
             {
                 for (int i = 0; i < FundInfos.Count; i++)
@@ -193,15 +193,15 @@ namespace FundSearcher.Views
             return true;
         }
 
-        private void InitFilterData()
+        private void InitFilterData(bool isRefresh)
         {
             filter = false;
 
-            var lastKey = SelectTrackingTarget?.Key;
+            var lastKey = isRefresh ? SelectTrackingTarget?.Key : "";
             InitTrackingTargets();
             lastSelectTrackingTarget = SelectTrackingTarget = GetDefaultSelectItem(TrackingTargets, lastKey);
 
-            lastKey = SelectRunningRate?.Key;
+            lastKey = isRefresh ? SelectRunningRate?.Key : "";
             InitRunningRates();
             lastSelectRunningRate = SelectRunningRate = GetDefaultSelectItem(RunningRates, lastKey);
 
@@ -226,7 +226,7 @@ namespace FundSearcher.Views
         {
             RunningRates.Clear();
             RunningRates.Add(new FilterModel("", "全部"));
-            RunningRates.AddRange(fundDataBase.FundInfos.Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, $"{t.TransactionInfo.RunningRate * 100:F2}%")).Distinct(FilterModelEqualityComparer.Instance).OrderBy(t => t.Key));
+            RunningRates.AddRange(fundDataBase.FundInfos.Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, t.TransactionInfo.RunningRate.ToString("P2"))).Distinct(FilterModelEqualityComparer.Instance).OrderBy(t => t.Key));
         }
     }
 }
