@@ -187,7 +187,7 @@ namespace Fund.Crawler.Webs
             {
                 columns = new string[]
                 {
-                    input.GetHtmlTagValue("th", 2).GetHtmlTagContent(),
+                    input.GetHtmlTagValue("th", 2).GetHtmlTagContent().GetHtmlTagContent(true),
                 };
             }
             else

@@ -164,10 +164,11 @@ namespace Crawler.DataHandler.Extensions
         /// 获取标签的内容
         /// </summary>
         /// <param name="input"></param>
+        /// <param name="faultReturnInput">失败返回原值</param>
         /// <returns></returns>
-        public static string GetHtmlTagContent(this string input)
+        public static string GetHtmlTagContent(this string input, bool faultReturnInput = false)
         {
-            return HtmlDecode.GetHtmlTagContent(input);
+            return HtmlDecode.GetHtmlTagContent(input, faultReturnInput);
         }
     }
 }

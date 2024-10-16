@@ -19,6 +19,7 @@
     <UserControl.Resources>
         <system:Byte x:Key="Byte2">2</system:Byte>
         <system:Byte x:Key="Byte4">4</system:Byte>
+        <system:String x:Key="Rate">费率</system:String>
         <system:String x:Key="RateOriginal">原费率</system:String>
         <system:String x:Key="RateCardBuy">银行卡购买</system:String>
         <system:String x:Key="RateCurrentBuy">活期宝购买</system:String>
@@ -176,6 +177,14 @@
                             <DataGrid CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.ApplyRates}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Width="200" Header="适用金额" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
+                                    <DataGridTextColumn Width="100" Header="{StaticResource Rate}" IsReadOnly="True">
+                                        <DataGridTextColumn.Binding>
+                                            <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                                <Binding Path="Rate"/>
+                                                <Binding Source="{StaticResource Rate}"/>
+                                            </MultiBinding>
+                                        </DataGridTextColumn.Binding>
+                                    </DataGridTextColumn>
                                     <DataGridTextColumn Width="100" Header="{StaticResource RateOriginal}" IsReadOnly="True">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource DictRateConverter}">
@@ -199,6 +208,14 @@
                             <DataGrid CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.BuyRates}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Width="200" Header="适用金额" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
+                                    <DataGridTextColumn Width="100" Header="{StaticResource Rate}" IsReadOnly="True">
+                                        <DataGridTextColumn.Binding>
+                                            <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                                <Binding Path="Rate"/>
+                                                <Binding Source="{StaticResource Rate}"/>
+                                            </MultiBinding>
+                                        </DataGridTextColumn.Binding>
+                                    </DataGridTextColumn>
                                     <DataGridTextColumn Width="100" Header="{StaticResource RateOriginal}" IsReadOnly="True">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource DictRateConverter}">

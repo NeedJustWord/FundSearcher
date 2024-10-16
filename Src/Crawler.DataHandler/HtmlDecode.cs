@@ -176,11 +176,12 @@ namespace Crawler.DataHandler
         /// 获取标签内容
         /// </summary>
         /// <param name="input"></param>
+        /// <param name="faultReturnInput">失败返回原值</param>
         /// <returns></returns>
-        public static string GetHtmlTagContent(string input)
+        public static string GetHtmlTagContent(string input, bool faultReturnInput)
         {
             var match = Regex.Match(input, RegexHelper.GetHtmlTagContentPattern());
-            return match != null && match.Success ? match.Value : null;
+            return match != null && match.Success ? match.Value : (faultReturnInput ? input : null);
         }
     }
 }
