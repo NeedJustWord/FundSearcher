@@ -59,7 +59,7 @@ namespace Fund.DataBase
         {
             if (fundUpdate.HasUpdate)
             {
-                File.WriteAllText(dbFileName, fundUpdate.FundInfos.ToJson());
+                File.WriteAllText(dbFileName, fundUpdate.FundInfos.CustomSort().ToJson());
             }
         }
 

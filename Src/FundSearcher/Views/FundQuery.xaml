@@ -112,7 +112,7 @@
             </StackPanel>
         </Grid>
 
-        <DataGrid Grid.Row="1" x:Name="dgFundInfos" Margin="3" CanUserAddRows="False" AutoGenerateColumns="False"
+        <DataGrid Grid.Row="1" x:Name="dgFundInfos" Margin="3" CanUserAddRows="False" CanUserSortColumns="False" AutoGenerateColumns="False"
                   RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding FundInfos}">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Width="30" HeaderStyle="{StaticResource dtCheckHeader}" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">

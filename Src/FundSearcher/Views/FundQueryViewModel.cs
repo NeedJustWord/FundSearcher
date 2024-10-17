@@ -140,7 +140,7 @@ namespace FundSearcher.Views
             }
 
             InitFilterData(false);
-            var data = list.Select(t => Handle(t)).OrderBy(t => t.TransactionInfo.RunningRate).ThenByDescending(t => t.AssetSize).ThenBy(t => t.BirthDay).ThenBy(t => t.FundId).ToList();
+            var data = list.Select(t => Handle(t)).CustomSort().ToList();
             SetItemsSource(data);
             Filter();
         }
