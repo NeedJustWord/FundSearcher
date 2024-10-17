@@ -15,6 +15,9 @@ namespace FundSearcher.Views
 {
     class FundQueryViewModel : BaseFundViewModel
     {
+        private readonly string[] applyRateColumnNames = new string[] { "费率", "原费率", "天天基金优惠费率", };
+        private readonly string[] buyRateColumnNames = new string[] { "费率", "原费率", "银行卡购买", "活期宝购买", };
+        private readonly string[] sellRateColumnNames = new string[] { "赎回费率", };
         private readonly FundDataBase fundDataBase;
         private bool filter;
 
@@ -104,7 +107,7 @@ namespace FundSearcher.Views
         public FundQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator)
         {
             fundDataBase = dataBase;
-            Subscribe<FundQueryCheckAllEvent>(CheckAll);
+            eventAggregator.Subscribe<FundQueryCheckAllEvent>(CheckAll);
             RegisterCommand(CommandName.Query, Query);
             RegisterCommand(CommandName.Refresh, Refresh);
         }
@@ -137,7 +140,7 @@ namespace FundSearcher.Views
             }
 
             InitFilterData(false);
-            var data = list.OrderBy(t => t.TransactionInfo.RunningRate).ThenByDescending(t => t.AssetSize).ThenBy(t => t.BirthDay).ThenBy(t => t.FundId).ToList();
+            var data = list.Select(t => Handle(t)).OrderBy(t => t.TransactionInfo.RunningRate).ThenByDescending(t => t.AssetSize).ThenBy(t => t.BirthDay).ThenBy(t => t.FundId).ToList();
             SetItemsSource(data);
             Filter();
         }
@@ -159,12 +162,40 @@ namespace FundSearcher.Views
                 {
                     if (FundInfos[i].FundId == item.FundId)
                     {
-                        FundInfos[i] = item.Map(FundInfos[i]);
+                        item.OrderNumber = FundInfos[i].OrderNumber;
+                        FundInfos[i] = Handle(item).Map(FundInfos[i]);
+                        eventAggregator.Publish<FundQueryRefreshDetailEvent, FundInfo>(FundInfos[i]);
                         break;
                     }
                 }
             }
             Filter();
+        }
+
+        private FundInfo Handle(FundInfo model)
+        {
+            var rateNames = GetRateNames(model.TransactionInfo.ApplyRates);
+            model.ApplyRatesHiddenColumns = applyRateColumnNames.Except(rateNames).ToList();
+
+            rateNames = GetRateNames(model.TransactionInfo.BuyRates);
+            model.BuyRatesHiddenColumns = buyRateColumnNames.Except(rateNames).ToList();
+
+            rateNames = GetRateNames(model.TransactionInfo.SellRates);
+            model.SellRatesHiddenColumns = sellRateColumnNames.Except(rateNames).ToList();
+            return model;
+        }
+
+        private List<string> GetRateNames(List<TransactionRate> list)
+        {
+            var result = new List<string>();
+            if (list?.Count > 0)
+            {
+                foreach (var item in list[0].Rate.Keys)
+                {
+                    result.Add(item);
+                }
+            }
+            return result;
         }
 
         private void SetItemsSource(IEnumerable<FundInfo> infos)

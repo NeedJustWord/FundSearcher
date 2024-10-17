@@ -6,6 +6,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:consts="clr-namespace:FundSearcher.Consts"
+             xmlns:controls="clr-namespace:FundSearcher.Controls"
              xmlns:converters="clr-namespace:FundSearcher.Converters"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -174,10 +175,10 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <GroupBox Grid.Column="0" Header="认购费率">
-                            <DataGrid CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.ApplyRates}">
+                            <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.ApplyRates}" HiddenColumns="{Binding ApplyRatesHiddenColumns}" Tag="{Binding OrderNumber}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Width="200" Header="适用金额" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
-                                    <DataGridTextColumn Width="100" Header="{StaticResource Rate}" IsReadOnly="True">
+                                    <DataGridTextColumn Width="100" Header="{StaticResource Rate}" IsReadOnly="True" Visibility="Collapsed">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource DictRateConverter}">
                                                 <Binding Path="Rate"/>
@@ -185,7 +186,7 @@
                                             </MultiBinding>
                                         </DataGridTextColumn.Binding>
                                     </DataGridTextColumn>
-                                    <DataGridTextColumn Width="100" Header="{StaticResource RateOriginal}" IsReadOnly="True">
+                                    <DataGridTextColumn Width="100" Header="{StaticResource RateOriginal}" IsReadOnly="True" Visibility="Collapsed">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource DictRateConverter}">
                                                 <Binding Path="Rate"/>
@@ -193,7 +194,7 @@
                                             </MultiBinding>
                                         </DataGridTextColumn.Binding>
                                     </DataGridTextColumn>
-                                    <DataGridTextColumn Width="110" Header="{StaticResource RateEastMoneyPreferred}" IsReadOnly="True">
+                                    <DataGridTextColumn Width="110" Header="{StaticResource RateEastMoneyPreferred}" IsReadOnly="True" Visibility="Collapsed">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource DictRateConverter}">
                                                 <Binding Path="Rate"/>
@@ -202,13 +203,13 @@
                                         </DataGridTextColumn.Binding>
                                     </DataGridTextColumn>
                                 </DataGrid.Columns>
-                            </DataGrid>
+                            </controls:DataGridEx>
                         </GroupBox>
                         <GroupBox Grid.Column="1" Header="申购费率">
-                            <DataGrid CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.BuyRates}">
+                            <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.BuyRates}" HiddenColumns="{Binding BuyRatesHiddenColumns}" Tag="{Binding OrderNumber}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Width="200" Header="适用金额" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
-                                    <DataGridTextColumn Width="100" Header="{StaticResource Rate}" IsReadOnly="True">
+                                    <DataGridTextColumn Width="100" Header="{StaticResource Rate}" IsReadOnly="True" Visibility="Collapsed">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource DictRateConverter}">
                                                 <Binding Path="Rate"/>
@@ -216,7 +217,7 @@
                                             </MultiBinding>
                                         </DataGridTextColumn.Binding>
                                     </DataGridTextColumn>
-                                    <DataGridTextColumn Width="100" Header="{StaticResource RateOriginal}" IsReadOnly="True">
+                                    <DataGridTextColumn Width="100" Header="{StaticResource RateOriginal}" IsReadOnly="True" Visibility="Collapsed">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource DictRateConverter}">
                                                 <Binding Path="Rate"/>
@@ -224,7 +225,7 @@
                                             </MultiBinding>
                                         </DataGridTextColumn.Binding>
                                     </DataGridTextColumn>
-                                    <DataGridTextColumn Width="100" Header="{StaticResource RateCardBuy}" IsReadOnly="True">
+                                    <DataGridTextColumn Width="100" Header="{StaticResource RateCardBuy}" IsReadOnly="True" Visibility="Collapsed">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource DictRateConverter}">
                                                 <Binding Path="Rate"/>
@@ -232,7 +233,7 @@
                                             </MultiBinding>
                                         </DataGridTextColumn.Binding>
                                     </DataGridTextColumn>
-                                    <DataGridTextColumn Width="100" Header="{StaticResource RateCurrentBuy}" IsReadOnly="True">
+                                    <DataGridTextColumn Width="100" Header="{StaticResource RateCurrentBuy}" IsReadOnly="True" Visibility="Collapsed">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource DictRateConverter}">
                                                 <Binding Path="Rate"/>
@@ -241,13 +242,13 @@
                                         </DataGridTextColumn.Binding>
                                     </DataGridTextColumn>
                                 </DataGrid.Columns>
-                            </DataGrid>
+                            </controls:DataGridEx>
                         </GroupBox>
                         <GroupBox Grid.Column="2" Header="赎回费率">
-                            <DataGrid CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.SellRates}">
+                            <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.SellRates}" HiddenColumns="{Binding SellRatesHiddenColumns}" Tag="{Binding OrderNumber}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Width="200" Header="适用期限" IsReadOnly="True" Binding="{Binding ApplicablePeriod}"/>
-                                    <DataGridTextColumn Width="80" Header="{StaticResource RateSell}" IsReadOnly="True">
+                                    <DataGridTextColumn Width="80" Header="{StaticResource RateSell}" IsReadOnly="True" Visibility="Collapsed">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource DictRateConverter}">
                                                 <Binding Path="Rate"/>
@@ -256,7 +257,7 @@
                                         </DataGridTextColumn.Binding>
                                     </DataGridTextColumn>
                                 </DataGrid.Columns>
-                            </DataGrid>
+                            </controls:DataGridEx>
                         </GroupBox>
                     </Grid>
                 </DataTemplate>

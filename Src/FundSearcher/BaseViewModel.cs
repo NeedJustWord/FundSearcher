@@ -10,8 +10,8 @@ namespace FundSearcher
     class BaseViewModel : BindableBase, INavigationAware
     {
         private readonly Dictionary<string, Action<object>> dictDelegateCommand;
-        private readonly IEventAggregator eventAggregator;
 
+        protected readonly IEventAggregator eventAggregator;
         protected readonly IRegionManager regionManager;
         protected readonly string regionName;
         protected IRegionNavigationJournal journal;
@@ -84,17 +84,5 @@ namespace FundSearcher
         {
             journal = navigationContext.NavigationService.Journal;
         }
-
-        #region 消息订阅
-        protected void Subscribe<TEventType>(Action action) where TEventType : PubSubEvent, new()
-        {
-            eventAggregator.GetEvent<TEventType>().Subscribe(action);
-        }
-
-        protected void Subscribe<TEventType, TMessage>(Action<TMessage> action) where TEventType : PubSubEvent<TMessage>, new()
-        {
-            eventAggregator.GetEvent<TEventType>().Subscribe(action);
-        }
-        #endregion
     }
 }

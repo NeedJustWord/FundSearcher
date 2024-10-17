@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Prism.Mvvm;
 
@@ -40,6 +41,39 @@ namespace Fund.Crawler.Models
         {
             get { return orderNumber; }
             set { SetProperty(ref orderNumber, value); }
+        }
+
+        private List<string> applyRatesHiddenColumns;
+        /// <summary>
+        /// 认购费率隐藏列
+        /// </summary>
+        [JsonIgnore]
+        public List<string> ApplyRatesHiddenColumns
+        {
+            get { return applyRatesHiddenColumns; }
+            set { SetProperty(ref applyRatesHiddenColumns, value); }
+        }
+
+        private List<string> buyRatesHiddenColumns;
+        /// <summary>
+        /// 申购费率隐藏列
+        /// </summary>
+        [JsonIgnore]
+        public List<string> BuyRatesHiddenColumns
+        {
+            get { return buyRatesHiddenColumns; }
+            set { SetProperty(ref buyRatesHiddenColumns, value); }
+        }
+
+        private List<string> sellRatesHiddenColumns;
+        /// <summary>
+        /// 赎回费率隐藏列
+        /// </summary>
+        [JsonIgnore]
+        public List<string> SellRatesHiddenColumns
+        {
+            get { return sellRatesHiddenColumns; }
+            set { SetProperty(ref sellRatesHiddenColumns, value); }
         }
 
         private DateTime updateTime;
