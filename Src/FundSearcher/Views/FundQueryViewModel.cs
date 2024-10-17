@@ -19,8 +19,8 @@ namespace FundSearcher.Views
         private bool filter;
 
         #region 属性
-        private ObservableCollection<FundModel> fundInfos = new ObservableCollection<FundModel>();
-        public ObservableCollection<FundModel> FundInfos
+        private ObservableCollection<FundInfo> fundInfos = new ObservableCollection<FundInfo>();
+        public ObservableCollection<FundInfo> FundInfos
         {
             get { return fundInfos; }
             set { SetProperty(ref fundInfos, value); }
@@ -137,7 +137,7 @@ namespace FundSearcher.Views
             }
 
             InitFilterData(false);
-            var data = list.Select(t => t.Map<FundInfo, FundModel>()).OrderBy(t => t.TransactionInfo.RunningRate).ThenByDescending(t => t.AssetSize).ThenBy(t => t.BirthDay).ThenBy(t => t.FundId).ToList();
+            var data = list.OrderBy(t => t.TransactionInfo.RunningRate).ThenByDescending(t => t.AssetSize).ThenBy(t => t.BirthDay).ThenBy(t => t.FundId).ToList();
             SetItemsSource(data);
             Filter();
         }
@@ -159,7 +159,7 @@ namespace FundSearcher.Views
                 {
                     if (FundInfos[i].FundId == item.FundId)
                     {
-                        FundInfos[i] = item.Map<FundInfo, FundModel>();
+                        FundInfos[i] = item.Map(FundInfos[i]);
                         break;
                     }
                 }
@@ -167,7 +167,7 @@ namespace FundSearcher.Views
             Filter();
         }
 
-        private void SetItemsSource(IEnumerable<FundModel> infos)
+        private void SetItemsSource(IEnumerable<FundInfo> infos)
         {
             FundInfos.Clear();
             FundInfos.AddRange(infos);
@@ -186,7 +186,7 @@ namespace FundSearcher.Views
             }
         }
 
-        private bool IsShow(FundModel fund)
+        private bool IsShow(FundInfo fund)
         {
             if (SelectTrackingTarget.Key.IsNotNullAndEmpty() && fund.TrackingTarget != SelectTrackingTarget.Key) return false;
             if (SelectRunningRate.Key.IsNotNullAndEmpty() && fund.TransactionInfo.RunningRateStr != SelectRunningRate.Key) return false;
