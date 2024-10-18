@@ -102,6 +102,38 @@ namespace FundSearcher.Views
             }
         }
         #endregion
+
+        #region 交易场所
+        private ObservableCollection<FilterModel> counters = new ObservableCollection<FilterModel>();
+        /// <summary>
+        /// 交易场所
+        /// </summary>
+        public ObservableCollection<FilterModel> Counters
+        {
+            get { return counters; }
+            set { SetProperty(ref counters, value); }
+        }
+
+        private FilterModel lastSelectCounter;
+        private FilterModel selectCounter;
+        /// <summary>
+        /// 选中交易场所
+        /// </summary>
+        public FilterModel SelectCounter
+        {
+            get { return selectCounter; }
+            set
+            {
+                if (lastSelectCounter != null) lastSelectCounter.IsSelected = false;
+                if (SetProperty(ref selectCounter, value) && filter)
+                {
+                    lastSelectCounter = value;
+                    value.IsSelected = true;
+                    Filter();
+                }
+            }
+        }
+        #endregion
         #endregion
 
         public FundQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator)
@@ -114,6 +146,7 @@ namespace FundSearcher.Views
 
         protected override void OnLoaded()
         {
+            InitCounters();
             Query();
         }
 
@@ -221,6 +254,7 @@ namespace FundSearcher.Views
         {
             if (SelectTrackingTarget.Key.IsNotNullAndEmpty() && fund.TrackingTarget != SelectTrackingTarget.Key) return false;
             if (SelectRunningRate.Key.IsNotNullAndEmpty() && fund.TransactionInfo.RunningRateStr != SelectRunningRate.Key) return false;
+            if (SelectCounter.Key.IsNotNullAndEmpty() && fund.Counter != SelectCounter.Key) return false;
             return true;
         }
 
@@ -235,6 +269,9 @@ namespace FundSearcher.Views
             lastKey = isRefresh ? SelectRunningRate?.Key : "";
             InitRunningRates();
             lastSelectRunningRate = SelectRunningRate = GetDefaultSelectItem(RunningRates, lastKey);
+
+            lastKey = isRefresh ? SelectCounter?.Key : "";
+            lastSelectCounter = SelectCounter = GetDefaultSelectItem(Counters, lastKey);
 
             filter = true;
         }
@@ -258,6 +295,14 @@ namespace FundSearcher.Views
             RunningRates.Clear();
             RunningRates.Add(new FilterModel("", "全部"));
             RunningRates.AddRange(fundDataBase.FundInfos.Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, t.TransactionInfo.RunningRate.ToString("P2"))).Distinct(FilterModelEqualityComparer.Instance).OrderBy(t => t.Key));
+        }
+
+        private void InitCounters()
+        {
+            Counters.Clear();
+            Counters.Add(new FilterModel("", "全部"));
+            Counters.Add(new FilterModel("场内交易", "场内交易"));
+            Counters.Add(new FilterModel("场外交易", "场外交易"));
         }
     }
 }

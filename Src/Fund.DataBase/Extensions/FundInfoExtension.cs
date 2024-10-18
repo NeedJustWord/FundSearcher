@@ -26,7 +26,7 @@ namespace Fund.Crawler.Models
         /// <returns></returns>
         public static IEnumerable<FundInfo> CustomSort(this IEnumerable<FundInfo> list)
         {
-            return list.OrderBy(t => t.TrackingTarget).ThenBy(t => t.TransactionInfo.RunningRate).ThenByDescending(t => t.AssetSize).ThenBy(t => t.BirthDay).ThenBy(t => t.FundId);
+            return list.OrderBy(t => t.Counter).ThenBy(t => t.TrackingTarget).ThenBy(t => t.TransactionInfo.RunningRate).ThenByDescending(t => t.AssetSize).ThenBy(t => t.BirthDay).ThenBy(t => t.FundId);
         }
     }
 }

@@ -80,6 +80,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -99,7 +100,11 @@
             <ListView Grid.Row="2" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
                       ItemsSource="{Binding RunningRates}" SelectedItem="{Binding SelectRunningRate}"/>
 
-            <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Label Grid.Row="3" Grid.Column="0" Content="交易场所：" Style="{StaticResource QueryLabel}"/>
+            <ListView Grid.Row="3" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                      ItemsSource="{Binding Counters}" SelectedItem="{Binding SelectCounter}"/>
+
+            <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                 <Button Content="查询" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Query}"/>
@@ -124,10 +129,11 @@
                 </DataGridCheckBoxColumn>
                 <DataGridTemplateColumn Width="50" HeaderStyle="{StaticResource dtNumHeader}" CellStyle="{StaticResource dtNum}"/>
                 <DataGridTextColumn Header="基金代码" Width="60" IsReadOnly="True" Binding="{Binding FundId}"/>
-                <DataGridTextColumn Header="基金简称" Width="360" IsReadOnly="True" Binding="{Binding FundName}"/>
+                <DataGridTextColumn Header="基金简称" Width="320" IsReadOnly="True" Binding="{Binding FundName}"/>
+                <DataGridTextColumn Header="交易场所" Width="60" IsReadOnly="True" Binding="{Binding Counter}"/>
                 <DataGridTextColumn Header="跟踪标的" Width="120" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
                 <DataGridTextColumn Header="成立日期" Width="80" IsReadOnly="True" Binding="{Binding BirthDay,StringFormat=yyyy-MM-dd}"/>
-                <DataGridTextColumn Header="资产规模(亿元)" Width="160" IsReadOnly="True">
+                <DataGridTextColumn Header="资产规模(亿元)" Width="180" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource FundSizeConverter}">
                             <Binding Path="AssetSize"/>
@@ -136,7 +142,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="份额规模(亿份)" Width="170" IsReadOnly="True">
+                <DataGridTextColumn Header="份额规模(亿份)" Width="180" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource FundSizeConverter}">
                             <Binding Path="ShareSize"/>

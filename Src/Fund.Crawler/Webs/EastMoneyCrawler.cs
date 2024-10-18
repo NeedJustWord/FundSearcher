@@ -49,6 +49,12 @@ namespace Fund.Crawler.Webs
 
         private void HandlerBaseInfoSource(string pageSource, FundInfo fundInfo)
         {
+            var content = pageSource.GetFirstHtmlTagValueByAttri("div", "class", "bs_jz")
+                .GetFirstHtmlTagValueByAttri("div", "class", "col-right")
+                .GetHtmlTagValue("p", 1)
+                .GetHtmlTagContent();
+            fundInfo.Counter = content.Contains("场内交易") ? "场内交易" : "场外交易";
+
             var keyValues = pageSource.GetFirstHtmlTagValueByAttri("table", "class", "info w790")
             .GetHtmlTagValue("tr")
             .SelectMany(t =>

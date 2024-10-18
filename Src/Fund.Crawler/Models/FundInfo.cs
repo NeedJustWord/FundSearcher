@@ -126,6 +126,16 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref fundFullName, value); }
         }
 
+        private string counter;
+        /// <summary>
+        /// 交易场所
+        /// </summary>
+        public string Counter
+        {
+            get { return counter; }
+            set { SetProperty(ref counter, value); }
+        }
+
         private string fundType;
         /// <summary>
         /// 基金类型
