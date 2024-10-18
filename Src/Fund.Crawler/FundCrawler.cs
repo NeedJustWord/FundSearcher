@@ -46,10 +46,10 @@ namespace Fund.Crawler
                 List<FundInfo> result = new List<FundInfo>();
                 if (fundIds != null)
                 {
-                    Parallel.ForEach(fundIds, fundId =>
+                    Parallel.ForEach(fundIds, (fundId, pls, index) =>
                     {
                         if (string.IsNullOrWhiteSpace(fundId)) return;
-                        result.Add(WebCrawler.Start(fundId).Result);
+                        result.Add(WebCrawler.Start(new CrawlerKey(index, fundId)).Result);
                     });
                 }
                 return result;

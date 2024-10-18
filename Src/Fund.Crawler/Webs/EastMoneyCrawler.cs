@@ -19,16 +19,16 @@ namespace Fund.Crawler.Webs
         {
         }
 
-        public async override Task<FundInfo> Start(string fundId)
+        public async override Task<FundInfo> Start(CrawlerKey key)
         {
             return await Task.Run(async () =>
             {
-                var fundInfo = CreateFundInfo(fundId);
+                var fundInfo = CreateFundInfo(key.FundId);
 
                 var task = new Task[]
                 {
-                    GetBaseInfo(fundId, fundInfo),
-                    GetTransactionInfo(fundId, fundInfo),
+                    GetBaseInfo(key, fundInfo),
+                    GetTransactionInfo(key, fundInfo),
                 };
 
                 await Task.WhenAll(task);
@@ -39,12 +39,12 @@ namespace Fund.Crawler.Webs
         /// <summary>
         /// 基本概况
         /// </summary>
-        /// <param name="fundId"></param>
+        /// <param name="key"></param>
         /// <param name="fundInfo"></param>
-        private async Task GetBaseInfo(string fundId, FundInfo fundInfo)
+        private async Task GetBaseInfo(CrawlerKey key, FundInfo fundInfo)
         {
-            var url = $"http://fundf10.eastmoney.com/jbgk_{fundId}.html";
-            await StartSimpleCrawler(url, fundInfo, HandlerBaseInfoSource);
+            var url = $"http://fundf10.eastmoney.com/jbgk_{key.FundId}.html";
+            await StartSimpleCrawler(key, url, fundInfo, HandlerBaseInfoSource);
         }
 
         private void HandlerBaseInfoSource(string pageSource, FundInfo fundInfo)
@@ -107,12 +107,12 @@ namespace Fund.Crawler.Webs
         /// <summary>
         /// 交易信息
         /// </summary>
-        /// <param name="fundId"></param>
+        /// <param name="key"></param>
         /// <param name="fundInfo"></param>
-        private async Task GetTransactionInfo(string fundId, FundInfo fundInfo)
+        private async Task GetTransactionInfo(CrawlerKey key, FundInfo fundInfo)
         {
-            var url = $"http://fundf10.eastmoney.com/jjfl_{fundId}.html";
-            await StartSimpleCrawler(url, fundInfo, HandleTransactionInfoSource);
+            var url = $"http://fundf10.eastmoney.com/jjfl_{key.FundId}.html";
+            await StartSimpleCrawler(key, url, fundInfo, HandleTransactionInfoSource);
         }
 
         private void HandleTransactionInfoSource(string pageSource, FundInfo fundInfo)

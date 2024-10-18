@@ -24,11 +24,11 @@ namespace Fund.Crawler.Webs
         }
 
         /// <summary>
-        /// 根据基金代码爬取基金信息
+        /// 根据key爬取基金信息
         /// </summary>
-        /// <param name="fundId">基金代码</param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public abstract Task<FundInfo> Start(string fundId);
+        public abstract Task<FundInfo> Start(CrawlerKey key);
 
         /// <summary>
         /// 创建基金信息
@@ -48,24 +48,31 @@ namespace Fund.Crawler.Webs
         /// <summary>
         /// 使用简单爬虫爬取<paramref name="url"/>
         /// </summary>
+        /// <param name="key">爬取信息key</param>
         /// <param name="url">爬虫URL地址</param>
         /// <param name="fundInfo">基金信息</param>
         /// <param name="action">页面源码处理方法</param>
         /// <returns></returns>
-        protected async Task<string> StartSimpleCrawler(string url, FundInfo fundInfo, Action<string, FundInfo> action)
+        protected async Task<string> StartSimpleCrawler(CrawlerKey key, string url, FundInfo fundInfo, Action<string, FundInfo> action)
         {
             var crawler = new SimpleCrawler();
             crawler.OnStartEvent += (sender, args) =>
             {
-                WriteLog($"{args.ThreadId} 开始休眠");
-                RandomSleep(3, 15);
-                WriteLog($"{args.ThreadId} 休眠结束，开始爬取");
+                var keyStr = key.GetKey(url);
+                if (key.Index != 0)
+                {
+                    WriteLog($"{args.ThreadId} {keyStr}开始休眠");
+                    RandomSleep(keyStr, 3, 15);
+                    WriteLog($"{args.ThreadId} {keyStr}休眠结束");
+                }
+                WriteLog($"{args.ThreadId} {keyStr}开始爬取");
             };
             crawler.OnCompletedEvent += (sender, args) =>
             {
-                WriteLog($"{args.ThreadId} 爬取结束，开始处理");
+                var keyStr = key.GetKey(url);
+                WriteLog($"{args.ThreadId} {keyStr}爬取结束，开始处理");
                 action?.Invoke(args.PageSource, fundInfo);
-                WriteLog($"{args.ThreadId} 处理结束");
+                WriteLog($"{args.ThreadId} {keyStr}处理结束");
             };
             return await crawler.Start(url);
         }
@@ -87,16 +94,17 @@ namespace Fund.Crawler.Webs
         /// <summary>
         /// 随机休眠
         /// </summary>
+        /// <param name="key"></param>
         /// <param name="minSecond"></param>
         /// <param name="maxSecond"></param>
-        private void RandomSleep(int minSecond, int maxSecond)
+        private void RandomSleep(string key, int minSecond, int maxSecond)
         {
             var second = GetRandomSleepSecond(minSecond, maxSecond);
-            WriteLog($"随机时间 {second}");
+            WriteLog($"{key}随机休眠时间 {second}s");
             Task.Delay(second * 1000).Wait();
         }
 
-        private void WriteLog(string msg)
+        protected void WriteLog(string msg)
         {
             Console.WriteLine($"{DateTime.Now} {msg}");
         }
