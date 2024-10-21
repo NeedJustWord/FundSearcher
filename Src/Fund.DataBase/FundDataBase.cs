@@ -15,6 +15,7 @@ namespace Fund.DataBase
     {
         private FundUpdate fundUpdate = new FundUpdate();
         private string dbFileName;
+        private string dbFileNameWithExtension => $"{dbFileName}.txt";
 
         private static char[] fundIdSeparator = new char[] { ' ', ',', '，', '-' };
 
@@ -23,7 +24,7 @@ namespace Fund.DataBase
         /// </summary>
         public List<FundInfo> FundInfos => fundUpdate.FundInfos;
 
-        public FundDataBase() : this("FundInfos.txt")
+        public FundDataBase() : this("FundInfos")
         {
         }
 
@@ -38,18 +39,12 @@ namespace Fund.DataBase
         /// </summary>
         public void Load()
         {
-            if (File.Exists(dbFileName))
-            {
-                try
-                {
-                    var json = File.ReadAllText(dbFileName);
-                    var list = json.FromJson<List<FundInfo>>();
-                    fundUpdate.Init(list);
-                }
-                catch (Exception)
-                {
-                }
-            }
+            var files = Directory.GetFiles(".", $"{dbFileName}*.txt");
+            var list = files.SelectMany(t => File.ReadAllText(t).FromJson<List<FundInfo>>())
+                .GroupBy(t => new FundKey(t.FundId, t.FundInfoSource))
+                .Select(t => t.OrderByDescending(x => x.UpdateTime).First());
+            fundUpdate.Init(list);
+            Save(files);
         }
 
         /// <summary>
@@ -59,7 +54,20 @@ namespace Fund.DataBase
         {
             if (fundUpdate.HasUpdate)
             {
-                File.WriteAllText(dbFileName, fundUpdate.FundInfos.CustomSort().ToJson());
+                File.WriteAllText(dbFileNameWithExtension, fundUpdate.FundInfos.CustomSort().ToJson());
+            }
+        }
+
+        private void Save(string[] files)
+        {
+            if (files.Length == 0) return;
+            if (files.Length > 1 || string.Compare(Path.GetFileName(files[0]), dbFileNameWithExtension, true) != 0)
+            {
+                foreach (var file in files)
+                {
+                    File.Delete(file);
+                }
+                File.WriteAllText(dbFileNameWithExtension, fundUpdate.FundInfos.CustomSort().ToJson());
             }
         }
 

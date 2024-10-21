@@ -20,7 +20,7 @@ namespace FundSearcher.Models
 
         public FilterModel(string key, string value, bool isSelected = false)
         {
-            Key = key;
+            Key = key ?? "";
             Value = value;
             IsSelected = isSelected;
         }
