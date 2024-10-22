@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Fund.Crawler.Models;
 
 namespace FundSearcher
 {
@@ -6,6 +7,7 @@ namespace FundSearcher
     {
         public AutoMapperProfile()
         {
+            CreateMap<FundInfo, FundInfo>();
         }
     }
 }

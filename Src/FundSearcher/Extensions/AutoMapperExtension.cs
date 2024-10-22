@@ -23,5 +23,15 @@ namespace FundSearcher.Extensions
             action?.Invoke(result);
             return result;
         }
+
+        public static TTo[] Map<TFrom, TTo>(this TFrom[] from, Action<TTo> action = null)
+        {
+            var result = new TTo[from.Length];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = from[i].Map(action);
+            }
+            return result;
+        }
     }
 }

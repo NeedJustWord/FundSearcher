@@ -17,7 +17,6 @@ namespace FundSearcher
         protected IRegionNavigationJournal journal;
 
         public DelegateCommand LoadedCommand { get; private set; }
-        public DelegateCommand<string> NavigateCommand { get; private set; }
         public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand<object> DictCommand { get; private set; }
 
@@ -30,7 +29,6 @@ namespace FundSearcher
             this.eventAggregator = eventAggregator;
 
             LoadedCommand = new DelegateCommand(OnLoaded);
-            NavigateCommand = new DelegateCommand<string>(Navigate);
             GoBackCommand = new DelegateCommand(GoBack);
             DictCommand = new DelegateCommand<object>(Dict);
         }
@@ -39,9 +37,14 @@ namespace FundSearcher
         {
         }
 
-        private void Navigate(string navigatePath)
+        protected void Navigate(string navigatePath)
         {
             if (navigatePath != null) regionManager.RequestNavigate(regionName, navigatePath);
+        }
+
+        protected void Navigate(string navigatePath, NavigationParameters navigationParameters)
+        {
+            if (navigatePath != null) regionManager.RequestNavigate(regionName, navigatePath, navigationParameters);
         }
 
         private void GoBack()
@@ -76,11 +79,11 @@ namespace FundSearcher
             return true;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public virtual void OnNavigatedFrom(NavigationContext navigationContext)
         {
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public virtual void OnNavigatedTo(NavigationContext navigationContext)
         {
             journal = navigationContext.NavigationService.Journal;
         }

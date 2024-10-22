@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:FundSearcher.Converters"
                     xmlns:localModels="clr-namespace:FundSearcher.Models"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <Color x:Key="QueryTextBoxBorderColor">#2979DC</Color>
@@ -9,6 +10,23 @@
     <SolidColorBrush x:Key="FilterSelectedForegroundColorBrush" Color="{DynamicResource FilterSelectedForegroundColor}"/>
 
     <sys:Double x:Key="QueryTextBoxHeight">25</sys:Double>
+
+    <sys:String x:Key="StringRate">费率</sys:String>
+    <sys:String x:Key="StringRateOriginal">原费率</sys:String>
+    <sys:String x:Key="StringRateCardBuy">银行卡购买</sys:String>
+    <sys:String x:Key="StringRateCurrentBuy">活期宝购买</sys:String>
+    <sys:String x:Key="StringRateEastMoneyPreferred">天天基金优惠费率</sys:String>
+    <sys:String x:Key="StringRateSell">赎回费率</sys:String>
+    <sys:String x:Key="StringFormatF2">F2</sys:String>
+    <sys:String x:Key="StringFormatF4">F4</sys:String>
+
+    <converters:DictRateConverter x:Key="DictRateConverter"/>
+    <converters:FundSizeConverter x:Key="FundSizeConverter"/>
+
+    <TransformGroup x:Key="CompareLayoutTransform">
+        <RotateTransform Angle="-90"/>
+        <ScaleTransform ScaleX="1" ScaleY="-1"/>
+    </TransformGroup>
 
     <Style TargetType="Button" x:Key="NormalButton">
         <Setter Property="Width" Value="75"/>
@@ -100,6 +118,36 @@
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="DataGrid" x:Key="CompareDataGrid">
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="LayoutTransform" Value="{StaticResource CompareLayoutTransform}"/>
+        <Setter Property="RowStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="200"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="CellStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="LayoutTransform" Value="{StaticResource CompareLayoutTransform}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ColumnHeaderStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="LayoutTransform" Value="{StaticResource CompareLayoutTransform}"/>
                 </Style>
             </Setter.Value>
         </Setter>

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using Fund.Crawler.Models;
 using Fund.DataBase;
 using FundSearcher.Consts;
+using FundSearcher.Controls;
 using FundSearcher.Extensions;
 using FundSearcher.Models;
 using FundSearcher.PubSubEvents;
@@ -142,11 +142,12 @@ namespace FundSearcher.Views
             eventAggregator.Subscribe<FundQueryCheckAllEvent>(CheckAll);
             RegisterCommand(CommandName.Query, Query);
             RegisterCommand(CommandName.Refresh, Refresh);
+            RegisterCommand(CommandName.Compare, Compare);
+            InitCounters();
         }
 
         protected override void OnLoaded()
         {
-            InitCounters();
             Query();
         }
 
@@ -183,7 +184,7 @@ namespace FundSearcher.Views
             var fundIds = fundInfos.Where(t => t.IsShow && t.IsChecked).Select(t => t.FundId).ToArray();
             if (fundIds.Length == 0)
             {
-                MessageBox.Show("请勾选需要刷新的基金", "基金检索工具", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxEx.ShowError("请勾选需要刷新的基金");
                 return;
             }
 
@@ -203,6 +204,31 @@ namespace FundSearcher.Views
                 }
             }
             Filter();
+        }
+
+        private void Compare()
+        {
+            var infos = fundInfos.Where(t => t.IsShow && t.IsChecked).ToArray();
+            if (infos.Length < 2)
+            {
+                MessageBoxEx.ShowError("请至少选择2只基金进行比较");
+                return;
+            }
+            if (infos.Length > 9)
+            {
+                MessageBoxEx.ShowError("最多选择9只基金进行比较");
+                return;
+            }
+
+            var copyInfos = infos.Map<FundInfo, FundInfo>(t =>
+            {
+                t.IsChecked = false;
+            });
+            var param = new NavigationParameters
+            {
+                {ParameterName.CompareFundInfos, copyInfos},
+            };
+            Navigate(NavigateName.FundCompare, param);
         }
 
         private FundInfo Handle(FundInfo model)

@@ -65,8 +65,10 @@
     <Compile Include="BaseWindowViewModel.cs" />
     <Compile Include="Consts\CommandName.cs" />
     <Compile Include="Consts\NavigateName.cs" />
+    <Compile Include="Consts\ParameterName.cs" />
     <Compile Include="Consts\RegionName.cs" />
     <Compile Include="Controls\DataGridEx.cs" />
+    <Compile Include="Controls\MessageBoxEx.cs" />
     <Compile Include="Converters\DictRateConverter.cs" />
     <Compile Include="Converters\FundSizeConverter.cs" />
     <Compile Include="Extensions\AutoMapperExtension.cs" />

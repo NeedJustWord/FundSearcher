@@ -13,7 +13,7 @@ namespace FundSearcher.Converters
         {
             var value = (double)values[0];
             var deadline = (DateTime)values[1];
-            var format = $"F{values[2]}";
+            var format = (string)values[2];
             return $"{value.ToString(format)}(截止至:{deadline:yyyy-MM-dd})";
         }
 
