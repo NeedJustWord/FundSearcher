@@ -79,6 +79,7 @@
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Models\FilterModel.cs" />
     <Compile Include="Module.cs" />
+    <Compile Include="PubSubEvents\FundCompareFilterModelClickEvent.cs" />
     <Compile Include="PubSubEvents\FundQueryCheckAllEvent.cs" />
     <Compile Include="PubSubEvents\FundQueryRefreshDetailEvent.cs" />
     <Compile Include="Shell.xaml.cs">

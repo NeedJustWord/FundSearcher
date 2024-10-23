@@ -20,7 +20,7 @@
 
         <Label Grid.Row="0" Grid.Column="0" Content="基金：" Style="{StaticResource QueryLabel}"/>
         <ListView Grid.Row="0" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}" SelectionMode="Multiple"
-                      ItemsSource="{Binding ShowFundInfos}"/>
+                  ItemsSource="{Binding ShowFundInfos}" PreviewMouseLeftButtonDown="ListView_PreviewMouseLeftButtonDown"/>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
             <Button Content="返回" Style="{StaticResource QueryButton}" Command="{Binding GoBackCommand}"/>

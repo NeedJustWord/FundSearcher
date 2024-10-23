@@ -2,7 +2,10 @@
 using System.Linq;
 using Fund.Crawler.Models;
 using FundSearcher.Consts;
+using FundSearcher.Extensions;
 using FundSearcher.Models;
+using FundSearcher.PubSubEvents;
+using Prism.Events;
 using Prism.Regions;
 
 namespace FundSearcher.Views
@@ -30,8 +33,9 @@ namespace FundSearcher.Views
         }
         #endregion
 
-        public FundCompareViewModel(IRegionManager regionManager) : base(regionManager)
+        public FundCompareViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : base(regionManager, eventAggregator)
         {
+            eventAggregator.Subscribe<FundCompareFilterModelClickEvent, FilterModel>(FilterModelClick);
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
@@ -45,6 +49,13 @@ namespace FundSearcher.Views
                 FundInfos.AddRange(infos);
                 ShowFundInfos.AddRange(infos.Select(t => new FilterModel(t.FundId, t.FundName, true)));
             }
+        }
+
+        private void FilterModelClick(FilterModel model)
+        {
+            model.IsSelected = !model.IsSelected;
+            var info = FundInfos.First(t => t.FundId == model.Key);
+            info.IsShow = model.IsSelected;
         }
     }
 }
