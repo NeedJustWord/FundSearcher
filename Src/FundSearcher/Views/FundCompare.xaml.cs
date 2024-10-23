@@ -21,7 +21,7 @@ namespace FundSearcher.Views
             this.aggregator = aggregator;
         }
 
-        private void DataGrid_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
             var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EBF1DD"));
             var dg = (DataGrid)sender;
@@ -41,6 +41,8 @@ namespace FundSearcher.Views
             if (e.OriginalSource is DependencyObject obj)
             {
                 var item = obj.FindVisualTreeParent<ListViewItem>();
+                if (item == null) return;
+
                 var model = (FilterModel)item.DataContext;
                 aggregator.Publish<FundCompareFilterModelClickEvent, FilterModel>(model);
             }
