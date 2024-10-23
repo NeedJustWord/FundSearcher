@@ -19,6 +19,7 @@ namespace FundSearcher.Views
         private readonly string[] buyRateColumnNames = new string[] { "费率", "原费率", "银行卡购买", "活期宝购买", };
         private readonly string[] sellRateColumnNames = new string[] { "赎回费率", };
         private readonly FundDataBase fundDataBase;
+        private bool isFirstLoad = true;
         private bool filter;
 
         #region 属性
@@ -124,7 +125,7 @@ namespace FundSearcher.Views
             get { return selectCounter; }
             set
             {
-                if (lastSelectCounter != null) lastSelectCounter.IsSelected = false;
+                if (lastSelectCounter != null && lastSelectCounter != value) lastSelectCounter.IsSelected = false;
                 if (SetProperty(ref selectCounter, value) && filter)
                 {
                     lastSelectCounter = value;
@@ -148,7 +149,11 @@ namespace FundSearcher.Views
 
         protected override void OnLoaded()
         {
-            Query();
+            if (isFirstLoad)
+            {
+                isFirstLoad = false;
+                Query();
+            }
         }
 
         private void CheckAll()
@@ -214,9 +219,9 @@ namespace FundSearcher.Views
                 MessageBoxEx.ShowError("请至少选择2只基金进行比较");
                 return;
             }
-            if (infos.Length > 9)
+            if (infos.Length > 10)
             {
-                MessageBoxEx.ShowError("最多选择9只基金进行比较");
+                MessageBoxEx.ShowError("最多选择10只基金进行比较");
                 return;
             }
 

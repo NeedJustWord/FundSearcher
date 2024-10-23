@@ -38,7 +38,8 @@ namespace FundSearcher.Views
                 var row = (DataGridRow)dgFundInfos.ItemContainerGenerator.ContainerFromItem(item);
                 if (row != null)
                 {
-                    row.FindVisualTreeChild<TextBlock>("tag").Text = "+";
+                    var tag = row.FindVisualTreeChild<TextBlock>("tag");
+                    if (tag != null) tag.Text = "+";
                 }
             }
         }
@@ -77,7 +78,7 @@ namespace FundSearcher.Views
             }
         }
 
-        public void RefreshDetail(FundInfo info)
+        private void RefreshDetail(FundInfo info)
         {
             var list = new List<DataGridEx>();
             dgFundInfos.FindVisualTreeChilds(ref list);

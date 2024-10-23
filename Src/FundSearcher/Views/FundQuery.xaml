@@ -124,18 +124,18 @@
                 <DataGridTextColumn Header="资产规模(亿元)" Width="180" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource FundSizeConverter}">
+                            <Binding Source="{StaticResource StringFormatF2}"/>
                             <Binding Path="AssetSize"/>
                             <Binding Path="AssetDeadline"/>
-                            <Binding Source="{StaticResource StringFormatF2}"/>
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="份额规模(亿份)" Width="180" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource FundSizeConverter}">
+                            <Binding Source="{StaticResource StringFormatF4}"/>
                             <Binding Path="ShareSize"/>
                             <Binding Path="ShareDeadline"/>
-                            <Binding Source="{StaticResource StringFormatF4}"/>
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>

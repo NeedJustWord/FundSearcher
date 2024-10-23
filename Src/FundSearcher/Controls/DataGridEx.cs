@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -28,9 +29,19 @@ namespace FundSearcher.Controls
 
         private static void InternalSetHiddenColumns(DataGrid dg, List<string> hiddenColumns)
         {
+            Func<string, Visibility> func;
+            if (hiddenColumns?.Count > 0)
+            {
+                func = t => hiddenColumns.Contains(t) ? Visibility.Collapsed : Visibility.Visible;
+            }
+            else
+            {
+                func = t => Visibility.Visible;
+            }
+
             foreach (var column in dg.Columns)
             {
-                column.Visibility = hiddenColumns.Contains((string)column.Header) ? Visibility.Collapsed : Visibility.Visible;
+                column.Visibility = func((string)column.Header);
             }
         }
 

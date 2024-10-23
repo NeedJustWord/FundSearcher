@@ -18,6 +18,7 @@ namespace System
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
                 DateFormatString = "yyyy-MM-dd HH:mm:ss",
+                NullValueHandling = NullValueHandling.Ignore,
             };
             return JsonConvert.SerializeObject(t, Formatting.Indented, settings);
         }

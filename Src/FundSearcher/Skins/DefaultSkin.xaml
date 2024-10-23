@@ -11,6 +11,8 @@
 
     <sys:Double x:Key="QueryTextBoxHeight">25</sys:Double>
 
+    <sys:String x:Key="StringCounterIn">场内交易</sys:String>
+    <sys:String x:Key="StringCounterOut">场外交易</sys:String>
     <sys:String x:Key="StringRate">费率</sys:String>
     <sys:String x:Key="StringRateOriginal">原费率</sys:String>
     <sys:String x:Key="StringRateCardBuy">银行卡购买</sys:String>
@@ -20,6 +22,7 @@
     <sys:String x:Key="StringFormatF2">F2</sys:String>
     <sys:String x:Key="StringFormatF4">F4</sys:String>
 
+    <converters:CompareRateDisplayConverter x:Key="CompareRateDisplayConverter"/>
     <converters:DictRateConverter x:Key="DictRateConverter"/>
     <converters:FundSizeConverter x:Key="FundSizeConverter"/>
 
@@ -127,6 +130,7 @@
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="AutoGenerateColumns" Value="False"/>
         <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="Margin" Value="3"/>
         <Setter Property="LayoutTransform" Value="{StaticResource CompareLayoutTransform}"/>
         <Setter Property="RowStyle">
             <Setter.Value>
@@ -139,6 +143,7 @@
             <Setter.Value>
                 <Style TargetType="DataGridCell">
                     <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="Foreground" Value="Black"/>
                     <Setter Property="LayoutTransform" Value="{StaticResource CompareLayoutTransform}"/>
                 </Style>
             </Setter.Value>

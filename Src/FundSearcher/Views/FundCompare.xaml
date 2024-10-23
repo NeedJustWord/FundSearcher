@@ -26,40 +26,67 @@
             <Button Content="返回" Style="{StaticResource QueryButton}" Command="{Binding GoBackCommand}"/>
         </StackPanel>
 
-        <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource CompareDataGrid}" ItemsSource="{Binding FundInfos}">
+        <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Loaded="DataGrid_Loaded"
+                  Style="{StaticResource CompareDataGrid}" ItemsSource="{Binding FundInfos}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="序号" IsReadOnly="True" Binding="{Binding OrderNumber}"/>
                 <DataGridTextColumn Header="基金代码" IsReadOnly="True" Binding="{Binding FundId}"/>
                 <DataGridTextColumn Header="基金简称" IsReadOnly="True" Binding="{Binding FundName}"/>
-                <DataGridTextColumn Header="交易场所" IsReadOnly="True" Binding="{Binding Counter}"/>
-                <DataGridTextColumn Header="跟踪标的" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
+
+                <DataGridTextColumn IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="信息速览" FontWeight="Bold"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="成立日期" IsReadOnly="True" Binding="{Binding BirthDay,StringFormat=yyyy-MM-dd}"/>
                 <DataGridTextColumn Header="资产规模(亿元)" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource FundSizeConverter}">
-                            <Binding Path="AssetSize"/>
-                            <Binding Path="AssetDeadline"/>
                             <Binding Source="{StaticResource StringFormatF2}"/>
+                            <Binding Path="AssetSize"/>
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="份额规模(亿份)" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource FundSizeConverter}">
-                            <Binding Path="ShareSize"/>
-                            <Binding Path="ShareDeadline"/>
                             <Binding Source="{StaticResource StringFormatF4}"/>
+                            <Binding Path="ShareSize"/>
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="买入确认日" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyConfirmDate}"/>
-                <DataGridTextColumn Header="卖出确认日" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
+                <DataGridTextColumn Header="跟踪标的" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
+                <DataGridTextColumn Header="信息来源" IsReadOnly="True" Binding="{Binding FundInfoSource}"/>
+                <DataGridTextColumn Header="更新时间" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+
+                <DataGridTextColumn IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="交易信息" FontWeight="Bold"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="交易场所" IsReadOnly="True" Binding="{Binding Counter}"/>
+                <DataGridTextColumn Header="购买费率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource CompareRateDisplayConverter}">
+                            <Binding Path="Counter"/>
+                            <Binding Path="TransactionInfo.ApplyRates"/>
+                            <Binding Path="TransactionInfo.BuyRates"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="管理费率(每年)" IsReadOnly="True" Binding="{Binding TransactionInfo.ManageRate,StringFormat=0.00%}"/>
                 <DataGridTextColumn Header="托管费率(每年)" IsReadOnly="True" Binding="{Binding TransactionInfo.HostingRate,StringFormat=0.00%}"/>
                 <DataGridTextColumn Header="销售服务费率(每年)" IsReadOnly="True" Binding="{Binding TransactionInfo.SalesServiceRate,StringFormat=0.00%}"/>
                 <DataGridTextColumn Header="运作费用(每年)" IsReadOnly="True" Binding="{Binding TransactionInfo.RunningRate,StringFormat=0.00%}"/>
-                <DataGridTextColumn Header="信息来源" IsReadOnly="True" Binding="{Binding FundInfoSource}"/>
-                <DataGridTextColumn Header="更新时间" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+                <DataGridTextColumn Header="买入确认日" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyConfirmDate}"/>
+                <DataGridTextColumn Header="赎回费率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource CompareRateDisplayConverter}">
+                            <Binding Source="{StaticResource StringRateSell}"/>
+                            <Binding Path="TransactionInfo.SellRates"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="卖出确认日" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
             </DataGrid.Columns>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">

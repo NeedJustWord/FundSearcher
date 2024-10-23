@@ -31,13 +31,13 @@ namespace FundSearcher.Extensions
         /// <param name="obj"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static T FindVisualTreeChild<T>(this DependencyObject obj, string name) where T : FrameworkElement
+        public static T FindVisualTreeChild<T>(this DependencyObject obj, string name = null) where T : FrameworkElement
         {
             var count = VisualTreeHelper.GetChildrenCount(obj);
             for (int i = 0; i < count; i++)
             {
                 var child = VisualTreeHelper.GetChild(obj, i);
-                if (child is T t && t.Name == name) return t;
+                if (child is T t && (name == null || t.Name == name)) return t;
 
                 var result = FindVisualTreeChild<T>(child, name);
                 if (result != null) return result;
