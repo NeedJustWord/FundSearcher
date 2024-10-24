@@ -19,7 +19,7 @@ namespace Fund.Crawler.Webs
         {
         }
 
-        public async override Task<FundInfo> Start(CrawlerKey key)
+        public async override Task<FundInfo> Start(FundKey key)
         {
             return await Task.Run(async () =>
             {
@@ -36,12 +36,23 @@ namespace Fund.Crawler.Webs
             });
         }
 
+        public async override Task<IndexInfo> Start(IndexKey key)
+        {
+            return await Task.Run(async () =>
+            {
+                var info = CreateIndexInfo(key.IndexCode);
+                await GetIndexInfo(key, info);
+                return info;
+            });
+        }
+
+        #region 基本概况
         /// <summary>
         /// 基本概况
         /// </summary>
         /// <param name="key"></param>
         /// <param name="fundInfo"></param>
-        private async Task GetBaseInfo(CrawlerKey key, FundInfo fundInfo)
+        private async Task GetBaseInfo(FundKey key, FundInfo fundInfo)
         {
             var url = $"http://fundf10.eastmoney.com/jbgk_{key.FundId}.html";
             await StartSimpleCrawler(key, url, fundInfo, HandlerBaseInfoSource);
@@ -109,13 +120,15 @@ namespace Fund.Crawler.Webs
                 }
             }
         }
+        #endregion
 
+        #region 交易信息
         /// <summary>
         /// 交易信息
         /// </summary>
         /// <param name="key"></param>
         /// <param name="fundInfo"></param>
-        private async Task GetTransactionInfo(CrawlerKey key, FundInfo fundInfo)
+        private async Task GetTransactionInfo(FundKey key, FundInfo fundInfo)
         {
             var url = $"http://fundf10.eastmoney.com/jjfl_{key.FundId}.html";
             await StartSimpleCrawler(key, url, fundInfo, HandleTransactionInfoSource);
@@ -170,6 +183,40 @@ namespace Fund.Crawler.Webs
 
             fundInfo.TransactionInfo = info;
         }
+        #endregion
+
+        #region 指数相关基金信息
+        /// <summary>
+        /// 指数相关基金信息
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="info"></param>
+        private async Task GetIndexInfo(IndexKey key, IndexInfo info)
+        {
+            var url = $"https://zhishubao.1234567.com.cn/home/detail?code={key.IndexCode}";
+            await StartSimpleCrawler(key, url, info, HandleIndexInfoSource);
+        }
+
+        private void HandleIndexInfoSource(string pageSource, IndexInfo info)
+        {
+            info.IndexName = pageSource.GetFirstHtmlTagValueByAttri("div", "class", "subNav").GetHtmlTagValue("span", 1).GetHtmlTagContent().Replace("相关指数基金", "");
+
+            var rows = pageSource.GetFirstHtmlTagValueByAttri("table", "class", "index_concat_table show-all").GetFirstHtmlTagValue("tbody").GetHtmlTagValue("tr").ToList();
+            info.FundBaseInfos.Capacity = rows.Count;
+            var now = DateTime.Now;
+            foreach (var row in rows)
+            {
+                var td = row.GetFirstHtmlTagValue("td");
+                info.FundBaseInfos.Add(new FundBaseInfo
+                {
+                    InfoSource = SourceName,
+                    UpdateTime = now,
+                    FundId = td.GetFirstHtmlTagValue("p").GetHtmlTagContent(),
+                    FundName = td.GetFirstHtmlTagValue("a").GetHtmlTagContent(),
+                });
+            }
+        }
+        #endregion
 
         private List<TransactionRate> GetTransactionRates(string input)
         {

@@ -41,7 +41,7 @@ namespace Fund.DataBase
         {
             var files = Directory.GetFiles(".", $"{dbFileName}*.txt");
             var list = files.SelectMany(t => File.ReadAllText(t).FromJson<List<FundInfo>>())
-                .GroupBy(t => new FundKey(t.FundId, t.FundInfoSource))
+                .GroupBy(t => new FundKey(t.FundId, t.InfoSource))
                 .Select(t => t.OrderByDescending(x => x.UpdateTime).First());
             fundUpdate.Init(list);
             Save(files);

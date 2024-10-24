@@ -32,7 +32,7 @@ namespace Fund.DataBase
         {
             if (fundInfo == null) throw new ArgumentNullException($"{nameof(fundInfo)}为null");
 
-            return new FundKey(fundInfo.FundId, fundInfo.FundInfoSource);
+            return new FundKey(fundInfo.FundId, fundInfo.InfoSource);
         }
     }
 }

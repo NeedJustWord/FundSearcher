@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Crawler.SimpleCrawler;
 using Fund.Crawler.Models;
@@ -28,7 +29,14 @@ namespace Fund.Crawler.Webs
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public abstract Task<FundInfo> Start(CrawlerKey key);
+        public abstract Task<FundInfo> Start(FundKey key);
+
+        /// <summary>
+        /// 根据key爬取指数相关基金信息
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public abstract Task<IndexInfo> Start(IndexKey key);
 
         /// <summary>
         /// 创建基金信息
@@ -39,9 +47,25 @@ namespace Fund.Crawler.Webs
         {
             return new FundInfo
             {
-                FundInfoSource = SourceName,
-                FundId = fundId,
+                InfoSource = SourceName,
                 UpdateTime = DateTime.Now,
+                FundId = fundId,
+            };
+        }
+
+        /// <summary>
+        /// 创建指数信息
+        /// </summary>
+        /// <param name="indexCode"></param>
+        /// <returns></returns>
+        protected IndexInfo CreateIndexInfo(string indexCode)
+        {
+            return new IndexInfo
+            {
+                InfoSource = SourceName,
+                UpdateTime = DateTime.Now,
+                IndexCode = indexCode,
+                FundBaseInfos = new List<FundBaseInfo>(),
             };
         }
 
@@ -50,10 +74,10 @@ namespace Fund.Crawler.Webs
         /// </summary>
         /// <param name="key">爬取信息key</param>
         /// <param name="url">爬虫URL地址</param>
-        /// <param name="fundInfo">基金信息</param>
+        /// <param name="info">爬取信息</param>
         /// <param name="action">页面源码处理方法</param>
         /// <returns></returns>
-        protected async Task<string> StartSimpleCrawler(CrawlerKey key, string url, FundInfo fundInfo, Action<string, FundInfo> action)
+        protected async Task<string> StartSimpleCrawler<TInfo>(BaseKey key, string url, TInfo info, Action<string, TInfo> action)
         {
             var crawler = new SimpleCrawler();
             crawler.OnStartEvent += (sender, args) =>
@@ -71,7 +95,7 @@ namespace Fund.Crawler.Webs
             {
                 var keyStr = key.GetKey(url);
                 WriteLog($"{args.ThreadId} {keyStr}爬取结束，开始处理");
-                action?.Invoke(args.PageSource, fundInfo);
+                action?.Invoke(args.PageSource, info);
                 WriteLog($"{args.ThreadId} {keyStr}处理结束");
             };
             return await crawler.Start(url);

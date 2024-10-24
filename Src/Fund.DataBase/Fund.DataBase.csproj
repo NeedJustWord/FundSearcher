@@ -42,22 +42,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\FundInfoExtension.cs" />
-    <Compile Include="Extensions\JsonExtension.cs" />
     <Compile Include="FundDataBase.cs" />
     <Compile Include="FundKey.cs" />
     <Compile Include="FundUpdate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fund.Core\Fund.Core.csproj">
+      <Project>{0d6ac1fc-2927-42ba-af8c-fa59946830fe}</Project>
+      <Name>Fund.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fund.Crawler\Fund.Crawler.csproj">
       <Project>{647e6585-6ff1-42a5-a7a8-12ee67ca44c6}</Project>
       <Name>Fund.Crawler</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -49,7 +49,7 @@ namespace Fund.Crawler
                     Parallel.ForEach(fundIds, (fundId, pls, index) =>
                     {
                         if (string.IsNullOrWhiteSpace(fundId)) return;
-                        result.Add(WebCrawler.Start(new CrawlerKey(index, fundId)).Result);
+                        result.Add(WebCrawler.Start(new FundKey(index, fundId)).Result);
                     });
                 }
                 return result;

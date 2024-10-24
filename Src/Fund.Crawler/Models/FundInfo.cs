@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Prism.Mvvm;
 
 namespace Fund.Crawler.Models
 {
     /// <summary>
     /// 基金信息
     /// </summary>
-    public class FundInfo : BindableBase
+    public class FundInfo : FundBaseInfo
     {
         private bool isChecked;
         /// <summary>
@@ -74,46 +73,6 @@ namespace Fund.Crawler.Models
         {
             get { return sellRatesHiddenColumns; }
             set { SetProperty(ref sellRatesHiddenColumns, value); }
-        }
-
-        private DateTime updateTime;
-        /// <summary>
-        /// 更新时间
-        /// </summary>
-        public DateTime UpdateTime
-        {
-            get { return updateTime; }
-            set { SetProperty(ref updateTime, value); }
-        }
-
-        private string fundInfoSource;
-        /// <summary>
-        /// 基金信息来源
-        /// </summary>
-        public string FundInfoSource
-        {
-            get { return fundInfoSource; }
-            set { SetProperty(ref fundInfoSource, value); }
-        }
-
-        private string fundId;
-        /// <summary>
-        /// 基金代码
-        /// </summary>
-        public string FundId
-        {
-            get { return fundId; }
-            set { SetProperty(ref fundId, value); }
-        }
-
-        private string fundName;
-        /// <summary>
-        /// 基金简称
-        /// </summary>
-        public string FundName
-        {
-            get { return fundName; }
-            set { SetProperty(ref fundName, value); }
         }
 
         private string fundFullName;
