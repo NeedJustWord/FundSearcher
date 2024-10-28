@@ -64,6 +64,10 @@
       <Project>{f78b4dd9-cdcf-4999-991c-f614c6447097}</Project>
       <Name>Crawler.SimpleCrawler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fund.Core\Fund.Core.csproj">
+      <Project>{0d6ac1fc-2927-42ba-af8c-fa59946830fe}</Project>
+      <Name>Fund.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">

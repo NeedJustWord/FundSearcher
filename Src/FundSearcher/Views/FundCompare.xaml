@@ -54,6 +54,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
+                <DataGridTextColumn Header="基金类别" IsReadOnly="True" Binding="{Binding FundClass}"/>
                 <DataGridTextColumn Header="跟踪标的" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
                 <DataGridTextColumn Header="信息来源" IsReadOnly="True" Binding="{Binding InfoSource}"/>
                 <DataGridTextColumn Header="更新时间" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>

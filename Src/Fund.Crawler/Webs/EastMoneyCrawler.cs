@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Crawler.DataHandler.Extensions;
+using Fund.Core.Extensions;
 using Fund.Crawler.Models;
 
 namespace Fund.Crawler.Webs
@@ -102,8 +103,8 @@ namespace Fund.Crawler.Webs
                     case "成立日期/规模":
                         {
                             var tmp = value.Split('/');
-                            fundInfo.BirthDay = DateTime.Parse(tmp[0].TrimEnd());
-                            fundInfo.BirthSize = tmp[1].Contains("--") ? (double?)null : GetSize(tmp[1].TrimStart());
+                            fundInfo.BirthDay = tmp[0].IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(tmp[0].TrimEnd());
+                            fundInfo.BirthSize = GetSize(tmp[1].TrimStart());
                         }
                         break;
                     case "资产规模":
@@ -115,7 +116,7 @@ namespace Fund.Crawler.Webs
                         fundInfo.ShareDeadline = GetDeadline(value);
                         break;
                     case "跟踪标的":
-                        fundInfo.TrackingTarget = value;
+                        fundInfo.TrackingTarget = value.IsNullOrEmpty() || value == "该基金无跟踪标的" ? "无" : value;
                         break;
                 }
             }
@@ -298,15 +299,16 @@ namespace Fund.Crawler.Webs
             return result;
         }
 
-        private double GetSize(string str)
+        private double? GetSize(string str)
         {
+            if (str.All(t => t == '-')) return null;
             return double.Parse(str.Substring(0, str.IndexOf("亿")));
         }
 
-        private DateTime GetDeadline(string str)
+        private DateTime? GetDeadline(string str)
         {
-            var index = str.IndexOf("：");
-            return DateTime.Parse(str.Substring(index + 1, 11));
+            if (str.All(t => t == '-')) return null;
+            return DateTime.Parse(str.Substring(str.IndexOf("：") + 1, 11));
         }
 
         private double GetRate(string str)

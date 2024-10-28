@@ -76,7 +76,6 @@
     <Compile Include="Extensions\DataGridExtension.cs" />
     <Compile Include="Extensions\DependencyObjectExtension.cs" />
     <Compile Include="Extensions\IEventAggregatorExtension.cs" />
-    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Models\FilterModel.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="PubSubEvents\FundCompareFilterModelClickEvent.cs" />
@@ -130,6 +129,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fund.Core\Fund.Core.csproj">
+      <Project>{0d6ac1fc-2927-42ba-af8c-fa59946830fe}</Project>
+      <Name>Fund.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fund.Crawler\Fund.Crawler.csproj">
       <Project>{647e6585-6ff1-42a5-a7a8-12ee67ca44c6}</Project>
       <Name>Fund.Crawler</Name>

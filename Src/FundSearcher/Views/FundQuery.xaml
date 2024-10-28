@@ -69,6 +69,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -80,19 +81,23 @@
             </Border>
             <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding QueryFundId}"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Content="跟踪标的：" Style="{StaticResource QueryLabel}"/>
+            <Label Grid.Row="1" Grid.Column="0" Content="基金类别：" Style="{StaticResource QueryLabel}"/>
             <ListView Grid.Row="1" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
-                      ItemsSource="{Binding TrackingTargets}" SelectedItem="{Binding SelectTrackingTarget}"/>
+                      ItemsSource="{Binding FundClasses}" SelectedItem="{Binding SelectFundClass}"/>
 
-            <Label Grid.Row="2" Grid.Column="0" Content="运作费率：" Style="{StaticResource QueryLabel}"/>
+            <Label Grid.Row="2" Grid.Column="0" Content="交易场所：" Style="{StaticResource QueryLabel}"/>
             <ListView Grid.Row="2" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
-                      ItemsSource="{Binding RunningRates}" SelectedItem="{Binding SelectRunningRate}"/>
-
-            <Label Grid.Row="3" Grid.Column="0" Content="交易场所：" Style="{StaticResource QueryLabel}"/>
-            <ListView Grid.Row="3" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
                       ItemsSource="{Binding Counters}" SelectedItem="{Binding SelectCounter}"/>
 
-            <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Label Grid.Row="3" Grid.Column="0" Content="跟踪标的：" Style="{StaticResource QueryLabel}"/>
+            <ListView Grid.Row="3" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                      ItemsSource="{Binding TrackingTargets}" SelectedItem="{Binding SelectTrackingTarget}"/>
+
+            <Label Grid.Row="4" Grid.Column="0" Content="运作费率：" Style="{StaticResource QueryLabel}"/>
+            <ListView Grid.Row="4" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                      ItemsSource="{Binding RunningRates}" SelectedItem="{Binding SelectRunningRate}"/>
+
+            <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                 <Button Content="查询" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Query}"/>
@@ -119,6 +124,7 @@
                 <DataGridTextColumn Header="基金代码" Width="60" IsReadOnly="True" Binding="{Binding FundId}"/>
                 <DataGridTextColumn Header="基金简称" Width="320" IsReadOnly="True" Binding="{Binding FundName}"/>
                 <DataGridTextColumn Header="交易场所" Width="60" IsReadOnly="True" Binding="{Binding Counter}"/>
+                <DataGridTextColumn Header="基金类别" Width="60" IsReadOnly="True" Binding="{Binding FundClass}"/>
                 <DataGridTextColumn Header="跟踪标的" Width="120" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
                 <DataGridTextColumn Header="成立日期" Width="80" IsReadOnly="True" Binding="{Binding BirthDay,StringFormat=yyyy-MM-dd}"/>
                 <DataGridTextColumn Header="资产规模(亿元)" Width="180" IsReadOnly="True">

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Fund.Core.Extensions;
 using Fund.Crawler.Models;
 using Fund.DataBase;
 using FundSearcher.Consts;
@@ -135,6 +136,38 @@ namespace FundSearcher.Views
             }
         }
         #endregion
+
+        #region 基金类别
+        private ObservableCollection<FilterModel> fundClasses = new ObservableCollection<FilterModel>();
+        /// <summary>
+        /// 基金类别
+        /// </summary>
+        public ObservableCollection<FilterModel> FundClasses
+        {
+            get { return fundClasses; }
+            set { SetProperty(ref fundClasses, value); }
+        }
+
+        private FilterModel lastSelectFundClass;
+        private FilterModel selectFundClass;
+        /// <summary>
+        /// 选中基金类别
+        /// </summary>
+        public FilterModel SelectFundClass
+        {
+            get { return selectFundClass; }
+            set
+            {
+                if (lastSelectFundClass != null && lastSelectFundClass != value) lastSelectFundClass.IsSelected = false;
+                if (SetProperty(ref selectFundClass, value) && filter)
+                {
+                    lastSelectFundClass = value;
+                    value.IsSelected = true;
+                    Filter();
+                }
+            }
+        }
+        #endregion
         #endregion
 
         public FundQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator)
@@ -145,6 +178,7 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.Refresh, Refresh);
             RegisterCommand(CommandName.Compare, Compare);
             InitCounters();
+            InitFundClasses();
         }
 
         protected override void OnLoaded()
@@ -286,6 +320,7 @@ namespace FundSearcher.Views
             if (SelectTrackingTarget.Key.IsNotNullAndEmpty() && fund.TrackingTarget != SelectTrackingTarget.Key) return false;
             if (SelectRunningRate.Key.IsNotNullAndEmpty() && fund.TransactionInfo.RunningRateStr != SelectRunningRate.Key) return false;
             if (SelectCounter.Key.IsNotNullAndEmpty() && fund.Counter != SelectCounter.Key) return false;
+            if (SelectFundClass.Key.IsNotNullAndEmpty() && fund.FundClass != SelectFundClass.Key) return false;
             return true;
         }
 
@@ -303,6 +338,9 @@ namespace FundSearcher.Views
 
             lastKey = isRefresh ? SelectCounter?.Key : "";
             lastSelectCounter = SelectCounter = GetDefaultSelectItem(Counters, lastKey);
+
+            lastKey = isRefresh ? SelectFundClass?.Key : "";
+            lastSelectFundClass = SelectFundClass = GetDefaultSelectItem(FundClasses, lastKey);
 
             filter = true;
         }
@@ -334,6 +372,14 @@ namespace FundSearcher.Views
             Counters.Add(new FilterModel("", "全部"));
             Counters.Add(new FilterModel("场内交易", "场内交易"));
             Counters.Add(new FilterModel("场外交易", "场外交易"));
+        }
+
+        private void InitFundClasses()
+        {
+            FundClasses.Clear();
+            FundClasses.Add(new FilterModel("", "全部"));
+            FundClasses.Add(new FilterModel("A类", "A类"));
+            FundClasses.Add(new FilterModel("C类", "C类"));
         }
     }
 }

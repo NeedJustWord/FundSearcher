@@ -75,6 +75,12 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref sellRatesHiddenColumns, value); }
         }
 
+        /// <summary>
+        /// 基金类别
+        /// </summary>
+        [JsonIgnore]
+        public string FundClass => FundName.Contains("C") ? "C类" : "A类";
+
         private string fundFullName;
         /// <summary>
         /// 基金全称
@@ -115,11 +121,11 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref issueDay, value); }
         }
 
-        private DateTime birthDay;
+        private DateTime? birthDay;
         /// <summary>
         /// 成立日期
         /// </summary>
-        public DateTime BirthDay
+        public DateTime? BirthDay
         {
             get { return birthDay; }
             set { SetProperty(ref birthDay, value); }
@@ -135,41 +141,41 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref birthSize, value); }
         }
 
-        private double assetSize;
+        private double? assetSize;
         /// <summary>
         /// 资产规模(亿元)
         /// </summary>
-        public double AssetSize
+        public double? AssetSize
         {
             get { return assetSize; }
             set { SetProperty(ref assetSize, value); }
         }
 
-        private DateTime assetDeadline;
+        private DateTime? assetDeadline;
         /// <summary>
         /// 资产规模截止日
         /// </summary>
-        public DateTime AssetDeadline
+        public DateTime? AssetDeadline
         {
             get { return assetDeadline; }
             set { SetProperty(ref assetDeadline, value); }
         }
 
-        private double shareSize;
+        private double? shareSize;
         /// <summary>
         /// 份额规模(亿份)
         /// </summary>
-        public double ShareSize
+        public double? ShareSize
         {
             get { return shareSize; }
             set { SetProperty(ref shareSize, value); }
         }
 
-        private DateTime shareDeadline;
+        private DateTime? shareDeadline;
         /// <summary>
         /// 份额规模截止日
         /// </summary>
-        public DateTime ShareDeadline
+        public DateTime? ShareDeadline
         {
             get { return shareDeadline; }
             set { SetProperty(ref shareDeadline, value); }
