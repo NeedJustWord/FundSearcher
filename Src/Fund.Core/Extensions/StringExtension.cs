@@ -16,5 +16,10 @@
         {
             return string.IsNullOrWhiteSpace(str);
         }
+
+        public static double AsDouble(this string str)
+        {
+            return str.EndsWith("%") ? double.Parse(str.Substring(0, str.Length - 1)) / 100 : double.Parse(str);
+        }
     }
 }
