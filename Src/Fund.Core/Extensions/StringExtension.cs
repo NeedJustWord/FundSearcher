@@ -17,9 +17,14 @@
             return string.IsNullOrWhiteSpace(str);
         }
 
-        public static double AsDouble(this string str)
+        public static double AsDouble(this string str, double nullAsValue)
         {
-            return str.EndsWith("%") ? double.Parse(str.Substring(0, str.Length - 1)) / 100 : double.Parse(str);
+            if (str.EndsWith("%"))
+            {
+                return double.Parse(str.Substring(0, str.Length - 1)) / 100;
+            }
+
+            return double.TryParse(str, out var value) ? value : nullAsValue;
         }
     }
 }

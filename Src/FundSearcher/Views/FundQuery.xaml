@@ -70,6 +70,8 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -89,18 +91,29 @@
             <ListView Grid.Row="2" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
                       ItemsSource="{Binding Counters}" SelectedItem="{Binding SelectCounter}"/>
 
-            <Label Grid.Row="3" Grid.Column="0" Content="跟踪标的：" Style="{StaticResource QueryLabel}"/>
+            <Label Grid.Row="3" Grid.Column="0" Content="申购状态：" Style="{StaticResource QueryLabel}"/>
             <ListView Grid.Row="3" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                      ItemsSource="{Binding BuyStatuses}" SelectedItem="{Binding SelectBuyStatus}"/>
+
+            <Label Grid.Row="4" Grid.Column="0" Content="赎回状态：" Style="{StaticResource QueryLabel}"/>
+            <ListView Grid.Row="4" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                      ItemsSource="{Binding SellStatuses}" SelectedItem="{Binding SelectSellStatus}"/>
+
+            <Label Grid.Row="5" Grid.Column="0" Content="跟踪标的：" Style="{StaticResource QueryLabel}"/>
+            <ListView Grid.Row="5" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
                       ItemsSource="{Binding TrackingTargets}" SelectedItem="{Binding SelectTrackingTarget}"/>
 
-            <Label Grid.Row="4" Grid.Column="0" Content="运作费率：" Style="{StaticResource QueryLabel}"/>
-            <ListView Grid.Row="4" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+            <Label Grid.Row="6" Grid.Column="0" Content="运作费率：" Style="{StaticResource QueryLabel}"/>
+            <ListView Grid.Row="6" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
                       ItemsSource="{Binding RunningRates}" SelectedItem="{Binding SelectRunningRate}"/>
 
-            <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                 <Button Content="查询" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Query}"/>
+                <Button Content="重置" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}"
+                        CommandParameter="{x:Static consts:CommandName.Reset}"/>
                 <Button Content="刷新" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Refresh}"/>
@@ -124,6 +137,8 @@
                 <DataGridTextColumn Header="基金代码" Width="60" IsReadOnly="True" Binding="{Binding FundId}"/>
                 <DataGridTextColumn Header="基金简称" Width="320" IsReadOnly="True" Binding="{Binding FundName}"/>
                 <DataGridTextColumn Header="交易场所" Width="60" IsReadOnly="True" Binding="{Binding Counter}"/>
+                <DataGridTextColumn Header="申购状态" Width="60" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyStatus}"/>
+                <DataGridTextColumn Header="赎回状态" Width="60" IsReadOnly="True" Binding="{Binding TransactionInfo.SellStatus}"/>
                 <DataGridTextColumn Header="基金类别" Width="60" IsReadOnly="True" Binding="{Binding FundClass}"/>
                 <DataGridTextColumn Header="跟踪标的" Width="120" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
                 <DataGridTextColumn Header="成立日期" Width="80" IsReadOnly="True" Binding="{Binding BirthDay,StringFormat=yyyy-MM-dd}"/>
@@ -147,9 +162,7 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="买入确认日" Width="80" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyConfirmDate}"/>
                 <DataGridTextColumn Header="卖出确认日" Width="80" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
-                <DataGridTextColumn Header="管理费率(每年)" Width="90" IsReadOnly="True" Binding="{Binding TransactionInfo.ManageRate,StringFormat=0.00%}"/>
-                <DataGridTextColumn Header="托管费率(每年)" Width="90" IsReadOnly="True" Binding="{Binding TransactionInfo.HostingRate,StringFormat=0.00%}"/>
-                <DataGridTextColumn Header="销售服务费率(每年)" Width="120" IsReadOnly="True" Binding="{Binding TransactionInfo.SalesServiceRate,StringFormat=0.00%}"/>
+                <DataGridTextColumn Header="日累计申购限额(元)" Width="120" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
                 <DataGridTextColumn Header="运作费用(每年)" Width="90" IsReadOnly="True" Binding="{Binding TransactionInfo.RunningRate,StringFormat=0.00%}"/>
                 <DataGridTextColumn Header="信息来源" Width="60" IsReadOnly="True" Binding="{Binding InfoSource}"/>
                 <DataGridTextColumn Header="更新时间" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>

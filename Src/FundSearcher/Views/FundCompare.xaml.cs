@@ -42,6 +42,7 @@ namespace FundSearcher.Views
 
             var maxColumns = new string[]
             {
+                "日累计申购限额(元)",
                 "资产规模(亿元)",
                 "份额规模(亿份)",
             };
@@ -53,16 +54,18 @@ namespace FundSearcher.Views
                 "销售服务费率(每年)",
                 "运作费用(每年)",
             };
+            string header;
             var resultCells = new List<DataGridCell>();
             for (int column = 0; column < dg.Columns.Count; column++)
             {
-                if (maxColumns.Contains(dg.Columns[column].Header.ToString()))
+                header = dg.Columns[column].Header.ToString();
+                if (maxColumns.Contains(header))
                 {
-                    SetColumnHightLight(dg, column, double.MinValue, Math.Max, ref resultCells);
+                    SetColumnHightLight(dg, column, double.MinValue, double.MaxValue, Math.Max, ref resultCells);
                 }
-                else if (minColumns.Contains(dg.Columns[column].Header.ToString()))
+                else if (minColumns.Contains(header))
                 {
-                    SetColumnHightLight(dg, column, double.MaxValue, Math.Min, ref resultCells);
+                    SetColumnHightLight(dg, column, double.MaxValue, double.MinValue, Math.Min, ref resultCells);
                 }
             }
         }
@@ -79,7 +82,7 @@ namespace FundSearcher.Views
             }
         }
 
-        private void SetColumnHightLight(DataGrid dg, int column, double value, Func<double, double, double> compare, ref List<DataGridCell> resultCells)
+        private void SetColumnHightLight(DataGrid dg, int column, double value, double nullAsValue, Func<double, double, double> compare, ref List<DataGridCell> resultCells)
         {
             DataGridCell cell;
             double cellValue, compareValue;
@@ -88,7 +91,7 @@ namespace FundSearcher.Views
                 cell = dg.GetCell(row, column);
                 if (cell == null) continue;
 
-                cellValue = ((TextBlock)cell.Content).Text.AsDouble();
+                cellValue = ((TextBlock)cell.Content).Text.AsDouble(nullAsValue);
                 compareValue = compare(value, cellValue);
                 if (value != compareValue)
                 {

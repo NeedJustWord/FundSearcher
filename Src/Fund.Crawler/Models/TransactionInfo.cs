@@ -9,6 +9,36 @@ namespace Fund.Crawler.Models
     /// </summary>
     public class TransactionInfo : BindableBase
     {
+        private double? buyUpperLimitAmount;
+        /// <summary>
+        /// 日累计申购限额，单位元
+        /// </summary>
+        public double? BuyUpperLimitAmount
+        {
+            get { return buyUpperLimitAmount; }
+            set { SetProperty(ref buyUpperLimitAmount, value); }
+        }
+
+        private string buyStatus;
+        /// <summary>
+        /// 申购状态
+        /// </summary>
+        public string BuyStatus
+        {
+            get { return buyStatus; }
+            set { SetProperty(ref buyStatus, value); }
+        }
+
+        private string sellStatus;
+        /// <summary>
+        /// 赎回状态
+        /// </summary>
+        public string SellStatus
+        {
+            get { return sellStatus; }
+            set { SetProperty(ref sellStatus, value); }
+        }
+
         private string buyConfirmDate;
         /// <summary>
         /// 买入确认日

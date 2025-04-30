@@ -153,7 +153,7 @@ namespace Fund.Crawler.Webs
                 {
                     case "交易确认日":
                         var temp = item.Value.GetHtmlTagValue("td").ToList();
-                        if (temp.Count > 0)
+                        if (temp.Count > 3)
                         {
                             info.BuyConfirmDate = temp[1].GetHtmlTagContent();
                             info.SellConfirmDate = temp[3].GetHtmlTagContent();
@@ -161,9 +161,27 @@ namespace Fund.Crawler.Webs
                         break;
                     case "运作费用":
                         temp = item.Value.GetHtmlTagValue("td").ToList();
-                        info.ManageRate = GetRate(temp[1].GetHtmlTagContent());
-                        info.HostingRate = GetRate(temp[3].GetHtmlTagContent());
-                        info.SalesServiceRate = GetRate(temp[5].GetHtmlTagContent());
+                        if (temp.Count > 5)
+                        {
+                            info.ManageRate = GetRate(temp[1].GetHtmlTagContent());
+                            info.HostingRate = GetRate(temp[3].GetHtmlTagContent());
+                            info.SalesServiceRate = GetRate(temp[5].GetHtmlTagContent());
+                        }
+                        break;
+                    case "交易状态":
+                        temp = item.Value.GetHtmlTagValue("td").ToList();
+                        if (temp.Count > 3)
+                        {
+                            info.BuyStatus = temp[1].GetHtmlTagContent();
+                            info.SellStatus = temp[3].GetHtmlTagContent();
+                        }
+                        break;
+                    case "申购与赎回金额":
+                        temp = item.Value.GetHtmlTagValue("td").ToList();
+                        if (temp.Count > 5)
+                        {
+                            info.BuyUpperLimitAmount = GetYuanAmount(temp[5].GetHtmlTagContent());
+                        }
                         break;
                     default:
                         if (item.Key.Contains("认购费率"))
@@ -316,6 +334,25 @@ namespace Fund.Crawler.Webs
             if (str == "---") return 0;
             if (str.IndexOf("每年") == -1) return -1;
             return double.Parse(str.Substring(0, str.IndexOf('%'))) / 100;
+        }
+
+        private double? GetYuanAmount(string str)
+        {
+            if (str == null) return null;
+
+            if (str.EndsWith("元"))
+            {
+                str = str.TrimEnd('元');
+                int factor = 1;
+                if (str.EndsWith("万"))
+                {
+                    str = str.TrimEnd('万');
+                    factor = 10000;
+                }
+                return double.Parse(str) * factor;
+            }
+
+            return null;
         }
     }
 }

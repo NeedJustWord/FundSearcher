@@ -14,5 +14,9 @@
         /// 比较命令
         /// </summary>
         public const string Compare = "CompareCommand";
+        /// <summary>
+        /// 重置命令
+        /// </summary>
+        public const string Reset = "ResetCommand";
     }
 }

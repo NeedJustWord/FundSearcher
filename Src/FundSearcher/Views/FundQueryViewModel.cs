@@ -41,6 +41,70 @@ namespace FundSearcher.Views
             set { SetProperty(ref queryFundId, value); }
         }
 
+        #region 申购状态
+        private ObservableCollection<FilterModel> buyStatuses = new ObservableCollection<FilterModel>();
+        /// <summary>
+        /// 申购状态
+        /// </summary>
+        public ObservableCollection<FilterModel> BuyStatuses
+        {
+            get { return buyStatuses; }
+            set { SetProperty(ref buyStatuses, value); }
+        }
+
+        private FilterModel lastSelectBuyStatus;
+        private FilterModel selectBuyStatus;
+        /// <summary>
+        /// 选中申购状态
+        /// </summary>
+        public FilterModel SelectBuyStatus
+        {
+            get { return selectBuyStatus; }
+            set
+            {
+                if (lastSelectBuyStatus != null) lastSelectBuyStatus.IsSelected = false;
+                if (SetProperty(ref selectBuyStatus, value))
+                {
+                    lastSelectBuyStatus = value;
+                    value.IsSelected = true;
+                    if (filter) Filter();
+                }
+            }
+        }
+        #endregion
+
+        #region 赎回状态
+        private ObservableCollection<FilterModel> sellStatuses = new ObservableCollection<FilterModel>();
+        /// <summary>
+        /// 赎回状态
+        /// </summary>
+        public ObservableCollection<FilterModel> SellStatuses
+        {
+            get { return sellStatuses; }
+            set { SetProperty(ref sellStatuses, value); }
+        }
+
+        private FilterModel lastSelectSellStatus;
+        private FilterModel selectSellStatus;
+        /// <summary>
+        /// 选中赎回状态
+        /// </summary>
+        public FilterModel SelectSellStatus
+        {
+            get { return selectSellStatus; }
+            set
+            {
+                if (lastSelectSellStatus != null) lastSelectSellStatus.IsSelected = false;
+                if (SetProperty(ref selectSellStatus, value))
+                {
+                    lastSelectSellStatus = value;
+                    value.IsSelected = true;
+                    if (filter) Filter();
+                }
+            }
+        }
+        #endregion
+
         #region 跟踪标的
         private ObservableCollection<FilterModel> trackingTargets = new ObservableCollection<FilterModel>();
         /// <summary>
@@ -63,11 +127,11 @@ namespace FundSearcher.Views
             set
             {
                 if (lastSelectTrackingTarget != null) lastSelectTrackingTarget.IsSelected = false;
-                if (SetProperty(ref selectTrackingTarget, value) && filter)
+                if (SetProperty(ref selectTrackingTarget, value))
                 {
                     lastSelectTrackingTarget = value;
                     value.IsSelected = true;
-                    Filter();
+                    if (filter) Filter();
                 }
             }
         }
@@ -95,11 +159,11 @@ namespace FundSearcher.Views
             set
             {
                 if (lastSelectRunningRate != null) lastSelectRunningRate.IsSelected = false;
-                if (SetProperty(ref selectRunningRate, value) && filter)
+                if (SetProperty(ref selectRunningRate, value))
                 {
                     lastSelectRunningRate = value;
                     value.IsSelected = true;
-                    Filter();
+                    if (filter) Filter();
                 }
             }
         }
@@ -127,11 +191,11 @@ namespace FundSearcher.Views
             set
             {
                 if (lastSelectCounter != null && lastSelectCounter != value) lastSelectCounter.IsSelected = false;
-                if (SetProperty(ref selectCounter, value) && filter)
+                if (SetProperty(ref selectCounter, value))
                 {
                     lastSelectCounter = value;
                     value.IsSelected = true;
-                    Filter();
+                    if (filter) Filter();
                 }
             }
         }
@@ -159,11 +223,11 @@ namespace FundSearcher.Views
             set
             {
                 if (lastSelectFundClass != null && lastSelectFundClass != value) lastSelectFundClass.IsSelected = false;
-                if (SetProperty(ref selectFundClass, value) && filter)
+                if (SetProperty(ref selectFundClass, value))
                 {
                     lastSelectFundClass = value;
                     value.IsSelected = true;
-                    Filter();
+                    if (filter) Filter();
                 }
             }
         }
@@ -177,6 +241,7 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.Query, Query);
             RegisterCommand(CommandName.Refresh, Refresh);
             RegisterCommand(CommandName.Compare, Compare);
+            RegisterCommand(CommandName.Reset, Reset);
             InitCounters();
             InitFundClasses();
         }
@@ -270,8 +335,24 @@ namespace FundSearcher.Views
             Navigate(NavigateName.FundCompare, param);
         }
 
+        private void Reset()
+        {
+            filter = false;
+            QueryFundId = null;
+            SelectBuyStatus = BuyStatuses.FirstOrDefault();
+            SelectSellStatus = SellStatuses.FirstOrDefault();
+            SelectTrackingTarget = TrackingTargets.FirstOrDefault();
+            SelectRunningRate = RunningRates.FirstOrDefault();
+            SelectCounter = Counters.FirstOrDefault();
+            SelectFundClass = FundClasses.FirstOrDefault();
+            Filter();
+            filter = true;
+        }
+
         private FundInfo Handle(FundInfo model)
         {
+            if (model.TransactionInfo == null) return model;
+
             var rateNames = GetRateNames(model.TransactionInfo.ApplyRates);
             model.ApplyRatesHiddenColumns = applyRateColumnNames.Except(rateNames).ToList();
 
@@ -318,7 +399,9 @@ namespace FundSearcher.Views
         private bool IsShow(FundInfo fund)
         {
             if (SelectTrackingTarget.Key.IsNotNullAndEmpty() && fund.TrackingTarget != SelectTrackingTarget.Key) return false;
-            if (SelectRunningRate.Key.IsNotNullAndEmpty() && fund.TransactionInfo.RunningRateStr != SelectRunningRate.Key) return false;
+            if (SelectBuyStatus.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.BuyStatus != SelectBuyStatus.Key)) return false;
+            if (SelectSellStatus.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.SellStatus != SelectSellStatus.Key)) return false;
+            if (SelectRunningRate.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.RunningRateStr != SelectRunningRate.Key)) return false;
             if (SelectCounter.Key.IsNotNullAndEmpty() && fund.Counter != SelectCounter.Key) return false;
             if (SelectFundClass.Key.IsNotNullAndEmpty() && fund.FundClass != SelectFundClass.Key) return false;
             return true;
@@ -335,6 +418,14 @@ namespace FundSearcher.Views
             lastKey = isRefresh ? SelectRunningRate?.Key : "";
             InitRunningRates();
             lastSelectRunningRate = SelectRunningRate = GetDefaultSelectItem(RunningRates, lastKey);
+
+            lastKey = isRefresh ? SelectBuyStatus?.Key : "";
+            InitBuyStatuses();
+            lastSelectBuyStatus = SelectBuyStatus = GetDefaultSelectItem(BuyStatuses, lastKey);
+
+            lastKey = isRefresh ? SelectSellStatus?.Key : "";
+            InitSellStatuses();
+            lastSelectSellStatus = SelectSellStatus = GetDefaultSelectItem(SellStatuses, lastKey);
 
             lastKey = isRefresh ? SelectCounter?.Key : "";
             lastSelectCounter = SelectCounter = GetDefaultSelectItem(Counters, lastKey);
@@ -359,11 +450,25 @@ namespace FundSearcher.Views
             TrackingTargets.AddRange(fundDataBase.FundInfos.Select(t => new FilterModel(t.TrackingTarget, t.TrackingTarget)).Distinct(FilterModelEqualityComparer.Instance));
         }
 
+        private void InitBuyStatuses()
+        {
+            BuyStatuses.Clear();
+            BuyStatuses.Add(new FilterModel("", "全部"));
+            BuyStatuses.AddRange(fundDataBase.FundInfos.Where(t => t.TransactionInfo != null).Select(t => new FilterModel(t.TransactionInfo.BuyStatus, t.TransactionInfo.BuyStatus)).Distinct(FilterModelEqualityComparer.Instance));
+        }
+
+        private void InitSellStatuses()
+        {
+            SellStatuses.Clear();
+            SellStatuses.Add(new FilterModel("", "全部"));
+            SellStatuses.AddRange(fundDataBase.FundInfos.Where(t => t.TransactionInfo != null).Select(t => new FilterModel(t.TransactionInfo.SellStatus, t.TransactionInfo.SellStatus)).Distinct(FilterModelEqualityComparer.Instance));
+        }
+
         private void InitRunningRates()
         {
             RunningRates.Clear();
             RunningRates.Add(new FilterModel("", "全部"));
-            RunningRates.AddRange(fundDataBase.FundInfos.Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, t.TransactionInfo.RunningRate.ToString("P2"))).Distinct(FilterModelEqualityComparer.Instance).OrderBy(t => t.Key));
+            RunningRates.AddRange(fundDataBase.FundInfos.Where(t => t.TransactionInfo != null).Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, t.TransactionInfo.RunningRate.ToString("P2"))).Distinct(FilterModelEqualityComparer.Instance).OrderBy(t => t.Key));
         }
 
         private void InitCounters()

@@ -65,6 +65,7 @@
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="交易场所" IsReadOnly="True" Binding="{Binding Counter}"/>
+                <DataGridTextColumn Header="日累计申购限额(元)" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
                 <DataGridTextColumn Header="购买费率" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource CompareRateDisplayConverter}">
