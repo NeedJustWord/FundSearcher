@@ -84,6 +84,7 @@
     </Style>
 
     <Style TargetType="ListView" x:Key="HorizontalFilterListView">
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="ItemsPanel">
@@ -96,9 +97,7 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate DataType="{x:Type localModels:FilterModel}">
-                    <WrapPanel Orientation="Horizontal">
-                        <Label Name="lbValue" Content="{Binding Value}"/>
-                    </WrapPanel>
+                    <Label Name="lbValue" Content="{Binding Value}"/>
                     <DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding IsSelected}" Value="True">
                             <Setter TargetName="lbValue" Property="Foreground" Value="{StaticResource FilterSelectedForegroundColorBrush}"/>

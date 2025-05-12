@@ -62,11 +62,11 @@ namespace FundSearcher.Views
             get { return selectBuyStatus; }
             set
             {
-                if (lastSelectBuyStatus != null) lastSelectBuyStatus.IsSelected = false;
+                SetLastUnselected(lastSelectBuyStatus, value);
                 if (SetProperty(ref selectBuyStatus, value))
                 {
                     lastSelectBuyStatus = value;
-                    value.IsSelected = true;
+                    SetValueSelected(value);
                     if (filter) Filter();
                 }
             }
@@ -94,11 +94,11 @@ namespace FundSearcher.Views
             get { return selectSellStatus; }
             set
             {
-                if (lastSelectSellStatus != null) lastSelectSellStatus.IsSelected = false;
+                SetLastUnselected(lastSelectSellStatus, value);
                 if (SetProperty(ref selectSellStatus, value))
                 {
                     lastSelectSellStatus = value;
-                    value.IsSelected = true;
+                    SetValueSelected(value);
                     if (filter) Filter();
                 }
             }
@@ -126,11 +126,11 @@ namespace FundSearcher.Views
             get { return selectTrackingTarget; }
             set
             {
-                if (lastSelectTrackingTarget != null) lastSelectTrackingTarget.IsSelected = false;
+                SetLastUnselected(lastSelectTrackingTarget, value);
                 if (SetProperty(ref selectTrackingTarget, value))
                 {
                     lastSelectTrackingTarget = value;
-                    value.IsSelected = true;
+                    SetValueSelected(value);
                     if (filter) Filter();
                 }
             }
@@ -158,12 +158,12 @@ namespace FundSearcher.Views
             get { return selectRunningRate; }
             set
             {
-                if (lastSelectRunningRate != null) lastSelectRunningRate.IsSelected = false;
+                SetLastUnselected(lastSelectRunningRate, value);
                 if (SetProperty(ref selectRunningRate, value))
                 {
                     lastSelectRunningRate = value;
-                    value.IsSelected = true;
-                    if (filter) Filter();
+                    SetValueSelected(value);
+                    if (filter) Filter(false);
                 }
             }
         }
@@ -190,11 +190,11 @@ namespace FundSearcher.Views
             get { return selectCounter; }
             set
             {
-                if (lastSelectCounter != null && lastSelectCounter != value) lastSelectCounter.IsSelected = false;
+                SetLastUnselected(lastSelectCounter, value);
                 if (SetProperty(ref selectCounter, value))
                 {
                     lastSelectCounter = value;
-                    value.IsSelected = true;
+                    SetValueSelected(value);
                     if (filter) Filter();
                 }
             }
@@ -222,11 +222,11 @@ namespace FundSearcher.Views
             get { return selectFundClass; }
             set
             {
-                if (lastSelectFundClass != null && lastSelectFundClass != value) lastSelectFundClass.IsSelected = false;
+                SetLastUnselected(lastSelectFundClass, value);
                 if (SetProperty(ref selectFundClass, value))
                 {
                     lastSelectFundClass = value;
-                    value.IsSelected = true;
+                    SetValueSelected(value);
                     if (filter) Filter();
                 }
             }
@@ -337,16 +337,8 @@ namespace FundSearcher.Views
 
         private void Reset()
         {
-            filter = false;
             QueryFundId = null;
-            SelectBuyStatus = BuyStatuses.FirstOrDefault();
-            SelectSellStatus = SellStatuses.FirstOrDefault();
-            SelectTrackingTarget = TrackingTargets.FirstOrDefault();
-            SelectRunningRate = RunningRates.FirstOrDefault();
-            SelectCounter = Counters.FirstOrDefault();
-            SelectFundClass = FundClasses.FirstOrDefault();
-            Filter();
-            filter = true;
+            Query();
         }
 
         private FundInfo Handle(FundInfo model)
@@ -383,8 +375,10 @@ namespace FundSearcher.Views
             FundInfos.AddRange(infos);
         }
 
-        private void Filter()
+        private void Filter(bool isInitRunningRates = true)
         {
+            if (isInitRunningRates) InitRunningRates(SelectRunningRate.Key);
+
             int order = 1;
             foreach (var item in FundInfos)
             {
@@ -396,12 +390,12 @@ namespace FundSearcher.Views
             }
         }
 
-        private bool IsShow(FundInfo fund)
+        private bool IsShow(FundInfo fund, bool checkRunningRate = true)
         {
             if (SelectTrackingTarget.Key.IsNotNullAndEmpty() && fund.TrackingTarget != SelectTrackingTarget.Key) return false;
             if (SelectBuyStatus.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.BuyStatus != SelectBuyStatus.Key)) return false;
             if (SelectSellStatus.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.SellStatus != SelectSellStatus.Key)) return false;
-            if (SelectRunningRate.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.RunningRateStr != SelectRunningRate.Key)) return false;
+            if (checkRunningRate && SelectRunningRate != null && SelectRunningRate.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.RunningRateStr != SelectRunningRate.Key)) return false;
             if (SelectCounter.Key.IsNotNullAndEmpty() && fund.Counter != SelectCounter.Key) return false;
             if (SelectFundClass.Key.IsNotNullAndEmpty() && fund.FundClass != SelectFundClass.Key) return false;
             return true;
@@ -414,10 +408,6 @@ namespace FundSearcher.Views
             var lastKey = isRefresh ? SelectTrackingTarget?.Key : "";
             InitTrackingTargets();
             lastSelectTrackingTarget = SelectTrackingTarget = GetDefaultSelectItem(TrackingTargets, lastKey);
-
-            lastKey = isRefresh ? SelectRunningRate?.Key : "";
-            InitRunningRates();
-            lastSelectRunningRate = SelectRunningRate = GetDefaultSelectItem(RunningRates, lastKey);
 
             lastKey = isRefresh ? SelectBuyStatus?.Key : "";
             InitBuyStatuses();
@@ -433,6 +423,10 @@ namespace FundSearcher.Views
             lastKey = isRefresh ? SelectFundClass?.Key : "";
             lastSelectFundClass = SelectFundClass = GetDefaultSelectItem(FundClasses, lastKey);
 
+            lastKey = isRefresh ? SelectRunningRate?.Key : "";
+            InitRunningRates();
+            lastSelectRunningRate = SelectRunningRate = GetDefaultSelectItem(RunningRates, lastKey);
+
             filter = true;
         }
 
@@ -441,6 +435,16 @@ namespace FundSearcher.Views
             var item = key.IsNotNullAndEmpty() ? (data.FirstOrDefault(t => t.Key == key) ?? data.First()) : data.First();
             item.IsSelected = true;
             return item;
+        }
+
+        private void SetLastUnselected(FilterModel last, FilterModel value)
+        {
+            if (last != null && last != value) last.IsSelected = false;
+        }
+
+        private void SetValueSelected(FilterModel value)
+        {
+            if (value != null) value.IsSelected = true;
         }
 
         private void InitTrackingTargets()
@@ -464,11 +468,17 @@ namespace FundSearcher.Views
             SellStatuses.AddRange(fundDataBase.FundInfos.Where(t => t.TransactionInfo != null).Select(t => new FilterModel(t.TransactionInfo.SellStatus, t.TransactionInfo.SellStatus)).Distinct(FilterModelEqualityComparer.Instance));
         }
 
+        private void InitRunningRates(string lastKey)
+        {
+            InitRunningRates();
+            lastSelectRunningRate = SelectRunningRate = GetDefaultSelectItem(RunningRates, lastKey);
+        }
+
         private void InitRunningRates()
         {
             RunningRates.Clear();
             RunningRates.Add(new FilterModel("", "全部"));
-            RunningRates.AddRange(fundDataBase.FundInfos.Where(t => t.TransactionInfo != null).Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, t.TransactionInfo.RunningRate.ToString("P2"))).Distinct(FilterModelEqualityComparer.Instance).OrderBy(t => t.Key));
+            RunningRates.AddRange(FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, t.TransactionInfo.RunningRate.ToString("P2"))).Distinct(FilterModelEqualityComparer.Instance).OrderBy(t => t.Key));
         }
 
         private void InitCounters()
