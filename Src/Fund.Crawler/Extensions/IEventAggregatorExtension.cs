@@ -1,9 +1,9 @@
 ﻿using System;
 using Prism.Events;
 
-namespace FundSearcher.Extensions
+namespace Fund.Crawler.Extensions
 {
-    static class IEventAggregatorExtension
+    public static class IEventAggregatorExtension
     {
         #region 订阅消息
         public static void Subscribe<TEventType>(this IEventAggregator aggregator, Action action) where TEventType : PubSubEvent, new()

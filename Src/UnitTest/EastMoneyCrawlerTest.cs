@@ -3,9 +3,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Fund.Core.Helpers;
+using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
+using Fund.Crawler.PubSubEvents;
 using Fund.Crawler.Webs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prism.Events;
 
 namespace UnitTest
 {
@@ -39,6 +42,7 @@ namespace UnitTest
             return Task.Run(() =>
             {
                 var crawler = GetCrawler();
+                crawler.InitIndexTotal(indexCodes.Length);
                 foreach (var item in indexCodes)
                 {
                     var info = GetIndexInfo(crawler, item).Result;
@@ -65,7 +69,14 @@ namespace UnitTest
 
         private EastMoneyCrawler GetCrawler()
         {
-            return new EastMoneyCrawler();
+            var aggregator = new EventAggregator();
+            aggregator.Subscribe<CrawlingProgressEvent, CrawlingProgressModel>(HandleCrawleProgress);
+            return new EastMoneyCrawler(aggregator);
+        }
+
+        private void HandleCrawleProgress(CrawlingProgressModel model)
+        {
+            Console.WriteLine($"{model.Message} 进度：{(double)model.Current / model.Total:P2}");
         }
     }
 }

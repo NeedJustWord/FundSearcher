@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Crawler.DataHandler.Extensions;
 using Fund.Core.Extensions;
 using Fund.Crawler.Models;
+using Prism.Events;
 
 namespace Fund.Crawler.Webs
 {
@@ -16,7 +17,11 @@ namespace Fund.Crawler.Webs
     {
         public const string SourceNameKey = "天天基金";
 
-        public EastMoneyCrawler() : base(SourceNameKey)
+        public override int FundPageCount => 2;
+
+        public override int IndexPageCount => 1;
+
+        public EastMoneyCrawler(IEventAggregator eventAggregator) : base(SourceNameKey, eventAggregator)
         {
         }
 
@@ -347,7 +352,12 @@ namespace Fund.Crawler.Webs
                 if (str.EndsWith("万"))
                 {
                     str = str.TrimEnd('万');
-                    factor = 10000;
+                    factor = 1_0000;
+                }
+                else if (str.EndsWith("亿"))
+                {
+                    str = str.TrimEnd('亿');
+                    factor = 1_0000_0000;
                 }
                 return double.Parse(str) * factor;
             }

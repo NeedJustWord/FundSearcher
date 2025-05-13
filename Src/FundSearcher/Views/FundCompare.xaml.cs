@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Fund.Core.Extensions;
+using Fund.Crawler.Extensions;
 using FundSearcher.Extensions;
 using FundSearcher.Models;
 using FundSearcher.PubSubEvents;

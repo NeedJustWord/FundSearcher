@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using FundSearcher.Controls;
 using FundSearcher.Extensions;

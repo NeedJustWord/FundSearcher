@@ -2,7 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Fund.Core.Extensions;
+using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
+using Fund.Crawler.PubSubEvents;
 using Fund.DataBase;
 using FundSearcher.Consts;
 using FundSearcher.Controls;
@@ -233,12 +235,45 @@ namespace FundSearcher.Views
             }
         }
         #endregion
+
+        #region 状态栏信息
+        private int total;
+        /// <summary>
+        /// 爬取总数
+        /// </summary>
+        public int Total
+        {
+            get { return total; }
+            set { SetProperty(ref total, value); }
+        }
+
+        private int current;
+        /// <summary>
+        /// 爬取当前进度
+        /// </summary>
+        public int Current
+        {
+            get { return current; }
+            set { SetProperty(ref current, value); }
+        }
+
+        private string message;
+        /// <summary>
+        /// 消息
+        /// </summary>
+        public string Message
+        {
+            get { return message; }
+            set { SetProperty(ref message, value); }
+        }
+        #endregion
         #endregion
 
         public FundQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator)
         {
             fundDataBase = dataBase;
             eventAggregator.Subscribe<FundQueryCheckAllEvent>(CheckAll);
+            eventAggregator.Subscribe<CrawlingProgressEvent, CrawlingProgressModel>(HandleCrawleProgress);
             RegisterCommand(CommandName.Query, Query);
             RegisterCommand(CommandName.Refresh, Refresh);
             RegisterCommand(CommandName.Compare, Compare);
@@ -253,7 +288,15 @@ namespace FundSearcher.Views
             {
                 isFirstLoad = false;
                 Query();
+                Message = "数据加载完成";
             }
+        }
+
+        private void HandleCrawleProgress(CrawlingProgressModel model)
+        {
+            Total = model.Total;
+            Current = model.Current;
+            Message = model.Message;
         }
 
         private void CheckAll()

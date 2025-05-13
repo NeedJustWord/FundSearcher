@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Crawler.SimpleCrawler;
+using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
+using Fund.Crawler.PubSubEvents;
+using Prism.Events;
 
 namespace Fund.Crawler.Webs
 {
@@ -19,13 +23,29 @@ namespace Fund.Crawler.Webs
         /// </summary>
         public string SourceName { get; }
 
-        protected BaseWebCrawler(string sourceName)
+        /// <summary>
+        /// 爬取基金信息的页面数
+        /// </summary>
+        public abstract int FundPageCount { get; }
+
+        /// <summary>
+        /// 爬取指数相关基金信息的页面数
+        /// </summary>
+        public abstract int IndexPageCount { get; }
+
+        protected IEventAggregator eventAggregator;
+        private int total;
+        private int current;
+
+        protected BaseWebCrawler(string sourceName, IEventAggregator eventAggregator)
         {
             SourceName = sourceName;
+            this.eventAggregator = eventAggregator;
         }
 
         /// <summary>
         /// 根据key爬取基金信息
+        /// <para>若想知道批量爬取进度，调用此方法前调用<see cref="InitFundTotal(int)"/>方法初始化批量总数</para>
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -33,6 +53,7 @@ namespace Fund.Crawler.Webs
 
         /// <summary>
         /// 根据key爬取指数相关基金信息
+        /// <para>若想知道批量爬取进度，调用此方法前调用<see cref="InitIndexTotal(int)"/>方法初始化批量总数</para>
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -94,9 +115,20 @@ namespace Fund.Crawler.Webs
             crawler.OnCompletedEvent += (sender, args) =>
             {
                 var keyStr = key.GetKey(url);
-                WriteLog($"{args.ThreadId} {keyStr}爬取结束，开始处理");
-                action?.Invoke(args.PageSource, info);
-                WriteLog($"{args.ThreadId} {keyStr}处理结束");
+                try
+                {
+                    WriteLog($"{args.ThreadId} {keyStr}爬取结束，开始处理");
+                    action?.Invoke(args.PageSource, info);
+                }
+                catch (Exception ex)
+                {
+                    WriteLog($"{args.ThreadId} {keyStr}处理出现异常，{ex.Message}");
+                }
+                finally
+                {
+                    IncrementCurrent();
+                    WriteLog($"{args.ThreadId} {keyStr}处理结束");
+                }
             };
             return await crawler.Start(url);
         }
@@ -128,9 +160,39 @@ namespace Fund.Crawler.Webs
             Task.Delay(second * 1000).Wait();
         }
 
-        protected void WriteLog(string msg)
+        /// <summary>
+        /// 初始化总数
+        /// </summary>
+        /// <param name="total"></param>
+        public void InitFundTotal(int total)
         {
-            Console.WriteLine($"{DateTime.Now} {msg}");
+            this.total = total * FundPageCount;
+            current = 0;
+        }
+
+        /// <summary>
+        /// 初始化总数
+        /// </summary>
+        /// <param name="total"></param>
+        public void InitIndexTotal(int total)
+        {
+            this.total = total * IndexPageCount;
+            current = 0;
+        }
+
+        private void IncrementCurrent()
+        {
+            Interlocked.Increment(ref current);
+        }
+
+        public void WriteLog(string msg)
+        {
+            eventAggregator.Publish<CrawlingProgressEvent, CrawlingProgressModel>(new CrawlingProgressModel()
+            {
+                Total = total,
+                Current = current,
+                Message = $"{DateTime.Now} {msg}",
+            });
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using FundSearcher.Consts;
-using FundSearcher.Extensions;
 using FundSearcher.Models;
 using FundSearcher.PubSubEvents;
 using Prism.Events;

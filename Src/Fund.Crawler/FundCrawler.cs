@@ -27,17 +27,6 @@ namespace Fund.Crawler
         /// 开始爬取
         /// </summary>
         /// <param name="fundIds"></param>
-        /// <param name="separator"></param>
-        /// <returns></returns>
-        public async Task<List<FundInfo>> Start(string fundIds, char separator = ',')
-        {
-            return await Start(fundIds == null ? new string[0] : fundIds.Split(separator));
-        }
-
-        /// <summary>
-        /// 开始爬取
-        /// </summary>
-        /// <param name="fundIds"></param>
         /// <returns></returns>
         public async Task<List<FundInfo>> Start(params string[] fundIds)
         {
@@ -46,11 +35,12 @@ namespace Fund.Crawler
                 List<FundInfo> result = new List<FundInfo>();
                 if (fundIds != null)
                 {
+                    WebCrawler.InitFundTotal(fundIds.Length);
                     Parallel.ForEach(fundIds, (fundId, pls, index) =>
                     {
-                        if (string.IsNullOrWhiteSpace(fundId)) return;
                         result.Add(WebCrawler.Start(new FundKey(index, fundId)).Result);
                     });
+                    WebCrawler.WriteLog("爬取完成");
                 }
                 return result;
             });

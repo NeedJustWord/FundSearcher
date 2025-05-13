@@ -79,7 +79,7 @@ namespace Fund.Crawler.Models
         /// 基金类别
         /// </summary>
         [JsonIgnore]
-        public string FundClass => FundName.Contains("C") ? "C类" : "A类";
+        public string FundClass => FundName == null ? "" : (FundName.Contains("C") ? "C类" : "A类");
 
         private string fundFullName;
         /// <summary>

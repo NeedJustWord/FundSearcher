@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Fund.Crawler;
 using Fund.Crawler.Models;
 using Fund.Crawler.Webs;
+using Prism.Events;
 
 namespace Fund.DataBase
 {
@@ -23,9 +24,9 @@ namespace Fund.DataBase
         /// </summary>
         public bool HasUpdate { get; private set; }
 
-        public FundUpdate()
+        public FundUpdate(IEventAggregator eventAggregator)
         {
-            crawlerDict.Add(EastMoneyCrawler.SourceNameKey, new FundCrawler(new EastMoneyCrawler()));
+            crawlerDict.Add(EastMoneyCrawler.SourceNameKey, new FundCrawler(new EastMoneyCrawler(eventAggregator)));
         }
 
         /// <summary>

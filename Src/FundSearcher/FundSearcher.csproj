@@ -73,10 +73,10 @@
     <Compile Include="Converters\CompareRateDisplayConverter.cs" />
     <Compile Include="Converters\DictRateConverter.cs" />
     <Compile Include="Converters\FundSizeConverter.cs" />
+    <Compile Include="Converters\ValueToPercentConverter.cs" />
     <Compile Include="Extensions\AutoMapperExtension.cs" />
     <Compile Include="Extensions\DataGridExtension.cs" />
     <Compile Include="Extensions\DependencyObjectExtension.cs" />
-    <Compile Include="Extensions\IEventAggregatorExtension.cs" />
     <Compile Include="Models\FilterModel.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="PubSubEvents\FundCompareFilterModelClickEvent.cs" />

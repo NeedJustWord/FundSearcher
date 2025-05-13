@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fund.Crawler.Models;
 using Fund.Crawler.Webs;
+using Prism.Events;
 
 namespace Fund.DataBase
 {
@@ -13,7 +14,7 @@ namespace Fund.DataBase
     /// </summary>
     public class FundDataBase
     {
-        private FundUpdate fundUpdate = new FundUpdate();
+        private FundUpdate fundUpdate;
         private string dbFileName;
         private string dbFileNameWithExtension => $"{dbFileName}.txt";
 
@@ -24,12 +25,13 @@ namespace Fund.DataBase
         /// </summary>
         public List<FundInfo> FundInfos => fundUpdate.FundInfos;
 
-        public FundDataBase() : this("FundInfos")
+        public FundDataBase(IEventAggregator eventAggregator) : this("FundInfos", eventAggregator)
         {
         }
 
-        public FundDataBase(string fileName)
+        public FundDataBase(string fileName, IEventAggregator eventAggregator)
         {
+            fundUpdate = new FundUpdate(eventAggregator);
             dbFileName = fileName;
             Load();
         }

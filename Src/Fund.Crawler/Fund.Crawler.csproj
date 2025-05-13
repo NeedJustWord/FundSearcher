@@ -41,9 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\IEventAggregatorExtension.cs" />
     <Compile Include="FundCrawler.cs" />
     <Compile Include="Models\BaseInfo.cs" />
     <Compile Include="Models\BaseKey.cs" />
+    <Compile Include="Models\CrawlingProgressModel.cs" />
     <Compile Include="Models\FundKey.cs" />
     <Compile Include="Models\FundBaseInfo.cs" />
     <Compile Include="Models\FundInfo.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="Models\TransactionInfo.cs" />
     <Compile Include="Models\TransactionRate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PubSubEvents\CrawlingProgressEvent.cs" />
     <Compile Include="Webs\BaseWebCrawler.cs" />
     <Compile Include="Webs\EastMoneyCrawler.cs" />
   </ItemGroup>

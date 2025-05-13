@@ -24,6 +24,7 @@
 
     <converters:BuyUpperLimitAmountConverter x:Key="BuyUpperLimitAmountConverter"/>
     <converters:CompareRateDisplayConverter x:Key="CompareRateDisplayConverter"/>
+    <converters:ValueToPercentConverter x:Key="ValueToPercentConverter"/>
     <converters:DictRateConverter x:Key="DictRateConverter"/>
     <converters:FundSizeConverter x:Key="FundSizeConverter"/>
 
@@ -53,6 +54,22 @@
         <Setter Property="HorizontalContentAlignment" Value="Right"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Width" Value="75"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="StatusProgressLabel">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="StatusMessageLabel">
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="ProgressBar" x:Key="StatusCrawlingProgress">
+        <Setter Property="Minimum" Value="0"/>
+        <Setter Property="Width" Value="500"/>
+        <Setter Property="Height" Value="20"/>
     </Style>
 
     <Style TargetType="ComboBox" x:Key="QueryComboBox">
