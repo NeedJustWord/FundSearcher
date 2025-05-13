@@ -21,6 +21,7 @@ namespace FundSearcher.Views
         private readonly string[] sellRateColumnNames = new string[] { "赎回费率", };
         private readonly FundDataBase fundDataBase;
         private bool isFirstLoad = true;
+        private bool isFiltering;
         private bool filter;
 
         #region 属性
@@ -377,6 +378,9 @@ namespace FundSearcher.Views
 
         private void Filter(bool isInitRunningRates = true)
         {
+            if (isFiltering) return;
+            isFiltering = true;
+
             if (isInitRunningRates) InitRunningRates(SelectRunningRate.Key);
 
             int order = 1;
@@ -388,6 +392,8 @@ namespace FundSearcher.Views
                     item.OrderNumber = order++;
                 }
             }
+
+            isFiltering = false;
         }
 
         private bool IsShow(FundInfo fund, bool checkRunningRate = true)
