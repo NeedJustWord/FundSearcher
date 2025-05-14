@@ -121,6 +121,9 @@
                 <Button Content="比较" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Compare}"/>
+                <Button Content="删除" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}"
+                        CommandParameter="{x:Static consts:CommandName.Delete}"/>
             </StackPanel>
         </Grid>
 

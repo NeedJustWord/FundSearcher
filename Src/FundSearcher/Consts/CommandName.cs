@@ -18,5 +18,9 @@
         /// 重置命令
         /// </summary>
         public const string Reset = "ResetCommand";
+        /// <summary>
+        /// 删除命令
+        /// </summary>
+        public const string Delete = "DeleteCommand";
     }
 }

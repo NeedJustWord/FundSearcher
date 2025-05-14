@@ -65,6 +65,26 @@ namespace Fund.DataBase
         }
 
         /// <summary>
+        /// 删除基金
+        /// </summary>
+        /// <param name="fundInfos"></param>
+        /// <returns></returns>
+        public List<FundInfo> Delete(FundInfo[] fundInfos)
+        {
+            List<FundInfo> result = new List<FundInfo>(fundInfos.Length);
+            foreach (var fundInfo in fundInfos)
+            {
+                if (fundInfoDict.Remove((FundKey)fundInfo))
+                {
+                    result.Add(fundInfo);
+                }
+            }
+            if (result.Count > 0) HasUpdate = true;
+
+            return result;
+        }
+
+        /// <summary>
         /// 更新基金
         /// </summary>
         /// <param name="fundKeys"></param>

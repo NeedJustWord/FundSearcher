@@ -60,6 +60,16 @@ namespace Fund.DataBase
             }
         }
 
+        /// <summary>
+        /// 删除基金
+        /// </summary>
+        /// <param name="fundInfos"></param>
+        /// <returns></returns>
+        public List<FundInfo> Delete(FundInfo[] fundInfos)
+        {
+            return fundUpdate.Delete(fundInfos);
+        }
+
         private void Save(string[] files)
         {
             if (files.Length == 0) return;

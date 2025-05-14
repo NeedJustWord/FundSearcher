@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using Fund.Core.Extensions;
 using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
@@ -278,6 +279,7 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.Refresh, Refresh);
             RegisterCommand(CommandName.Compare, Compare);
             RegisterCommand(CommandName.Reset, Reset);
+            RegisterCommand(CommandName.Delete, Delete);
             InitCounters();
             InitFundClasses();
         }
@@ -383,6 +385,49 @@ namespace FundSearcher.Views
         {
             QueryFundId = null;
             Query();
+        }
+
+        private void Delete()
+        {
+            var infos = fundInfos.Where(t => t.IsShow && t.IsChecked).ToArray();
+            if (infos.Length == 0)
+            {
+                MessageBoxEx.ShowError("请选择需要删除的基金");
+                return;
+            }
+
+            if (MessageBoxEx.ShowQuestion("你确定要删除所选基金吗？") == MessageBoxResult.No)
+            {
+                Message = "取消删除";
+                return;
+            }
+
+            var result = fundDataBase.Delete(infos);
+            if (result.Count == 0)
+            {
+                Message = "删除失败";
+                return;
+            }
+
+            Message = result.Count == infos.Length ? "删除成功" : "部分删除成功";
+            Delete(result);
+        }
+
+        private void Delete(List<FundInfo> infos)
+        {
+            foreach (var item in infos)
+            {
+                FundInfos.Remove(item);
+            }
+
+            int order = 1;
+            foreach (var item in FundInfos)
+            {
+                if (item.IsShow)
+                {
+                    item.OrderNumber = order++;
+                }
+            }
         }
 
         private FundInfo Handle(FundInfo model)
