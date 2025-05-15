@@ -27,6 +27,16 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref indexName, value); }
         }
 
+        private int trackingCount;
+        /// <summary>
+        /// 跟踪此指数的基金数量
+        /// </summary>
+        public int TrackingCount
+        {
+            get { return trackingCount; }
+            set { SetProperty(ref trackingCount, value); }
+        }
+
         private List<FundBaseInfo> fundBaseInfos;
         /// <summary>
         /// 指数相关基金

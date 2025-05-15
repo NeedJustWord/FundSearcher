@@ -60,6 +60,12 @@ namespace Fund.Crawler.Webs
         public abstract Task<IndexInfo> Start(IndexKey key);
 
         /// <summary>
+        /// 爬取所有指数信息
+        /// </summary>
+        /// <returns></returns>
+        public abstract Task<List<IndexInfo>> Start();
+
+        /// <summary>
         /// 创建基金信息
         /// </summary>
         /// <param name="fundId">基金代码</param>

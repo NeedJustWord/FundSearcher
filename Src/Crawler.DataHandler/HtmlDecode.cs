@@ -170,6 +170,18 @@ namespace Crawler.DataHandler
             var match = GetFirstHtmlTagByAttri(input, htmlTag, attriName, attriValue);
             return match != null && match.Success ? match.Value : null;
         }
+
+        /// <summary>
+        /// 获取当前Html标签指定属性的值
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="attriName"></param>
+        /// <returns></returns>
+        public static string GetAttriValue(string input, string attriName)
+        {
+            var match = Regex.Match(input, RegexHelper.GetAttriValue(attriName));
+            return match != null && match.Success ? match.Groups[1].Value : null;
+        }
         #endregion
 
         /// <summary>

@@ -28,8 +28,8 @@ namespace Crawler.DataHandler
         /// <returns></returns>
         public static string GetHtmlTagPattern(string htmlTag)
         {
-            if (htmlTagPatternDict.ContainsKey(htmlTag)) return htmlTagPatternDict[htmlTag];
-            var value = string.Format(htmlTagPattern, htmlTag);
+            if (htmlTagPatternDict.TryGetValue(htmlTag, out var value)) return value;
+            value = string.Format(htmlTagPattern, htmlTag);
             htmlTagPatternDict[htmlTag] = value;
             return value;
         }
@@ -45,6 +45,21 @@ namespace Crawler.DataHandler
         public static string GetHtmlTagPattern(string htmlTag, string attriName, string attriValue)
         {
             return string.Format(htmlTagByAttriPattern, htmlTag, attriName, attriValue);
+        }
+
+        private static string attriNamePattern = @"[^>]*\s{0}=(?<Quote>['""]?)([\s\S]*?)\k<Quote>";
+        private static Dictionary<string, string> attriNamePatternDict = new Dictionary<string, string>();
+        /// <summary>
+        /// 获取当前Html标签指定属性的值
+        /// </summary>
+        /// <param name="attriName"></param>
+        /// <returns></returns>
+        public static string GetAttriValue(string attriName)
+        {
+            if (attriNamePatternDict.TryGetValue(attriName, out var value)) return value;
+            value = string.Format(attriNamePattern, attriName);
+            attriNamePatternDict[attriName] = value;
+            return value;
         }
         #endregion
 

@@ -170,5 +170,16 @@ namespace Crawler.DataHandler.Extensions
         {
             return HtmlDecode.GetHtmlTagContent(input, faultReturnInput);
         }
+
+        /// <summary>
+        /// 获取当前Html标签指定属性的值
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="attriName"></param>
+        /// <returns></returns>
+        public static string GetAttriValue(this string input, string attriName)
+        {
+            return HtmlDecode.GetAttriValue(input, attriName);
+        }
     }
 }

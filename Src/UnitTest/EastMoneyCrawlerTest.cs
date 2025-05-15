@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,17 @@ namespace UnitTest
     public class EastMoneyCrawlerTest
     {
         [TestMethod]
+        public void GetAllIndexInfoTest()
+        {
+            AsyncHelper.RunSync(GetAllIndexInfoTask);
+        }
+
+        private async Task GetAllIndexInfoTask()
+        {
+            await GetAllIndexInfo(WriteJson);
+        }
+
+        [TestMethod]
         public void GetIndexInfoTest()
         {
             AsyncHelper.RunSync(GetIndexInfoTask);
@@ -23,7 +35,7 @@ namespace UnitTest
 
         private async Task GetIndexInfoTask()
         {
-            await Handle(WriteJson, "NDX100");
+            await GetIndexInfo(WriteJson, "NDX100");
         }
 
         [TestMethod]
@@ -34,10 +46,10 @@ namespace UnitTest
 
         private async Task GetIndexFundIdTask()
         {
-            await Handle(WriteFundId, "NDX100", "000300", "399006");
+            await GetIndexInfo(WriteFundId, "NDX100", "000300", "399006");
         }
 
-        private Task Handle(Action<IndexInfo> action, params string[] indexCodes)
+        private Task GetIndexInfo(Action<IndexInfo> action, params string[] indexCodes)
         {
             return Task.Run(() =>
             {
@@ -51,9 +63,19 @@ namespace UnitTest
             });
         }
 
-        private void WriteJson(IndexInfo info)
+        private Task GetAllIndexInfo(Action<List<IndexInfo>> action)
         {
-            Debug.WriteLine(info.ToJson());
+            return Task.Run(() =>
+            {
+                var crawler = GetCrawler();
+                var infos = crawler.Start().Result;
+                action(infos);
+            });
+        }
+
+        private void WriteJson<T>(T t)
+        {
+            Debug.WriteLine(t.ToJson());
         }
 
         private void WriteFundId(IndexInfo info)

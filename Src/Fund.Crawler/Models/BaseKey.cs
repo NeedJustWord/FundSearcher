@@ -3,7 +3,7 @@
     /// <summary>
     /// 基础Key
     /// </summary>
-    public abstract class BaseKey
+    public class BaseKey
     {
         /// <summary>
         /// 索引
@@ -15,6 +15,9 @@
             Index = index;
         }
 
-        public abstract string GetKey(string url);
+        public virtual string GetKey(string url)
+        {
+            return $"[{Index},{url}]";
+        }
     }
 }

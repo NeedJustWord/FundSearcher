@@ -52,6 +52,17 @@ namespace Fund.Crawler.Webs
             });
         }
 
+        public async override Task<List<IndexInfo>> Start()
+        {
+            return await Task.Run(async () =>
+            {
+                var infos = new List<IndexInfo>();
+                await GetIndexInfo(infos);
+                return infos;
+            });
+        }
+
+        #region 基金信息
         #region 基本概况
         /// <summary>
         /// 基本概况
@@ -208,6 +219,7 @@ namespace Fund.Crawler.Webs
             fundInfo.TransactionInfo = info;
         }
         #endregion
+        #endregion
 
         #region 指数相关基金信息
         /// <summary>
@@ -226,6 +238,7 @@ namespace Fund.Crawler.Webs
             info.IndexName = pageSource.GetFirstHtmlTagValueByAttri("div", "class", "subNav").GetHtmlTagValue("span", 1).GetHtmlTagContent().Replace("相关指数基金", "");
 
             var rows = pageSource.GetFirstHtmlTagValueByAttri("table", "class", "index_concat_table show-all").GetFirstHtmlTagValue("tbody").GetHtmlTagValue("tr").ToList();
+            info.TrackingCount = rows.Count;
             info.FundBaseInfos.Capacity = rows.Count;
             var now = DateTime.Now;
             foreach (var row in rows)
@@ -237,6 +250,34 @@ namespace Fund.Crawler.Webs
                     UpdateTime = now,
                     FundId = td.GetFirstHtmlTagValue("p").GetHtmlTagContent(),
                     FundName = td.GetFirstHtmlTagValue("a").GetHtmlTagContent(),
+                });
+            }
+        }
+        #endregion
+
+        #region 指数信息
+        private async Task GetIndexInfo(List<IndexInfo> result)
+        {
+            var url = $"https://zhishubao.1234567.com.cn/home/AllIndex";
+            await StartSimpleCrawler(new BaseKey(0), url, result, HandleIndexInfoSource);
+        }
+
+        private void HandleIndexInfoSource(string pageSource, List<IndexInfo> infos)
+        {
+            var now = DateTime.Now;
+            var rows = pageSource.GetFirstHtmlTagValueByAttri("ul", "class", "clearfix all_index_ul ").GetHtmlTagValueByAttri("div", "class", "link").ToList();
+            infos.Capacity = rows.Count;
+
+            int trackingCount;
+            foreach (var row in rows)
+            {
+                infos.Add(new IndexInfo
+                {
+                    InfoSource = SourceName,
+                    UpdateTime = now,
+                    IndexCode = row.GetAttriValue("data-code"),
+                    IndexName = row.GetAttriValue("data-name"),
+                    TrackingCount = int.TryParse(row.GetFirstHtmlTagValueByAttri("p", "class", "view").GetFirstHtmlTagValueByAttri("span", "class", "red").GetHtmlTagContent(), out trackingCount) ? trackingCount : 0,
                 });
             }
         }
