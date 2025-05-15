@@ -5,7 +5,6 @@ using System.Windows;
 using Fund.Core.Extensions;
 using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
-using Fund.Crawler.PubSubEvents;
 using Fund.DataBase;
 using FundSearcher.Consts;
 using FundSearcher.Controls;
@@ -22,8 +21,6 @@ namespace FundSearcher.Views
         private readonly string[] applyRateColumnNames = new string[] { "费率", "原费率", "天天基金优惠费率", };
         private readonly string[] buyRateColumnNames = new string[] { "费率", "原费率", "银行卡购买", "活期宝购买", };
         private readonly string[] sellRateColumnNames = new string[] { "赎回费率", };
-        private readonly FundDataBase fundDataBase;
-        private bool isFirstLoad = true;
         private bool isFiltering;
         private bool filter;
 
@@ -236,45 +233,11 @@ namespace FundSearcher.Views
             }
         }
         #endregion
-
-        #region 状态栏信息
-        private int total;
-        /// <summary>
-        /// 爬取总数
-        /// </summary>
-        public int Total
-        {
-            get { return total; }
-            set { SetProperty(ref total, value); }
-        }
-
-        private int current;
-        /// <summary>
-        /// 爬取当前进度
-        /// </summary>
-        public int Current
-        {
-            get { return current; }
-            set { SetProperty(ref current, value); }
-        }
-
-        private string message;
-        /// <summary>
-        /// 消息
-        /// </summary>
-        public string Message
-        {
-            get { return message; }
-            set { SetProperty(ref message, value); }
-        }
-        #endregion
         #endregion
 
-        public FundQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator)
+        public FundQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator, dataBase)
         {
-            fundDataBase = dataBase;
             eventAggregator.Subscribe<FundQueryCheckAllEvent>(CheckAll);
-            eventAggregator.Subscribe<CrawlingProgressEvent, CrawlingProgressModel>(HandleCrawleProgress);
             RegisterCommand(CommandName.Query, Query);
             RegisterCommand(CommandName.Refresh, Refresh);
             RegisterCommand(CommandName.Compare, Compare);
@@ -284,21 +247,10 @@ namespace FundSearcher.Views
             InitFundClasses();
         }
 
-        protected override void OnLoaded()
+        protected override void OnFirstLoad()
         {
-            if (isFirstLoad)
-            {
-                isFirstLoad = false;
-                Query();
-                Message = "数据加载完成";
-            }
-        }
-
-        private void HandleCrawleProgress(CrawlingProgressModel model)
-        {
-            Total = model.Total;
-            Current = model.Current;
-            Message = model.Message;
+            Query();
+            PublishStatusMessage("基金数据加载完成");
         }
 
         private void CheckAll()
@@ -398,18 +350,18 @@ namespace FundSearcher.Views
 
             if (MessageBoxEx.ShowQuestion("你确定要删除所选基金吗？") == MessageBoxResult.No)
             {
-                Message = "取消删除";
+                PublishStatusMessage("取消删除");
                 return;
             }
 
             var result = fundDataBase.Delete(infos);
             if (result.Count == 0)
             {
-                Message = "删除失败";
+                PublishStatusMessage("删除失败");
                 return;
             }
 
-            Message = result.Count == infos.Length ? "删除成功" : "部分删除成功";
+            PublishStatusMessage(result.Count == infos.Length ? "删除成功" : "部分删除成功");
             Delete(result);
         }
 

@@ -3,11 +3,11 @@
 namespace FundSearcher.Views
 {
     /// <summary>
-    /// FundDetail.xaml 的交互逻辑
+    /// IndexDetail.xaml 的交互逻辑
     /// </summary>
-    public partial class FundDetail : UserControl
+    public partial class IndexDetail : UserControl
     {
-        public FundDetail()
+        public IndexDetail()
         {
             InitializeComponent();
         }

@@ -4,7 +4,10 @@
     {
         public const string FundManager = "FundManagerNavigate";
         public const string FundQuery = "FundQueryNavigate";
-        public const string FundDetail = "FundDetailNavigate";
         public const string FundCompare = "FundCompareNavigate";
+
+        public const string IndexManager = "IndexManagerNavigate";
+        public const string IndexQuery = "IndexQueryNavigate";
+        public const string IndexDetail = "IndexDetailNavigate";
     }
 }

@@ -11,16 +11,18 @@ namespace FundSearcher
         public void OnInitialized(IContainerProvider containerProvider)
         {
             var regionManager = containerProvider.Resolve<IRegionManager>();
-            regionManager.RequestNavigate(RegionName.Main, NavigateName.FundManager);
-            regionManager.RequestNavigate(RegionName.Fund, NavigateName.FundQuery);
+            regionManager.RequestNavigate(RegionName.Shell, NavigateName.FundManager);
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<FundManager>(NavigateName.FundManager);
             containerRegistry.RegisterForNavigation<FundQuery>(NavigateName.FundQuery);
-            containerRegistry.RegisterForNavigation<FundDetail>(NavigateName.FundDetail);
             containerRegistry.RegisterForNavigation<FundCompare>(NavigateName.FundCompare);
+
+            containerRegistry.RegisterForNavigation<IndexManager>(NavigateName.IndexManager);
+            containerRegistry.RegisterForNavigation<IndexQuery>(NavigateName.IndexQuery);
+            containerRegistry.RegisterForNavigation<IndexDetail>(NavigateName.IndexDetail);
         }
     }
 }

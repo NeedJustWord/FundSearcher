@@ -1,4 +1,5 @@
-﻿using FundSearcher.Consts;
+﻿using Fund.DataBase;
+using FundSearcher.Consts;
 using Prism.Events;
 using Prism.Regions;
 
@@ -6,7 +7,7 @@ namespace FundSearcher
 {
     class BaseFundViewModel : BaseViewModel
     {
-        public BaseFundViewModel(IRegionManager regionManager, IEventAggregator eventAggregator = null) : base(regionManager, RegionName.Fund, eventAggregator)
+        public BaseFundViewModel(IRegionManager regionManager, IEventAggregator eventAggregator = null, FundDataBase fundDataBase = null) : base(regionManager, RegionName.Fund, eventAggregator, fundDataBase)
         {
         }
     }

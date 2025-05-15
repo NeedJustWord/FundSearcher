@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Fund.Crawler.Extensions;
+using Fund.DataBase;
+using FundSearcher.PubSubEvents;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -13,26 +16,49 @@ namespace FundSearcher
 
         protected readonly IEventAggregator eventAggregator;
         protected readonly IRegionManager regionManager;
+        protected readonly FundDataBase fundDataBase;
         protected readonly string regionName;
         protected IRegionNavigationJournal journal;
+        private bool isFirstLoad = true;
 
         public DelegateCommand LoadedCommand { get; private set; }
         public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand<object> DictCommand { get; private set; }
 
-        public BaseViewModel(IRegionManager regionManager, string regionName, IEventAggregator eventAggregator = null)
+        public BaseViewModel(IRegionManager regionManager, string regionName, IEventAggregator eventAggregator = null, FundDataBase fundDataBase = null)
         {
             dictDelegateCommand = new Dictionary<string, Action<object>>();
 
             this.regionManager = regionManager;
             this.regionName = regionName;
             this.eventAggregator = eventAggregator;
+            this.fundDataBase = fundDataBase;
 
-            LoadedCommand = new DelegateCommand(OnLoaded);
+            LoadedCommand = new DelegateCommand(InternalOnLoaded);
             GoBackCommand = new DelegateCommand(GoBack);
             DictCommand = new DelegateCommand<object>(Dict);
         }
 
+        private void InternalOnLoaded()
+        {
+            if (isFirstLoad)
+            {
+                isFirstLoad = false;
+                OnFirstLoad();
+            }
+            OnLoaded();
+        }
+
+        /// <summary>
+        /// 第一次加载执行
+        /// </summary>
+        protected virtual void OnFirstLoad()
+        {
+        }
+
+        /// <summary>
+        /// 每次加载执行
+        /// </summary>
         protected virtual void OnLoaded()
         {
         }
@@ -86,6 +112,11 @@ namespace FundSearcher
         public virtual void OnNavigatedTo(NavigationContext navigationContext)
         {
             journal = navigationContext.NavigationService.Journal;
+        }
+
+        protected void PublishStatusMessage(string msg)
+        {
+            eventAggregator.Publish<StatusMessageEvent, string>(msg);
         }
     }
 }

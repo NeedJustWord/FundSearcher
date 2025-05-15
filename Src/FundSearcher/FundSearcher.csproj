@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="AutoMapperProfile.cs" />
     <Compile Include="BaseFundViewModel.cs" />
+    <Compile Include="BaseIndexViewModel.cs" />
     <Compile Include="BaseViewModel.cs" />
     <Compile Include="BaseWindowViewModel.cs" />
     <Compile Include="Consts\CommandName.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="PubSubEvents\FundCompareFilterModelClickEvent.cs" />
     <Compile Include="PubSubEvents\FundQueryCheckAllEvent.cs" />
     <Compile Include="PubSubEvents\FundQueryRefreshDetailEvent.cs" />
+    <Compile Include="PubSubEvents\StatusMessageEvent.cs" />
     <Compile Include="Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
@@ -90,10 +92,10 @@
       <DependentUpon>FundCompare.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FundCompareViewModel.cs" />
-    <Compile Include="Views\FundDetail.xaml.cs">
-      <DependentUpon>FundDetail.xaml</DependentUpon>
+    <Compile Include="Views\IndexDetail.xaml.cs">
+      <DependentUpon>IndexDetail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FundDetailViewModel.cs" />
+    <Compile Include="Views\IndexDetailViewModel.cs" />
     <Compile Include="Views\FundManager.xaml.cs">
       <DependentUpon>FundManager.xaml</DependentUpon>
     </Compile>
@@ -102,6 +104,14 @@
       <DependentUpon>FundQuery.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FundQueryViewModel.cs" />
+    <Compile Include="Views\IndexManager.xaml.cs">
+      <DependentUpon>IndexManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\IndexManagerViewModel.cs" />
+    <Compile Include="Views\IndexQuery.xaml.cs">
+      <DependentUpon>IndexQuery.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\IndexQueryViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -164,7 +174,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\FundDetail.xaml">
+    <Page Include="Views\IndexDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,6 +183,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FundQuery.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\IndexManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\IndexQuery.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

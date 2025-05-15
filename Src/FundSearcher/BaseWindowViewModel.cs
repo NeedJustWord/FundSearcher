@@ -1,4 +1,6 @@
-﻿using Prism.Commands;
+﻿using Fund.DataBase;
+using Prism.Commands;
+using Prism.Events;
 using Prism.Regions;
 
 namespace FundSearcher
@@ -7,7 +9,7 @@ namespace FundSearcher
     {
         public DelegateCommand ClosingCommand { get; private set; }
 
-        public BaseWindowViewModel(IRegionManager regionManager, string regionName) : base(regionManager, regionName)
+        public BaseWindowViewModel(IRegionManager regionManager, string regionName, IEventAggregator eventAggregator, FundDataBase fundDataBase) : base(regionManager, regionName, eventAggregator, fundDataBase)
         {
             ClosingCommand = new DelegateCommand(OnClosing);
         }

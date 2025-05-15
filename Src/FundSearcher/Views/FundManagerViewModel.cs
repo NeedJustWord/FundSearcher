@@ -1,4 +1,5 @@
-﻿using Prism.Regions;
+﻿using FundSearcher.Consts;
+using Prism.Regions;
 
 namespace FundSearcher.Views
 {
@@ -6,6 +7,11 @@ namespace FundSearcher.Views
     {
         public FundManagerViewModel(IRegionManager regionManager) : base(regionManager)
         {
+        }
+
+        protected override void OnFirstLoad()
+        {
+            Navigate(NavigateName.FundQuery);
         }
     }
 }

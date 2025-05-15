@@ -19,6 +19,37 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <ContentControl prism:RegionManager.RegionName="{x:Static consts:RegionName.Main}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="基金" Style="{StaticResource MainMenuItem}"
+                      Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.FundMenu}"/>
+            <MenuItem Header="指数" Style="{StaticResource MainMenuItem}"
+                      Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.IndexMenu}"/>
+        </Menu>
+
+        <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static consts:RegionName.Shell}"/>
+
+        <DockPanel Grid.Row="2" Margin="3 0 3 3">
+            <Grid DockPanel.Dock="Right">
+                <ProgressBar Value="{Binding Current}" Maximum="{Binding Total}" Style="{StaticResource StatusCrawlingProgress}"/>
+                <Label Style="{StaticResource StatusProgressLabel}">
+                    <Label.Content>
+                        <MultiBinding Converter="{StaticResource ValueToPercentConverter}">
+                            <Binding Path="Current"/>
+                            <Binding Path="Total"/>
+                        </MultiBinding>
+                    </Label.Content>
+                </Label>
+            </Grid>
+
+            <Grid DockPanel.Dock="Left">
+                <Label Content="{Binding Message}" Style="{StaticResource StatusMessageLabel}"/>
+            </Grid>
+        </DockPanel>
     </Grid>
 </Window>

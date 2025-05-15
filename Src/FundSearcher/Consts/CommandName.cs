@@ -3,6 +3,15 @@
     class CommandName
     {
         /// <summary>
+        /// 基金菜单
+        /// </summary>
+        public const string FundMenu = "FundMenu";
+        /// <summary>
+        /// 指数菜单
+        /// </summary>
+        public const string IndexMenu = "IndexMenu";
+
+        /// <summary>
         /// 查询命令
         /// </summary>
         public const string Query = "QueryCommand";
