@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:consts="clr-namespace:FundSearcher.Consts"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1800">
@@ -14,5 +15,60 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource QueryLabelBorder}">
+                <Label Content="关键字：" Style="{StaticResource KeyValueLabel}"/>
+            </Border>
+            <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding KeyWord}"/>
+
+            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                <Button Content="查询" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Query}"/>
+                <Button Content="重置" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Reset}"/>
+                <Button Content="刷新" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Refresh}"/>
+                <Button Content="详情" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Detail}"/>
+            </StackPanel>
+        </Grid>
+
+        <DataGrid Grid.Row="1" Margin="3" CanUserAddRows="False" CanUserSortColumns="False" AutoGenerateColumns="False"
+                  ItemsSource="{Binding IndexInfos}" SelectedItem="{Binding SelectedIndexInfo}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="序号" Width="40" IsReadOnly="True" Binding="{Binding OrderNumber}"/>
+                <DataGridTextColumn Header="指数代码" Width="120" IsReadOnly="True" Binding="{Binding IndexCode}"/>
+                <DataGridTextColumn Header="指数名称" Width="500" IsReadOnly="True" Binding="{Binding IndexName}"/>
+                <DataGridTextColumn Header="指数相关基金数量" Width="110" IsReadOnly="True" Binding="{Binding TrackingCount}"/>
+                <DataGridTextColumn Header="信息来源" Width="60" IsReadOnly="True" Binding="{Binding InfoSource}"/>
+                <DataGridTextColumn Header="更新时间" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsShow}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsShow}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
     </Grid>
 </UserControl>

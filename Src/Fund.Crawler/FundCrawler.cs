@@ -24,7 +24,7 @@ namespace Fund.Crawler
         }
 
         /// <summary>
-        /// 开始爬取
+        /// 开始爬取基金信息
         /// </summary>
         /// <param name="fundIds"></param>
         /// <returns></returns>
@@ -42,6 +42,20 @@ namespace Fund.Crawler
                     });
                     WebCrawler.WriteLog("爬取完成");
                 }
+                return result;
+            });
+        }
+
+        /// <summary>
+        /// 开始爬取指数信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<IndexInfo>> Start()
+        {
+            return await Task.Run(() =>
+            {
+                var result = WebCrawler.Start().Result;
+                WebCrawler.WriteLog("爬取完成");
                 return result;
             });
         }

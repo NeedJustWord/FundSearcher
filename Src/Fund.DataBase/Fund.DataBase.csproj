@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\FundInfoExtension.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="FundDataBase.cs" />
     <Compile Include="FundKey.cs" />
     <Compile Include="FundUpdate.cs" />

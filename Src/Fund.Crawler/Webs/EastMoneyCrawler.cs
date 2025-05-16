@@ -271,13 +271,19 @@ namespace Fund.Crawler.Webs
             int trackingCount;
             foreach (var row in rows)
             {
+                if (int.TryParse(row.GetFirstHtmlTagValueByAttri("span", "class", "red").GetHtmlTagContent(), out trackingCount) == false)
+                {
+                    trackingCount = 0;
+                }
+
                 infos.Add(new IndexInfo
                 {
                     InfoSource = SourceName,
                     UpdateTime = now,
                     IndexCode = row.GetAttriValue("data-code"),
                     IndexName = row.GetAttriValue("data-name"),
-                    TrackingCount = int.TryParse(row.GetFirstHtmlTagValueByAttri("p", "class", "view").GetFirstHtmlTagValueByAttri("span", "class", "red").GetHtmlTagContent(), out trackingCount) ? trackingCount : 0,
+                    TrackingCount = trackingCount,
+                    FundBaseInfos = new List<FundBaseInfo>(trackingCount),
                 });
             }
         }

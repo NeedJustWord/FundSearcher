@@ -31,5 +31,9 @@
         /// 删除命令
         /// </summary>
         public const string Delete = "DeleteCommand";
+        /// <summary>
+        /// 详情命令
+        /// </summary>
+        public const string Detail = "DetailCommand";
     }
 }

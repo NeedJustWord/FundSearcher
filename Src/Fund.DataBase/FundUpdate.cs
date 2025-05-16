@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fund.Crawler;
@@ -12,6 +13,8 @@ namespace Fund.DataBase
     {
         private Dictionary<string, FundCrawler> crawlerDict = new Dictionary<string, FundCrawler>();
         private Dictionary<FundKey, FundInfo> fundInfoDict = new Dictionary<FundKey, FundInfo>();
+        private Dictionary<string, Tuple<List<IndexInfo>, DateTime>> indexInfoDict = new Dictionary<string, Tuple<List<IndexInfo>, DateTime>>();
+        private List<IndexInfo> emptyIndexInfos = new List<IndexInfo>(0);
         private bool isIniting;
 
         /// <summary>
@@ -20,15 +23,26 @@ namespace Fund.DataBase
         public List<FundInfo> FundInfos => fundInfoDict.Values.ToList();
 
         /// <summary>
+        /// 指数列表
+        /// </summary>
+        public List<IndexInfo> IndexInfos => indexInfoDict.Values.SelectMany(t => t.Item1).ToList();
+
+        /// <summary>
         /// 基金列表是否有更新
         /// </summary>
-        public bool HasUpdate { get; private set; }
+        public bool HasFundUpdate { get; private set; }
+
+        /// <summary>
+        /// 指数列表是否有更新
+        /// </summary>
+        public bool HasIndexUpdate { get; private set; }
 
         public FundUpdate(IEventAggregator eventAggregator)
         {
             crawlerDict.Add(EastMoneyCrawler.SourceNameKey, new FundCrawler(new EastMoneyCrawler(eventAggregator)));
         }
 
+        #region 基金
         /// <summary>
         /// 初始化
         /// </summary>
@@ -39,7 +53,7 @@ namespace Fund.DataBase
             fundInfoDict.Clear();
             Add(fundInfos);
             isIniting = false;
-            HasUpdate = false;
+            HasFundUpdate = false;
         }
 
         /// <summary>
@@ -55,9 +69,9 @@ namespace Fund.DataBase
                     if (fundInfo != null)
                     {
                         fundInfoDict[(FundKey)fundInfo] = fundInfo;
-                        if (HasUpdate == false && isIniting == false)
+                        if (HasFundUpdate == false && isIniting == false)
                         {
-                            HasUpdate = true;
+                            HasFundUpdate = true;
                         }
                     }
                 }
@@ -79,7 +93,7 @@ namespace Fund.DataBase
                     result.Add(fundInfo);
                 }
             }
-            if (result.Count > 0) HasUpdate = true;
+            if (result.Count > 0) HasFundUpdate = true;
 
             return result;
         }
@@ -88,6 +102,7 @@ namespace Fund.DataBase
         /// 更新基金
         /// </summary>
         /// <param name="fundKeys"></param>
+        /// <param name="forceUpdate"></param>
         /// <returns></returns>
         public async Task<List<FundInfo>> Update(IEnumerable<FundKey> fundKeys, bool forceUpdate)
         {
@@ -126,5 +141,67 @@ namespace Fund.DataBase
                 return result;
             });
         }
+        #endregion
+
+        #region 指数
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <param name="dict"></param>
+        public void Init(Dictionary<string, List<IndexInfo>> dict)
+        {
+            isIniting = true;
+            indexInfoDict.Clear();
+
+            foreach (var item in dict)
+            {
+                if (dict.Values.Count > 0)
+                {
+                    indexInfoDict[item.Key] = new Tuple<List<IndexInfo>, DateTime>(item.Value, item.Value.First().UpdateTime);
+                }
+            }
+
+            isIniting = false;
+            HasIndexUpdate = false;
+        }
+
+        /// <summary>
+        /// 更新指数
+        /// </summary>
+        /// <param name="sourceName"></param>
+        /// <param name="forceUpdate"></param>
+        /// <returns></returns>
+        public async Task<List<IndexInfo>> Update(string sourceName, bool forceUpdate)
+        {
+            return await Task.Run(() =>
+            {
+                List<IndexInfo> infos = null;
+                bool needUpdate = false;
+
+                if (indexInfoDict.TryGetValue(sourceName, out var tuple))
+                {
+                    infos = tuple.Item1;
+                    needUpdate = forceUpdate || tuple.Item2.IsNeedUpdate();
+                }
+                else
+                {
+                    needUpdate = true;
+                }
+
+                if (needUpdate)
+                {
+                    if (crawlerDict.TryGetValue(sourceName, out var crawler))
+                    {
+                        infos = crawler.Start().Result;
+                        indexInfoDict[sourceName] = new Tuple<List<IndexInfo>, DateTime>(infos, DateTime.Now);
+                        HasIndexUpdate = true;
+                    }
+                }
+
+                return infos ?? emptyIndexInfos;
+            });
+        }
+        #endregion
     }
 }

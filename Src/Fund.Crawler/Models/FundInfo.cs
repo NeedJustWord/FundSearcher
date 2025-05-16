@@ -20,28 +20,6 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref isChecked, value); }
         }
 
-        private bool isShow;
-        /// <summary>
-        /// 是否显示
-        /// </summary>
-        [JsonIgnore]
-        public bool IsShow
-        {
-            get { return isShow; }
-            set { SetProperty(ref isShow, value); }
-        }
-
-        private int orderNumber;
-        /// <summary>
-        /// 序号
-        /// </summary>
-        [JsonIgnore]
-        public int OrderNumber
-        {
-            get { return orderNumber; }
-            set { SetProperty(ref orderNumber, value); }
-        }
-
         private List<string> applyRatesHiddenColumns;
         /// <summary>
         /// 认购费率隐藏列

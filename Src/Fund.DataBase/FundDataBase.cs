@@ -15,24 +15,26 @@ namespace Fund.DataBase
     public class FundDataBase
     {
         private FundUpdate fundUpdate;
-        private string dbFileName;
-        private string dbFileNameWithExtension => $"{dbFileName}.txt";
+        private string fundFileName;
+        private string fundFileNameWithExtension;
+        private string indexFileName;
+        private string indexFileNameWithExtension;
 
-        private static char[] fundIdSeparator = new char[] { ' ', ',', '，', '-' };
+        public static char[] InputSeparator = new char[] { ' ', ',', '，', '-' };
 
         /// <summary>
         /// 基金列表
         /// </summary>
         public List<FundInfo> FundInfos => fundUpdate.FundInfos;
 
-        public FundDataBase(IEventAggregator eventAggregator) : this("FundInfos", eventAggregator)
+        public FundDataBase(IEventAggregator eventAggregator, string fundFileName = "FundInfos", string indexFileName = "IndexInfos")
         {
-        }
+            this.fundFileName = fundFileName;
+            fundFileNameWithExtension = $"{fundFileName}.txt";
+            this.indexFileName = indexFileName;
+            indexFileNameWithExtension = $"{indexFileName}.txt";
 
-        public FundDataBase(string fileName, IEventAggregator eventAggregator)
-        {
             fundUpdate = new FundUpdate(eventAggregator);
-            dbFileName = fileName;
             Load();
         }
 
@@ -41,12 +43,23 @@ namespace Fund.DataBase
         /// </summary>
         public void Load()
         {
-            var files = Directory.GetFiles(".", $"{dbFileName}*.txt");
+            var files = Directory.GetFiles(".", $"{fundFileName}*.txt");
             var list = files.SelectMany(t => File.ReadAllText(t).FromJson<List<FundInfo>>())
                 .GroupBy(t => new FundKey(t.FundId, t.InfoSource))
                 .Select(t => t.OrderByDescending(x => x.UpdateTime).First());
             fundUpdate.Init(list);
-            Save(files);
+            Save(files, fundFileNameWithExtension, fundUpdate.FundInfos.CustomSort().ToJson());
+
+            files = Directory.GetFiles(".", $"{indexFileName}*.txt");
+            var group = files.SelectMany(t => File.ReadAllText(t).FromJson<List<IndexInfo>>())
+                .GroupBy(t => t.InfoSource);
+            var dict = new Dictionary<string, List<IndexInfo>>();
+            foreach (var item in group)
+            {
+                dict[item.Key] = item.GroupBy(t => t.IndexCode).Select(t => t.OrderByDescending(x => x.UpdateTime).First()).ToList();
+            }
+            fundUpdate.Init(dict);
+            Save(files, indexFileNameWithExtension, fundUpdate.IndexInfos.CustomSort().ToJson());
         }
 
         /// <summary>
@@ -54,9 +67,26 @@ namespace Fund.DataBase
         /// </summary>
         public void Save()
         {
-            if (fundUpdate.HasUpdate)
+            if (fundUpdate.HasFundUpdate)
             {
-                File.WriteAllText(dbFileNameWithExtension, fundUpdate.FundInfos.CustomSort().ToJson());
+                File.WriteAllText(fundFileNameWithExtension, fundUpdate.FundInfos.CustomSort().ToJson());
+            }
+            if (fundUpdate.HasIndexUpdate)
+            {
+                File.WriteAllText(indexFileNameWithExtension, fundUpdate.IndexInfos.CustomSort().ToJson());
+            }
+        }
+
+        private void Save(string[] files, string fileNameWithExtension, string contents)
+        {
+            if (files.Length == 0) return;
+            if (files.Length > 1 || string.Compare(Path.GetFileName(files[0]), fileNameWithExtension, true) != 0)
+            {
+                foreach (var file in files)
+                {
+                    File.Delete(file);
+                }
+                File.WriteAllText(fileNameWithExtension, contents);
             }
         }
 
@@ -70,19 +100,6 @@ namespace Fund.DataBase
             return fundUpdate.Delete(fundInfos);
         }
 
-        private void Save(string[] files)
-        {
-            if (files.Length == 0) return;
-            if (files.Length > 1 || string.Compare(Path.GetFileName(files[0]), dbFileNameWithExtension, true) != 0)
-            {
-                foreach (var file in files)
-                {
-                    File.Delete(file);
-                }
-                File.WriteAllText(dbFileNameWithExtension, fundUpdate.FundInfos.CustomSort().ToJson());
-            }
-        }
-
         /// <summary>
         /// 获取基金信息
         /// </summary>
@@ -92,7 +109,7 @@ namespace Fund.DataBase
         /// <returns></returns>
         public async Task<List<FundInfo>> GetFundInfos(string fundIds, string sourceName = EastMoneyCrawler.SourceNameKey, bool forceUpdate = false)
         {
-            return await GetFundInfos(sourceName, forceUpdate, fundIds == null ? new string[0] : fundIds.Split(fundIdSeparator, StringSplitOptions.RemoveEmptyEntries).Where(t => int.TryParse(t, out _)).SelectMany(GetFundIds).Distinct().ToArray());
+            return await GetFundInfos(sourceName, forceUpdate, fundIds == null ? new string[0] : fundIds.Split(InputSeparator, StringSplitOptions.RemoveEmptyEntries).Where(t => int.TryParse(t, out _)).SelectMany(GetFundIds).Distinct().ToArray());
         }
 
         /// <summary>
@@ -135,6 +152,19 @@ namespace Fund.DataBase
                     if (item.FundId.Contains(input)) yield return item.FundId;
                 }
             }
+        }
+
+        /// <summary>
+        /// 获取指数信息
+        /// </summary>
+        /// <param name="forceUpdate">是否强制更新</param>
+        /// <returns></returns>
+        public async Task<List<IndexInfo>> GetIndexInfos(bool forceUpdate = false)
+        {
+            return await Task.Run(() =>
+            {
+                return fundUpdate.Update(EastMoneyCrawler.SourceNameKey, forceUpdate);
+            });
         }
     }
 }
