@@ -27,6 +27,7 @@
         </StackPanel>
 
         <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Loaded="DataGrid_Loaded"
+                  RowStyle="{StaticResource ShowDataGridRow}"
                   Style="{StaticResource CompareDataGrid}" ItemsSource="{Binding FundInfos}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="基金代码" IsReadOnly="True" Binding="{Binding FundId}"/>
@@ -90,18 +91,6 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="卖出确认日" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
             </DataGrid.Columns>
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsShow}" Value="True">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsShow}" Value="False">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
         </DataGrid>
     </Grid>
 </UserControl>

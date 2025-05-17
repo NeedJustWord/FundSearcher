@@ -6,6 +6,18 @@ namespace Fund.Crawler.Models
 {
     public static class Extensions
     {
+        private static char[] inputSeparator = new char[] { ' ', ',', '，', '-' };
+
+        /// <summary>
+        /// 输入分割
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string[] InputSplit(this string str)
+        {
+            return str == null ? new string[0] : str.Split(inputSeparator, StringSplitOptions.RemoveEmptyEntries);
+        }
+
         /// <summary>
         /// 判断是否需要更新
         /// </summary>
@@ -44,6 +56,16 @@ namespace Fund.Crawler.Models
         public static IEnumerable<IndexInfo> CustomSort(this IEnumerable<IndexInfo> list)
         {
             return list.OrderBy(t => t.IndexCode);
+        }
+
+        /// <summary>
+        /// 自定义排序
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static IEnumerable<FundBaseInfo> CustomSort(this IEnumerable<FundBaseInfo> list)
+        {
+            return list.OrderBy(t => t.FundId);
         }
     }
 }

@@ -35,5 +35,9 @@
         /// 详情命令
         /// </summary>
         public const string Detail = "DetailCommand";
+        /// <summary>
+        /// 复制命令
+        /// </summary>
+        public const string Copy = "CopyCommand";
     }
 }

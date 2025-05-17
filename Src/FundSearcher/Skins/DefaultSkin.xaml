@@ -226,4 +226,15 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="DataGridRow" x:Key="ShowDataGridRow">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsShow}" Value="True">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShow}" Value="False">
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

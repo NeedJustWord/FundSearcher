@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Fund.Crawler.Models;
@@ -14,16 +13,6 @@ namespace FundSearcher.Views
     class IndexQueryViewModel : BaseIndexViewModel
     {
         #region 属性
-        private string keyWord;
-        /// <summary>
-        /// 关键字
-        /// </summary>
-        public string KeyWord
-        {
-            get { return keyWord; }
-            set { SetProperty(ref keyWord, value); }
-        }
-
         private IndexInfo selectedIndexInfo;
         /// <summary>
         /// 选中指数信息
@@ -102,7 +91,7 @@ namespace FundSearcher.Views
 
         private void Filter()
         {
-            var keyWords = keyWord == null ? new string[0] : keyWord.Split(FundDataBase.InputSeparator, StringSplitOptions.RemoveEmptyEntries);
+            var keyWords = KeyWord.InputSplit();
 
             int order = 1;
             foreach (var item in IndexInfos)

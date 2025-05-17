@@ -48,6 +48,7 @@
         </Grid>
 
         <DataGrid Grid.Row="1" Margin="3" CanUserAddRows="False" CanUserSortColumns="False" AutoGenerateColumns="False"
+                  RowStyle="{StaticResource ShowDataGridRow}"
                   ItemsSource="{Binding IndexInfos}" SelectedItem="{Binding SelectedIndexInfo}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="序号" Width="40" IsReadOnly="True" Binding="{Binding OrderNumber}"/>
@@ -57,18 +58,6 @@
                 <DataGridTextColumn Header="信息来源" Width="60" IsReadOnly="True" Binding="{Binding InfoSource}"/>
                 <DataGridTextColumn Header="更新时间" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
             </DataGrid.Columns>
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsShow}" Value="True">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsShow}" Value="False">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
         </DataGrid>
     </Grid>
 </UserControl>

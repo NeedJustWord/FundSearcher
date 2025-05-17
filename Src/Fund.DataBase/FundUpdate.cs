@@ -202,6 +202,31 @@ namespace Fund.DataBase
                 return infos ?? emptyIndexInfos;
             });
         }
+
+        /// <summary>
+        /// 更新指数相关基金
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="forceUpdate"></param>
+        /// <returns></returns>
+        public async Task<List<FundBaseInfo>> Update(IndexInfo info, bool forceUpdate)
+        {
+            return await Task.Run(() =>
+            {
+                bool needUpdate = forceUpdate || (info.FundBaseInfos.Count > 0 && info.FundBaseInfos[0].UpdateTime.IsNeedUpdate());
+                if (needUpdate)
+                {
+                    if (crawlerDict.TryGetValue(info.InfoSource, out var crawler))
+                    {
+                        var index = crawler.Start(info.IndexCode).Result;
+                        info.FundBaseInfos = index.FundBaseInfos;
+                        info.TrackingCount = index.FundBaseInfos.Count;
+                        HasIndexUpdate = true;
+                    }
+                }
+                return info.FundBaseInfos;
+            });
+        }
         #endregion
     }
 }

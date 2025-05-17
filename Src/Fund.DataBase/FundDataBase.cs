@@ -20,8 +20,6 @@ namespace Fund.DataBase
         private string indexFileName;
         private string indexFileNameWithExtension;
 
-        public static char[] InputSeparator = new char[] { ' ', ',', '，', '-' };
-
         /// <summary>
         /// 基金列表
         /// </summary>
@@ -109,7 +107,7 @@ namespace Fund.DataBase
         /// <returns></returns>
         public async Task<List<FundInfo>> GetFundInfos(string fundIds, string sourceName = EastMoneyCrawler.SourceNameKey, bool forceUpdate = false)
         {
-            return await GetFundInfos(sourceName, forceUpdate, fundIds == null ? new string[0] : fundIds.Split(InputSeparator, StringSplitOptions.RemoveEmptyEntries).Where(t => int.TryParse(t, out _)).SelectMany(GetFundIds).Distinct().ToArray());
+            return await GetFundInfos(sourceName, forceUpdate, fundIds.InputSplit().Where(t => int.TryParse(t, out _)).SelectMany(GetFundIds).Distinct().ToArray());
         }
 
         /// <summary>
@@ -164,6 +162,20 @@ namespace Fund.DataBase
             return await Task.Run(() =>
             {
                 return fundUpdate.Update(EastMoneyCrawler.SourceNameKey, forceUpdate);
+            });
+        }
+
+        /// <summary>
+        /// 获取指数相关基金基础信息
+        /// </summary>
+        /// <param name="info">指数信息</param>
+        /// <param name="forceUpdate">是否强制更新</param>
+        /// <returns></returns>
+        public async Task<List<FundBaseInfo>> GetFundBaseInfos(IndexInfo info, bool forceUpdate = false)
+        {
+            return await Task.Run(() =>
+            {
+                return fundUpdate.Update(info, forceUpdate);
             });
         }
     }
