@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 namespace FundSearcher.Extensions
@@ -11,13 +12,15 @@ namespace FundSearcher.Extensions
         /// <param name="dataGrid">DataGrid</param>
         /// <param name="rowIndex">行号</param>
         /// <param name="columnIndex">列号</param>
+        /// <param name="isHiddenRow">是否隐藏行</param>
         /// <returns>指定单元格</returns>
-        public static DataGridCell GetCell(this DataGrid dataGrid, int rowIndex, int columnIndex)
+        public static DataGridCell GetCell(this DataGrid dataGrid, int rowIndex, int columnIndex, out bool isHiddenRow)
         {
             var row = dataGrid.GetRow(rowIndex);
             DataGridCell cell = null;
             if (row != null)
             {
+                isHiddenRow = row.Visibility != Visibility.Visible;
                 var presenter = row.FindVisualTreeChild<DataGridCellsPresenter>();
                 cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
                 if (cell == null)
@@ -26,6 +29,11 @@ namespace FundSearcher.Extensions
                     cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
                 }
             }
+            else
+            {
+                isHiddenRow = true;
+            }
+
             return cell;
         }
 

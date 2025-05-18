@@ -9,6 +9,16 @@ namespace Fund.Crawler.Models
     /// </summary>
     public class TransactionInfo : BindableBase
     {
+        private double price;
+        /// <summary>
+        /// 单位净值
+        /// </summary>
+        public double Price
+        {
+            get { return price; }
+            set { SetProperty(ref price, value); }
+        }
+
         private double? buyUpperLimitAmount;
         /// <summary>
         /// 日累计申购限额，单位元

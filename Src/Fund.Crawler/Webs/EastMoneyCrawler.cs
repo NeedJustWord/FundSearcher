@@ -154,6 +154,8 @@ namespace Fund.Crawler.Webs
         private void HandleTransactionInfoSource(string pageSource, FundInfo fundInfo)
         {
             var info = new TransactionInfo();
+            var price = pageSource.GetFirstHtmlTagValueByAttri("p", "class", "row row1").GetFirstHtmlTagValue("b").GetHtmlTagContent();
+            info.Price = price.Substring(0, price.IndexOf('(')).Trim().AsDouble(0);
 
             var keyValues = pageSource.GetHtmlTagValueByAttri("div", "class", "boxitem w790")
             .Select(t =>

@@ -30,45 +30,17 @@ namespace FundSearcher.Views
         private void DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
             var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EBF1DD"));
-            var dg = (DataGrid)sender;
             DataGridCell cell;
-            for (int row = 0; row < dg.Items.Count; row++)
+            for (int row = 0; row < dgCompare.Items.Count; row++)
             {
-                for (int column = 1; column < dg.Columns.Count; column += 2)
+                for (int column = 1; column < dgCompare.Columns.Count; column += 2)
                 {
-                    cell = dg.GetCell(row, column);
+                    cell = dgCompare.GetCell(row, column, out _);
                     if (cell != null) cell.Background = brush;
                 }
             }
 
-            var maxColumns = new string[]
-            {
-                "日累计申购限额(元)",
-                "资产规模(亿元)",
-                "份额规模(亿份)",
-            };
-            var minColumns = new string[]
-            {
-                "购买费率",
-                "管理费率(每年)",
-                "托管费率(每年)",
-                "销售服务费率(每年)",
-                "运作费用(每年)",
-            };
-            string header;
-            var resultCells = new List<DataGridCell>();
-            for (int column = 0; column < dg.Columns.Count; column++)
-            {
-                header = dg.Columns[column].Header.ToString();
-                if (maxColumns.Contains(header))
-                {
-                    SetColumnHightLight(dg, column, double.MinValue, double.MaxValue, Math.Max, ref resultCells);
-                }
-                else if (minColumns.Contains(header))
-                {
-                    SetColumnHightLight(dg, column, double.MaxValue, double.MinValue, Math.Min, ref resultCells);
-                }
-            }
+            SetColumnHightLight();
         }
 
         private void ListView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -80,18 +52,57 @@ namespace FundSearcher.Views
 
                 var model = (FilterModel)item.DataContext;
                 aggregator.Publish<FundCompareFilterModelClickEvent, FilterModel>(model);
+                SetColumnHightLight();
             }
         }
 
-        private void SetColumnHightLight(DataGrid dg, int column, double value, double nullAsValue, Func<double, double, double> compare, ref List<DataGridCell> resultCells)
+        private void SetColumnHightLight()
+        {
+            var maxColumns = new string[]
+            {
+                "日累计申购限额(元)",
+                "资产规模(亿元)",
+                "份额规模(亿份)",
+            };
+            var minColumns = new string[]
+            {
+                "单位净值",
+                "购买费率",
+                "管理费率(每年)",
+                "托管费率(每年)",
+                "销售服务费率(每年)",
+                "运作费用(每年)",
+            };
+            string header;
+            var allCells = new List<DataGridCell>(dgCompare.Items.Count);
+            var resultCells = new List<DataGridCell>(dgCompare.Items.Count);
+            for (int column = 0; column < dgCompare.Columns.Count; column++)
+            {
+                header = dgCompare.Columns[column].Header.ToString();
+                if (maxColumns.Contains(header))
+                {
+                    SetColumnHightLight(dgCompare, column, double.MinValue, double.MaxValue, Math.Max, ref allCells, ref resultCells);
+                }
+                else if (minColumns.Contains(header))
+                {
+                    SetColumnHightLight(dgCompare, column, double.MaxValue, double.MinValue, Math.Min, ref allCells, ref resultCells);
+                }
+            }
+        }
+
+        private void SetColumnHightLight(DataGrid dg, int column, double value, double nullAsValue, Func<double, double, double> compare, ref List<DataGridCell> allCells, ref List<DataGridCell> resultCells)
         {
             DataGridCell cell;
+            bool isHiddenRow;
             double cellValue, compareValue;
+
+            allCells.Clear();
             for (int row = 0; row < dg.Items.Count; row++)
             {
-                cell = dg.GetCell(row, column);
-                if (cell == null) continue;
+                cell = dg.GetCell(row, column, out isHiddenRow);
+                if (isHiddenRow || cell == null) continue;
 
+                allCells.Add(cell);
                 cellValue = ((TextBlock)cell.Content).Text.AsDouble(nullAsValue);
                 compareValue = compare(value, cellValue);
                 if (value != compareValue)
@@ -106,9 +117,14 @@ namespace FundSearcher.Views
                 }
             }
 
+            SolidColorBrush normal = new SolidColorBrush(Colors.Black), red = new SolidColorBrush(Colors.Red);
+            foreach (var item in allCells)
+            {
+                item.Foreground = normal;
+            }
             foreach (var item in resultCells)
             {
-                item.Foreground = new SolidColorBrush(Colors.Red);
+                item.Foreground = red;
             }
         }
     }

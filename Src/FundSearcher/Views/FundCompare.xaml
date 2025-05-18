@@ -26,7 +26,7 @@
             <Button Content="返回" Style="{StaticResource QueryButton}" Command="{Binding GoBackCommand}"/>
         </StackPanel>
 
-        <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Loaded="DataGrid_Loaded"
+        <DataGrid x:Name="dgCompare" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Loaded="DataGrid_Loaded"
                   RowStyle="{StaticResource ShowDataGridRow}"
                   Style="{StaticResource CompareDataGrid}" ItemsSource="{Binding FundInfos}">
             <DataGrid.Columns>
@@ -66,6 +66,7 @@
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="交易场所" IsReadOnly="True" Binding="{Binding Counter}"/>
+                <DataGridTextColumn Header="单位净值" IsReadOnly="True" Binding="{Binding TransactionInfo.Price,StringFormat=F4}"/>
                 <DataGridTextColumn Header="日累计申购限额(元)" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
                 <DataGridTextColumn Header="购买费率" IsReadOnly="True">
                     <DataGridTextColumn.Binding>

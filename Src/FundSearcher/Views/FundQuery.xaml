@@ -167,6 +167,7 @@
                 <DataGridTextColumn Header="买入确认日" Width="80" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyConfirmDate}"/>
                 <DataGridTextColumn Header="卖出确认日" Width="80" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
                 <DataGridTextColumn Header="日累计申购限额(元)" Width="120" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
+                <DataGridTextColumn Header="单位净值" Width="60" IsReadOnly="True" Binding="{Binding TransactionInfo.Price,StringFormat=F4}"/>
                 <DataGridTextColumn Header="运作费用(每年)" Width="90" IsReadOnly="True" Binding="{Binding TransactionInfo.RunningRate,StringFormat=0.00%}"/>
                 <DataGridTextColumn Header="信息来源" Width="60" IsReadOnly="True" Binding="{Binding InfoSource}"/>
                 <DataGridTextColumn Header="更新时间" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
