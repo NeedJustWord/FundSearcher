@@ -113,7 +113,7 @@ namespace Fund.Crawler.Webs
                 if (key.Index != 0)
                 {
                     WriteLog($"{args.ThreadId} {keyStr}开始休眠");
-                    RandomSleep(keyStr, 3, 15);
+                    RandomSleep(keyStr, 1000, 3000);
                     WriteLog($"{args.ThreadId} {keyStr}休眠结束");
                 }
                 WriteLog($"{args.ThreadId} {keyStr}开始爬取");
@@ -142,14 +142,14 @@ namespace Fund.Crawler.Webs
         /// <summary>
         /// 获取随机休眠时间
         /// </summary>
-        /// <param name="minSecond"></param>
-        /// <param name="maxSecond"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
         /// <returns></returns>
-        private static int GetRandomSleepSecond(int minSecond, int maxSecond)
+        private static int GetRandomSleepTime(int min, int max)
         {
             lock (lockObj)
             {
-                return random.Next(minSecond, maxSecond);
+                return random.Next(min, max);
             }
         }
 
@@ -157,13 +157,13 @@ namespace Fund.Crawler.Webs
         /// 随机休眠
         /// </summary>
         /// <param name="key"></param>
-        /// <param name="minSecond"></param>
-        /// <param name="maxSecond"></param>
-        private void RandomSleep(string key, int minSecond, int maxSecond)
+        /// <param name="minMilliseconds"></param>
+        /// <param name="maxMilliseconds"></param>
+        private void RandomSleep(string key, int minMilliseconds, int maxMilliseconds)
         {
-            var second = GetRandomSleepSecond(minSecond, maxSecond);
-            WriteLog($"{key}随机休眠时间 {second}s");
-            Task.Delay(second * 1000).Wait();
+            var time = GetRandomSleepTime(minMilliseconds, maxMilliseconds);
+            WriteLog($"{key}随机休眠时间 {time}ms");
+            Task.Delay(time).Wait();
         }
 
         /// <summary>
