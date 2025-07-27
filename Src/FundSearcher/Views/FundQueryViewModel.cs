@@ -311,14 +311,9 @@ namespace FundSearcher.Views
         private void Compare()
         {
             var infos = fundInfos.Where(t => t.IsShow && t.IsChecked).ToArray();
-            if (infos.Length < 2)
+            if (infos.Length == 0)
             {
-                MessageBoxEx.ShowError("请至少选择2只基金进行比较");
-                return;
-            }
-            if (infos.Length > 10)
-            {
-                MessageBoxEx.ShowError("最多选择10只基金进行比较");
+                MessageBoxEx.ShowError("请选择需要比较的基金");
                 return;
             }
 

@@ -9,7 +9,7 @@
              xmlns:controls="clr-namespace:FundSearcher.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="1800">
+             d:DesignHeight="450" d:DesignWidth="1920">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
@@ -168,8 +168,16 @@
                 <DataGridTextColumn Header="卖出确认日" Width="80" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
                 <DataGridTextColumn Header="日累计申购限额(元)" Width="120" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
                 <DataGridTextColumn Header="单位净值" Width="60" IsReadOnly="True" Binding="{Binding TransactionInfo.Price,StringFormat=F4}"/>
+                <DataGridTextColumn Header="购买费率" Width="60" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource CompareRateDisplayConverter}">
+                            <Binding Path="Counter"/>
+                            <Binding Path="TransactionInfo.ApplyRates"/>
+                            <Binding Path="TransactionInfo.BuyRates"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="运作费用(每年)" Width="90" IsReadOnly="True" Binding="{Binding TransactionInfo.RunningRate,StringFormat=0.00%}"/>
-                <DataGridTextColumn Header="信息来源" Width="60" IsReadOnly="True" Binding="{Binding InfoSource}"/>
                 <DataGridTextColumn Header="更新时间" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
