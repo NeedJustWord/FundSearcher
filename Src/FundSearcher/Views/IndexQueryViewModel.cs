@@ -207,7 +207,7 @@ namespace FundSearcher.Views
 
         private void Copy()
         {
-            var str = string.Join(",", IndexInfos.SelectMany(t => t.FundBaseInfos.Select(f => f.FundId)));
+            var str = string.Join(",", IndexInfos.Where(t => StarIndexes.Any(x => x.Key == t.IndexCode)).SelectMany(t => t.FundBaseInfos.Select(f => f.FundId)));
             Clipboard.SetText(str);
             PublishStatusMessage("复制关注指数相关基金代码成功");
         }
