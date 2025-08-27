@@ -194,6 +194,8 @@ namespace FundSearcher.Views
                 }
             }
 
+            if (SelectStarIndex == null) lastSelectStarIndex = SelectStarIndex = StarIndexes.First();
+
             SaveStarIndexes();
         }
 
@@ -228,7 +230,7 @@ namespace FundSearcher.Views
         private bool IsShow(IndexInfo index, string[] keyWords)
         {
             if (keyWords.Length > 0 && keyWords.All(t => index.IndexCode.Contains(t) == false && index.IndexName.Contains(t) == false)) return false;
-            if (SelectStarIndex.Key.IsNotNullAndEmpty() && index.IndexCode != SelectStarIndex.Key) return false;
+            if (SelectStarIndex != null && SelectStarIndex.Key.IsNotNullAndEmpty() && index.IndexCode != SelectStarIndex.Key) return false;
             return true;
         }
 
