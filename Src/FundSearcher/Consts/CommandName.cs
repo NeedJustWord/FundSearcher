@@ -43,5 +43,9 @@
         /// 复制命令
         /// </summary>
         public const string Copy = "CopyCommand";
+        /// <summary>
+        /// 刷新详情命令
+        /// </summary>
+        public const string RefreshDetail = "RefreshDetailCommand";
     }
 }

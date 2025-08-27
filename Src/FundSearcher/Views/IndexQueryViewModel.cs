@@ -86,6 +86,7 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.Add, Add);
             RegisterCommand(CommandName.Delete, Delete);
             RegisterCommand(CommandName.Copy, Copy);
+            RegisterCommand(CommandName.RefreshDetail, RefreshDetail);
             starIndexCodes = ConfigHelper.StarIndexes.SplitRemoveEmpty(',').ToList();
         }
 
@@ -210,6 +211,13 @@ namespace FundSearcher.Views
             var str = string.Join(",", IndexInfos.Where(t => StarIndexes.Any(x => x.Key == t.IndexCode)).SelectMany(t => t.FundBaseInfos.Select(f => f.FundId)));
             Clipboard.SetText(str);
             PublishStatusMessage("复制关注指数相关基金代码成功");
+        }
+
+        private async void RefreshDetail()
+        {
+            PublishStatusMessage("开始刷新关注指数详情");
+            await fundDataBase.GetFundBaseInfos(IndexInfos.Where(t => StarIndexes.Any(x => x.Key == t.IndexCode)), true);
+            PublishStatusMessage("刷新关注指数详情成功");
         }
 
         private void SetItemsSource(bool isRefresh, IEnumerable<IndexInfo> infos)

@@ -178,5 +178,19 @@ namespace Fund.DataBase
                 return fundUpdate.Update(info, forceUpdate);
             });
         }
+
+        /// <summary>
+        /// 获取指数相关基金基础信息
+        /// </summary>
+        /// <param name="info">指数信息</param>
+        /// <param name="forceUpdate">是否强制更新</param>
+        /// <returns></returns>
+        public async Task<List<FundBaseInfo>[]> GetFundBaseInfos(IEnumerable<IndexInfo> infos, bool forceUpdate = false)
+        {
+            return await Task.Run(() =>
+            {
+                return Task.WhenAll(infos.Select(t => fundUpdate.Update(t, forceUpdate)));
+            });
+        }
     }
 }
