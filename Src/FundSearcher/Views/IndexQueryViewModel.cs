@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using Fund.Core.Extensions;
 using Fund.Core.Helpers;
 using Fund.Crawler.Extensions;
@@ -84,6 +85,7 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.Detail, Detail);
             RegisterCommand(CommandName.Add, Add);
             RegisterCommand(CommandName.Delete, Delete);
+            RegisterCommand(CommandName.Copy, Copy);
             starIndexCodes = ConfigHelper.StarIndexes.SplitRemoveEmpty(',').ToList();
         }
 
@@ -201,6 +203,13 @@ namespace FundSearcher.Views
         private void SaveStarIndexes()
         {
             ConfigHelper.StarIndexes = string.Join(",", starIndexCodes.OrderBy(t => t));
+        }
+
+        private void Copy()
+        {
+            var str = string.Join(",", IndexInfos.SelectMany(t => t.FundBaseInfos.Select(f => f.FundId)));
+            Clipboard.SetText(str);
+            PublishStatusMessage("复制关注指数相关基金代码成功");
         }
 
         private void SetItemsSource(bool isRefresh, IEnumerable<IndexInfo> infos)

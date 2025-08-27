@@ -67,6 +67,8 @@
                         Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Add}"/>
                 <Button Content="取关" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Delete}"/>
+                <Button Content="复制" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Copy}"/>
             </StackPanel>
         </Grid>
 
