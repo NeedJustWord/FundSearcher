@@ -19,6 +19,17 @@ namespace Fund.Crawler.Models
         }
 
         /// <summary>
+        /// 分割
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="separator"></param>
+        /// <returns></returns>
+        public static string[] SplitRemoveEmpty(this string str, params char[] separator)
+        {
+            return str == null ? new string[0] : str.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
         /// 判断是否需要更新
         /// </summary>
         /// <param name="time"></param>

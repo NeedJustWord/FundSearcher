@@ -17,6 +17,17 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref isShow, value); }
         }
 
+        private bool isChecked;
+        /// <summary>
+        /// 是否选中
+        /// </summary>
+        [JsonIgnore]
+        public bool IsChecked
+        {
+            get { return isChecked; }
+            set { SetProperty(ref isChecked, value); }
+        }
+
         private int orderNumber;
         /// <summary>
         /// 序号

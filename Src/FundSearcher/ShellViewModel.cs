@@ -1,4 +1,5 @@
-﻿using Fund.Crawler.Extensions;
+﻿using Fund.Core.Helpers;
+using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using Fund.Crawler.PubSubEvents;
 using Fund.DataBase;
@@ -61,6 +62,7 @@ namespace FundSearcher
         protected override void OnClosing()
         {
             fundDataBase.Save();
+            ConfigHelper.Save();
         }
 
         private void HandleCrawleProgress(CrawlingProgressModel model)

@@ -28,6 +28,10 @@
         /// </summary>
         public const string Reset = "ResetCommand";
         /// <summary>
+        /// 添加命令
+        /// </summary>
+        public const string Add = "AddCommand";
+        /// <summary>
         /// 删除命令
         /// </summary>
         public const string Delete = "DeleteCommand";

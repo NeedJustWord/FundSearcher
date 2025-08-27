@@ -83,6 +83,7 @@
     <Compile Include="PubSubEvents\FundCompareFilterModelClickEvent.cs" />
     <Compile Include="PubSubEvents\FundQueryCheckAllEvent.cs" />
     <Compile Include="PubSubEvents\FundQueryRefreshDetailEvent.cs" />
+    <Compile Include="PubSubEvents\IndexQueryCheckAllEvent.cs" />
     <Compile Include="PubSubEvents\StatusMessageEvent.cs" />
     <Compile Include="Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>

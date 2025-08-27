@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Fund.Core.Extensions;
+using Fund.Core.Helpers;
+using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using Fund.DataBase;
 using FundSearcher.Consts;
 using FundSearcher.Controls;
+using FundSearcher.Models;
+using FundSearcher.PubSubEvents;
 using Prism.Events;
 using Prism.Regions;
 
@@ -32,14 +37,55 @@ namespace FundSearcher.Views
             get { return indexInfos; }
             set { SetProperty(ref indexInfos, value); }
         }
+
+        #region 关注指数
+        private ObservableCollection<FilterModel> starIndexes = new ObservableCollection<FilterModel>();
+        /// <summary>
+        /// 关注指数
+        /// </summary>
+        public ObservableCollection<FilterModel> StarIndexes
+        {
+            get { return starIndexes; }
+            set { SetProperty(ref starIndexes, value); }
+        }
+
+        private FilterModel lastSelectStarIndex;
+        private FilterModel selectStarIndex;
+        /// <summary>
+        /// 选中关注指数
+        /// </summary>
+        public FilterModel SelectStarIndex
+        {
+            get { return selectStarIndex; }
+            set
+            {
+                SetLastUnselected(lastSelectStarIndex, value);
+                if (SetProperty(ref selectStarIndex, value))
+                {
+                    lastSelectStarIndex = value;
+                    SetValueSelected(value);
+                    if (filter) Filter();
+                }
+            }
+        }
         #endregion
+
+        #endregion
+
+        private string starIndexesConfig = "StarIndexes";
+        private List<string> starIndexCodes;
+        private bool filter;
 
         public IndexQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator, dataBase)
         {
+            eventAggregator.Subscribe<IndexQueryCheckAllEvent>(CheckAll);
             RegisterCommand(CommandName.Query, Query);
             RegisterCommand(CommandName.Reset, Reset);
             RegisterCommand(CommandName.Refresh, Refresh);
             RegisterCommand(CommandName.Detail, Detail);
+            RegisterCommand(CommandName.Add, Add);
+            RegisterCommand(CommandName.Delete, Delete);
+            starIndexCodes = ConfigHelper.Get(starIndexesConfig).SplitRemoveEmpty(',').ToList();
         }
 
         protected override void OnFirstLoad()
@@ -48,10 +94,19 @@ namespace FundSearcher.Views
             PublishStatusMessage("指数数据加载完成");
         }
 
+        private void CheckAll()
+        {
+            var value = !IndexInfos.Where(t => t.IsShow).All(t => t.IsChecked);
+            foreach (var item in IndexInfos.Where(t => t.IsShow))
+            {
+                item.IsChecked = value;
+            }
+        }
+
         private async void Query()
         {
             var list = await fundDataBase.GetIndexInfos();
-            SetItemsSource(list.CustomSort());
+            SetItemsSource(false, list.CustomSort());
             Filter();
         }
 
@@ -64,7 +119,7 @@ namespace FundSearcher.Views
         private async void Refresh()
         {
             var list = await fundDataBase.GetIndexInfos(true);
-            SetItemsSource(list.CustomSort());
+            SetItemsSource(true, list.CustomSort());
             Filter();
         }
 
@@ -83,10 +138,76 @@ namespace FundSearcher.Views
             Navigate(NavigateName.IndexDetail, param);
         }
 
-        private void SetItemsSource(IEnumerable<IndexInfo> infos)
+        private void Add()
+        {
+            var checkInfos = indexInfos.Where(t => t.IsShow && t.IsChecked).ToArray();
+            if (checkInfos.Length == 0)
+            {
+                MessageBoxEx.ShowError("请勾选需要关注的指数");
+                return;
+            }
+
+            foreach (var info in checkInfos)
+            {
+                var temp = StarIndexes.FirstOrDefault(t => t.Key == info.IndexCode);
+                if (temp == null)
+                {
+                    StarIndexes.Add(new FilterModel(info.IndexCode, info.IndexName));
+                }
+
+                if (starIndexCodes.FindIndex(t => t == info.IndexCode) == -1)
+                {
+                    starIndexCodes.Add(info.IndexCode);
+                }
+            }
+
+            SaveStarIndexes();
+        }
+
+        private void Delete()
+        {
+            var checkInfos = indexInfos.Where(t => t.IsShow && t.IsChecked).ToArray();
+            if (checkInfos.Length == 0)
+            {
+                MessageBoxEx.ShowError("请勾选需要取关的指数");
+                return;
+            }
+
+            string indexCode;
+            for (int i = StarIndexes.Count - 1; i >= 0; i--)
+            {
+                indexCode = StarIndexes[i].Key;
+                var temp = checkInfos.FirstOrDefault(t => t.IndexCode == indexCode);
+                if (temp != null)
+                {
+                    StarIndexes.RemoveAt(i);
+                }
+            }
+
+            for (int i = starIndexCodes.Count - 1; i >= 0; i--)
+            {
+                indexCode = starIndexCodes[i];
+                var temp = checkInfos.FirstOrDefault(t => t.IndexCode == indexCode);
+                if (temp != null)
+                {
+                    starIndexCodes.RemoveAt(i);
+                }
+            }
+
+            SaveStarIndexes();
+        }
+
+        private void SaveStarIndexes()
+        {
+            ConfigHelper.Set(starIndexesConfig, string.Join(",", starIndexCodes.OrderBy(t => t)));
+        }
+
+        private void SetItemsSource(bool isRefresh, IEnumerable<IndexInfo> infos)
         {
             IndexInfos.Clear();
             IndexInfos.AddRange(infos);
+
+            InitFilterData(isRefresh);
         }
 
         private void Filter()
@@ -106,8 +227,32 @@ namespace FundSearcher.Views
 
         private bool IsShow(IndexInfo index, string[] keyWords)
         {
-            if (keyWords.Length == 0) return true;
-            return keyWords.Any(t => index.IndexCode.Contains(t) || index.IndexName.Contains(t));
+            if (keyWords.Length > 0 && keyWords.All(t => index.IndexCode.Contains(t) == false && index.IndexName.Contains(t) == false)) return false;
+            if (SelectStarIndex.Key.IsNotNullAndEmpty() && index.IndexCode != SelectStarIndex.Key) return false;
+            return true;
+        }
+
+        private void InitFilterData(bool isRefresh)
+        {
+            filter = false;
+
+            var lastKey = isRefresh ? SelectStarIndex?.Key : "";
+            InitStarIndexes();
+            lastSelectStarIndex = SelectStarIndex = GetDefaultSelectItem(StarIndexes, lastKey);
+
+            filter = true;
+        }
+
+        private void InitStarIndexes()
+        {
+            StarIndexes.Clear();
+            StarIndexes.Add(new FilterModel("", "全部"));
+
+            foreach (var item in starIndexCodes)
+            {
+                var info = IndexInfos.FirstOrDefault(t => t.IndexCode == item);
+                if (info != null) StarIndexes.Add(new FilterModel(info.IndexCode, info.IndexName));
+            }
         }
     }
 }

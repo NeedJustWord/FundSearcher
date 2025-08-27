@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Fund.Core.Extensions;
 using Fund.Crawler.Extensions;
 using Fund.DataBase;
+using FundSearcher.Models;
 using FundSearcher.PubSubEvents;
 using Prism.Commands;
 using Prism.Events;
@@ -117,6 +121,23 @@ namespace FundSearcher
         protected void PublishStatusMessage(string msg)
         {
             eventAggregator.Publish<StatusMessageEvent, string>(msg);
+        }
+
+        protected void SetLastUnselected(FilterModel last, FilterModel value)
+        {
+            if (last != null && last != value) last.IsSelected = false;
+        }
+
+        protected void SetValueSelected(FilterModel value)
+        {
+            if (value != null) value.IsSelected = true;
+        }
+
+        protected FilterModel GetDefaultSelectItem(ObservableCollection<FilterModel> data, string key)
+        {
+            var item = key.IsNotNullAndEmpty() ? (data.FirstOrDefault(t => t.Key == key) ?? data.First()) : data.First();
+            item.IsSelected = true;
+            return item;
         }
     }
 }

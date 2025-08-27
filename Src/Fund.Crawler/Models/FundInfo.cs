@@ -9,17 +9,6 @@ namespace Fund.Crawler.Models
     /// </summary>
     public class FundInfo : FundBaseInfo
     {
-        private bool isChecked;
-        /// <summary>
-        /// 是否选中
-        /// </summary>
-        [JsonIgnore]
-        public bool IsChecked
-        {
-            get { return isChecked; }
-            set { SetProperty(ref isChecked, value); }
-        }
-
         private List<string> applyRatesHiddenColumns;
         /// <summary>
         /// 认购费率隐藏列

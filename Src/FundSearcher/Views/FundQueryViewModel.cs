@@ -471,23 +471,6 @@ namespace FundSearcher.Views
             filter = true;
         }
 
-        private FilterModel GetDefaultSelectItem(ObservableCollection<FilterModel> data, string key)
-        {
-            var item = key.IsNotNullAndEmpty() ? (data.FirstOrDefault(t => t.Key == key) ?? data.First()) : data.First();
-            item.IsSelected = true;
-            return item;
-        }
-
-        private void SetLastUnselected(FilterModel last, FilterModel value)
-        {
-            if (last != null && last != value) last.IsSelected = false;
-        }
-
-        private void SetValueSelected(FilterModel value)
-        {
-            if (value != null) value.IsSelected = true;
-        }
-
         private void InitTrackingTargets()
         {
             TrackingTargets.Clear();

@@ -14,6 +14,20 @@
             <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    <UserControl.Resources>
+        <Style x:Key="dtCheckHeader" TargetType="DataGridColumnHeader">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Button BorderBrush="Transparent" Background="Transparent"
+                                Style="{x:Null}" Click="BtnCheckAll_Click">
+                            <TextBlock Text="#"/>
+                        </Button>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -22,6 +36,7 @@
 
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
@@ -35,6 +50,10 @@
             </Border>
             <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding KeyWord}"/>
 
+            <Label Grid.Row="1" Grid.Column="0" Content="关注指数：" Style="{StaticResource QueryLabel}"/>
+            <ListView Grid.Row="1" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                      ItemsSource="{Binding StarIndexes}" SelectedItem="{Binding SelectStarIndex}"/>
+
             <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                 <Button Content="查询" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Query}"/>
@@ -44,6 +63,10 @@
                         Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Refresh}"/>
                 <Button Content="详情" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Detail}"/>
+                <Button Content="关注" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Add}"/>
+                <Button Content="取关" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Delete}"/>
             </StackPanel>
         </Grid>
 
@@ -51,6 +74,13 @@
                   RowStyle="{StaticResource ShowDataGridRow}"
                   ItemsSource="{Binding IndexInfos}" SelectedItem="{Binding SelectedIndexInfo}">
             <DataGrid.Columns>
+                <DataGridCheckBoxColumn Width="30" HeaderStyle="{StaticResource dtCheckHeader}" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
                 <DataGridTextColumn Header="序号" Width="40" IsReadOnly="True" Binding="{Binding OrderNumber}"/>
                 <DataGridTextColumn Header="指数代码" Width="120" IsReadOnly="True" Binding="{Binding IndexCode}"/>
                 <DataGridTextColumn Header="指数名称" Width="500" IsReadOnly="True" Binding="{Binding IndexName}"/>

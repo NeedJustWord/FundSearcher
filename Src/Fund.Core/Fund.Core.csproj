@@ -44,6 +44,7 @@
     <Compile Include="Extensions\JsonExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Helpers\AsyncHelper.cs" />
+    <Compile Include="Helpers\ConfigHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
