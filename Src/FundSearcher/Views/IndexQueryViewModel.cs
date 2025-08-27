@@ -72,7 +72,6 @@ namespace FundSearcher.Views
 
         #endregion
 
-        private string starIndexesConfig = "StarIndexes";
         private List<string> starIndexCodes;
         private bool filter;
 
@@ -85,7 +84,7 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.Detail, Detail);
             RegisterCommand(CommandName.Add, Add);
             RegisterCommand(CommandName.Delete, Delete);
-            starIndexCodes = ConfigHelper.Get(starIndexesConfig).SplitRemoveEmpty(',').ToList();
+            starIndexCodes = ConfigHelper.StarIndexes.SplitRemoveEmpty(',').ToList();
         }
 
         protected override void OnFirstLoad()
@@ -201,7 +200,7 @@ namespace FundSearcher.Views
 
         private void SaveStarIndexes()
         {
-            ConfigHelper.Set(starIndexesConfig, string.Join(",", starIndexCodes.OrderBy(t => t)));
+            ConfigHelper.StarIndexes = string.Join(",", starIndexCodes.OrderBy(t => t));
         }
 
         private void SetItemsSource(bool isRefresh, IEnumerable<IndexInfo> infos)

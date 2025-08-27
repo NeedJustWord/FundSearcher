@@ -6,7 +6,27 @@ namespace Fund.Core.Helpers
 {
     public static class ConfigHelper
     {
+        #region 属性
+        private static string starIndexes;
+        /// <summary>
+        /// 关注指数
+        /// </summary>
+        public static string StarIndexes
+        {
+            get { return starIndexes; }
+            set
+            {
+                if (starIndexes != value)
+                {
+                    starIndexes = value;
+                    needSave = true;
+                }
+            }
+        }
+        #endregion
+
         private static XmlDocument document;
+        private static XmlNode appSettings;
         private static string configPath;
         private static bool needSave;
 
@@ -15,6 +35,26 @@ namespace Fund.Core.Helpers
             configPath = $"{Assembly.GetEntryAssembly().GetName().Name}.exe.config";
             document = new XmlDocument();
             document.Load(configPath);
+            appSettings = GetOrCreateXmlNode(document, "configuration", "appSettings");
+
+            starIndexes = Get(nameof(StarIndexes));
+        }
+
+        /// <summary>
+        /// 保存配置文件
+        /// </summary>
+        public static void Save()
+        {
+            if (needSave)
+            {
+                Set(nameof(StarIndexes), StarIndexes);
+                document.Save(configPath);
+            }
+        }
+
+        private static XmlNode GetXmlNode(string key)
+        {
+            return appSettings.SelectSingleNode($"add[@key='{key}']");
         }
 
         /// <summary>
@@ -22,9 +62,9 @@ namespace Fund.Core.Helpers
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static string Get(string key)
+        private static string Get(string key)
         {
-            var node = document.SelectSingleNode($"/configuration/appSettings/add[@key='{key}']");
+            var node = GetXmlNode(key);
             return node == null ? "" : node.Attributes["value"].Value;
         }
 
@@ -34,14 +74,13 @@ namespace Fund.Core.Helpers
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool Set(string key, string value)
+        private static bool Set(string key, string value)
         {
             try
             {
-                var node = document.SelectSingleNode($"/configuration/appSettings/add[@key='{key}']");
+                var node = GetXmlNode(key);
                 if (node == null)
                 {
-                    var appSettings = GetOrCreateXmlNode(document, "configuration", "appSettings");
                     var element = document.CreateElement("add");
                     element.SetAttribute("key", key);
                     element.SetAttribute("value", value);
@@ -57,19 +96,7 @@ namespace Fund.Core.Helpers
                 return false;
             }
 
-            needSave = true;
             return true;
-        }
-
-        /// <summary>
-        /// 保存配置文件
-        /// </summary>
-        public static void Save()
-        {
-            if (needSave)
-            {
-                document.Save(configPath);
-            }
         }
 
         private static XmlNode GetOrCreateXmlNode(XmlDocument root, params string[] names)
