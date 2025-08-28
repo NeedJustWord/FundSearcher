@@ -81,9 +81,10 @@
                   RowStyle="{StaticResource ShowDataGridRow}"
                   ItemsSource="{Binding IndexInfos}" SelectedItem="{Binding SelectedIndexInfo}">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Width="30" HeaderStyle="{StaticResource dtCheckHeader}" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                <DataGridCheckBoxColumn Width="20" HeaderStyle="{StaticResource dtCheckHeader}" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
                             <Setter Property="HorizontalAlignment" Value="Center"/>
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>

@@ -38,7 +38,7 @@
                         <TextBlock Text="信息速览" FontWeight="Bold"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="成立日期" IsReadOnly="True" Binding="{Binding BirthDay,StringFormat=yyyy-MM-dd}"/>
+                <DataGridTextColumn Header="成立日期" IsReadOnly="True" Binding="{Binding BirthDay,Converter={StaticResource BirthDayConverter}}"/>
                 <DataGridTextColumn Header="资产规模(亿元)" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource FundSizeConverter}">

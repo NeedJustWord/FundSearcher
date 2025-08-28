@@ -133,23 +133,24 @@
                   RowStyle="{StaticResource ShowDataGridRow}"
                   RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding FundInfos}">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Width="30" HeaderStyle="{StaticResource dtCheckHeader}" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                <DataGridCheckBoxColumn Width="20" HeaderStyle="{StaticResource dtCheckHeader}" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
                             <Setter Property="HorizontalAlignment" Value="Center"/>
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
                 <DataGridTemplateColumn Width="50" HeaderStyle="{StaticResource dtNumHeader}" CellStyle="{StaticResource dtNum}"/>
                 <DataGridTextColumn Header="基金代码" Width="60" IsReadOnly="True" Binding="{Binding FundId}"/>
-                <DataGridTextColumn Header="基金简称" Width="320" IsReadOnly="True" Binding="{Binding FundName}"/>
+                <DataGridTextColumn Header="基金简称" Width="300" IsReadOnly="True" Binding="{Binding FundName}"/>
                 <DataGridTextColumn Header="交易场所" Width="60" IsReadOnly="True" Binding="{Binding Counter}"/>
                 <DataGridTextColumn Header="申购状态" Width="60" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyStatus}"/>
                 <DataGridTextColumn Header="赎回状态" Width="60" IsReadOnly="True" Binding="{Binding TransactionInfo.SellStatus}"/>
                 <DataGridTextColumn Header="基金类别" Width="60" IsReadOnly="True" Binding="{Binding FundClass}"/>
                 <DataGridTextColumn Header="跟踪标的" Width="120" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
-                <DataGridTextColumn Header="成立日期" Width="80" IsReadOnly="True" Binding="{Binding BirthDay,StringFormat=yyyy-MM-dd}"/>
-                <DataGridTextColumn Header="资产规模(亿元)" Width="180" IsReadOnly="True">
+                <DataGridTextColumn Header="成立日期" Width="150" IsReadOnly="True" Binding="{Binding BirthDay,Converter={StaticResource BirthDayConverter}}"/>
+                <DataGridTextColumn Header="资产规模(亿元)" Width="160" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource FundSizeConverter}">
                             <Binding Source="{StaticResource StringFormatF2}"/>
@@ -167,8 +168,8 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="买入确认日" Width="80" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyConfirmDate}"/>
-                <DataGridTextColumn Header="卖出确认日" Width="80" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
+                <DataGridTextColumn Header="买入确认日" Width="70" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyConfirmDate}"/>
+                <DataGridTextColumn Header="卖出确认日" Width="70" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
                 <DataGridTextColumn Header="日累计申购限额(元)" Width="120" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
                 <DataGridTextColumn Header="单位净值" Width="60" IsReadOnly="True" Binding="{Binding TransactionInfo.Price,StringFormat=F4}"/>
                 <DataGridTextColumn Header="购买费率" Width="60" IsReadOnly="True">

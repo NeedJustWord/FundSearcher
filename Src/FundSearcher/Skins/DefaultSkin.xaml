@@ -27,6 +27,7 @@
     <converters:ValueToPercentConverter x:Key="ValueToPercentConverter"/>
     <converters:DictRateConverter x:Key="DictRateConverter"/>
     <converters:FundSizeConverter x:Key="FundSizeConverter"/>
+    <converters:BirthDayConverter x:Key="BirthDayConverter"/>
 
     <TransformGroup x:Key="CompareLayoutTransform">
         <RotateTransform Angle="-90"/>
