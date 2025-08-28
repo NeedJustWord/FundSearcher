@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Data;
 using Fund.Crawler.Models;
 
@@ -22,6 +23,8 @@ namespace FundSearcher.Converters
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
+            if (values[1] == DependencyProperty.UnsetValue) return "";
+
             var str = (string)values[0];
             if (str == "赎回费率")
             {

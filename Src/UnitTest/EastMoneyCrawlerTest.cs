@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Fund.Core.Helpers;
 using Fund.Crawler.Extensions;
@@ -68,7 +69,7 @@ namespace UnitTest
             return Task.Run(() =>
             {
                 var crawler = GetCrawler();
-                var infos = crawler.Start().Result;
+                var infos = crawler.Start(CancellationToken.None).Result;
                 action(infos);
             });
         }
@@ -86,7 +87,7 @@ namespace UnitTest
         private Task<IndexInfo> GetIndexInfo(BaseWebCrawler crawler, string indexCode)
         {
             var key = new IndexKey(0, indexCode);
-            return crawler.Start(key);
+            return crawler.Start(key, CancellationToken.None);
         }
 
         private EastMoneyCrawler GetCrawler()

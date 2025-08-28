@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Crawler.SimpleCrawler.Events;
 
@@ -23,17 +24,27 @@ namespace Crawler.SimpleCrawler
         /// 异步创建爬虫
         /// </summary>
         /// <param name="uri">爬虫URL地址</param>
+        /// <param name="token">任务取消token</param>
         /// <param name="proxy">代理服务器</param>
         /// <returns>网页源代码</returns>
-        public async override Task<string> Start(Uri uri, string proxy = null)
+        public async override Task<string> Start(Uri uri, CancellationToken token, string proxy = null)
         {
             return await Task.Run(() =>
             {
-                var threadId = System.Threading.Thread.CurrentThread.ManagedThreadId;//获取当前任务线程ID
+                var threadId = Thread.CurrentThread.ManagedThreadId;//获取当前任务线程ID
                 var pageSource = string.Empty;
                 try
                 {
+                    if (IsCancel(token, uri, threadId, "爬取任务开始事件执行前取消任务"))
+                    {
+                        return pageSource;
+                    }
                     OnStart(new OnStartEventArgs(uri, threadId));
+                    if (IsCancel(token, uri, threadId, "爬取任务开始事件执行后取消任务"))
+                    {
+                        return pageSource;
+                    }
+
                     var watch = new Stopwatch();
                     watch.Start();
                     var request = (HttpWebRequest)WebRequest.Create(uri);
@@ -54,6 +65,12 @@ namespace Crawler.SimpleCrawler
 
                     using (var response = (HttpWebResponse)request.GetResponse())//获取请求响应
                     {
+                        if (IsCancel(token, uri, threadId, "爬取任务获取请求响应后取消任务"))
+                        {
+                            request.Abort();
+                            watch.Stop();
+                            return pageSource;
+                        }
                         foreach (Cookie cookie in response.Cookies) CookiesContainer.Add(cookie);//将Cookie加入容器，保存登录状态
 
                         var encoding = Encoding.GetEncoding(response.CharacterSet);
@@ -91,6 +108,10 @@ namespace Crawler.SimpleCrawler
                     request.Abort();
                     watch.Stop();
                     var milliseconds = watch.ElapsedMilliseconds;//获取请求执行时间
+                    if (IsCancel(token, uri, threadId, "爬取任务完成事件开始前取消任务"))
+                    {
+                        return pageSource;
+                    }
                     OnCompleted(new OnCompletedEventArgs(uri, threadId, milliseconds, pageSource));
                 }
                 catch (Exception ex)
@@ -99,6 +120,16 @@ namespace Crawler.SimpleCrawler
                 }
                 return pageSource;
             });
+        }
+
+        private bool IsCancel(CancellationToken token, Uri uri, int threadId, string message)
+        {
+            if (token.IsCancellationRequested)
+            {
+                OnCancel(new OnCancelEventArgs(uri, threadId, message));
+                return true;
+            }
+            return false;
         }
     }
 }

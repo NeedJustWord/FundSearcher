@@ -271,8 +271,21 @@ namespace FundSearcher.Views
             }
             else
             {
-                var fundInfos = fundDataBase.GetFundInfos(queryFundId);
-                list = await fundInfos;
+                if (TryGetCancellationTokenFault(out var token))
+                {
+                    MessageBoxEx.ShowError("已有任务正在执行，请等任务执行完成，或取消任务");
+                    return;
+                }
+
+                var task = fundDataBase.GetFundInfos(queryFundId, token);
+                SetRunTask(task);
+                list = await task;
+                TaskCompleted();
+
+                if (TaskIsCancel)
+                {
+                    return;
+                }
             }
 
             InitFilterData(false);
@@ -290,7 +303,22 @@ namespace FundSearcher.Views
                 return;
             }
 
-            List<FundInfo> list = await fundDataBase.GetFundInfos(true, fundIds);
+            if (TryGetCancellationTokenFault(out var token))
+            {
+                MessageBoxEx.ShowError("已有任务正在执行，请等任务执行完成，或取消任务");
+                return;
+            }
+
+            var task = fundDataBase.GetFundInfos(token, true, fundIds);
+            SetRunTask(task);
+            var list = await task;
+            TaskCompleted();
+
+            if (TaskIsCancel)
+            {
+                return;
+            }
+
             InitFilterData(true);
             foreach (var item in list)
             {
@@ -314,6 +342,11 @@ namespace FundSearcher.Views
             if (infos.Length == 0)
             {
                 MessageBoxEx.ShowError("请选择需要比较的基金");
+                return;
+            }
+            if (infos.Length > 50)
+            {
+                MessageBoxEx.ShowError("最多选择50只基金进行比较");
                 return;
             }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Crawler.DataHandler.Extensions;
 using Fund.Core.Extensions;
@@ -25,39 +26,60 @@ namespace Fund.Crawler.Webs
         {
         }
 
-        public async override Task<FundInfo> Start(FundKey key)
+        public async override Task<FundInfo> Start(FundKey key, CancellationToken token)
         {
             return await Task.Run(async () =>
             {
                 var fundInfo = CreateFundInfo(key.FundId);
-
-                var task = new Task[]
+                if (token.IsCancellationRequested)
                 {
-                    GetBaseInfo(key, fundInfo),
-                    GetTransactionInfo(key, fundInfo),
-                };
+                    WriteLog($"取消基金{key.FundId}的爬取任务");
+                    return fundInfo.Cancel<FundInfo>();
+                }
+
+                var task = new Task[2];
+                task[0] = GetBaseInfo(key, fundInfo, token);
+                if (token.IsCancellationRequested)
+                {
+                    WriteLog($"取消基金{key.FundId}的交易信息爬取任务");
+                    return fundInfo.Cancel<FundInfo>();
+                }
+
+                task[1] = GetTransactionInfo(key, fundInfo, token);
 
                 await Task.WhenAll(task);
                 return fundInfo;
             });
         }
 
-        public async override Task<IndexInfo> Start(IndexKey key)
+        public async override Task<IndexInfo> Start(IndexKey key, CancellationToken token)
         {
             return await Task.Run(async () =>
             {
                 var info = CreateIndexInfo(key.IndexCode);
-                await GetIndexInfo(key, info);
+                if (token.IsCancellationRequested)
+                {
+                    WriteLog($"取消指数{key.IndexCode}的相关基金信息爬取任务");
+                    return info.Cancel<IndexInfo>();
+                }
+
+                await GetIndexInfo(key, info, token);
                 return info;
             });
         }
 
-        public async override Task<List<IndexInfo>> Start()
+        public async override Task<List<IndexInfo>> Start(CancellationToken token)
         {
             return await Task.Run(async () =>
             {
                 var infos = new List<IndexInfo>();
-                await GetIndexInfo(infos);
+                if (token.IsCancellationRequested)
+                {
+                    WriteLog($"取消所有指数信息的爬取任务");
+                    return infos;
+                }
+
+                await GetIndexInfo(infos, token);
                 return infos;
             });
         }
@@ -69,10 +91,11 @@ namespace Fund.Crawler.Webs
         /// </summary>
         /// <param name="key"></param>
         /// <param name="fundInfo"></param>
-        private async Task GetBaseInfo(FundKey key, FundInfo fundInfo)
+        /// <param name="token">任务取消token</param>
+        private async Task GetBaseInfo(FundKey key, FundInfo fundInfo, CancellationToken token)
         {
             var url = $"http://fundf10.eastmoney.com/jbgk_{key.FundId}.html";
-            await StartSimpleCrawler(key, url, fundInfo, HandlerBaseInfoSource);
+            await StartSimpleCrawler(key, url, fundInfo, HandlerBaseInfoSource, token);
         }
 
         private void HandlerBaseInfoSource(string pageSource, FundInfo fundInfo)
@@ -145,10 +168,11 @@ namespace Fund.Crawler.Webs
         /// </summary>
         /// <param name="key"></param>
         /// <param name="fundInfo"></param>
-        private async Task GetTransactionInfo(FundKey key, FundInfo fundInfo)
+        /// <param name="token">任务取消token</param>
+        private async Task GetTransactionInfo(FundKey key, FundInfo fundInfo, CancellationToken token)
         {
             var url = $"http://fundf10.eastmoney.com/jjfl_{key.FundId}.html";
-            await StartSimpleCrawler(key, url, fundInfo, HandleTransactionInfoSource);
+            await StartSimpleCrawler(key, url, fundInfo, HandleTransactionInfoSource, token);
         }
 
         private void HandleTransactionInfoSource(string pageSource, FundInfo fundInfo)
@@ -229,10 +253,11 @@ namespace Fund.Crawler.Webs
         /// </summary>
         /// <param name="key"></param>
         /// <param name="info"></param>
-        private async Task GetIndexInfo(IndexKey key, IndexInfo info)
+        /// <param name="token">任务取消token</param>
+        private async Task GetIndexInfo(IndexKey key, IndexInfo info, CancellationToken token)
         {
             var url = $"https://zhishubao.1234567.com.cn/home/detail?code={key.IndexCode}";
-            await StartSimpleCrawler(key, url, info, HandleIndexInfoSource);
+            await StartSimpleCrawler(key, url, info, HandleIndexInfoSource, token);
         }
 
         private void HandleIndexInfoSource(string pageSource, IndexInfo info)
@@ -258,10 +283,16 @@ namespace Fund.Crawler.Webs
         #endregion
 
         #region 指数信息
-        private async Task GetIndexInfo(List<IndexInfo> result)
+        /// <summary>
+        /// 指数信息
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="token">任务取消token</param>
+        /// <returns></returns>
+        private async Task GetIndexInfo(List<IndexInfo> result, CancellationToken token)
         {
             var url = $"https://zhishubao.1234567.com.cn/home/AllIndex";
-            await StartSimpleCrawler(new BaseKey(0), url, result, HandleIndexInfoSource);
+            await StartSimpleCrawler(new BaseKey(0), url, result, HandleIndexInfoSource, token);
         }
 
         private void HandleIndexInfoSource(string pageSource, List<IndexInfo> infos)

@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="BaseCrawler.cs" />
     <Compile Include="Events\BaseEventArgs.cs" />
+    <Compile Include="Events\OnCancelEventArgs.cs" />
     <Compile Include="Events\OnCompletedEventArgs.cs" />
     <Compile Include="Events\OnErrorEventArgs.cs" />
     <Compile Include="Events\OnStartEventArgs.cs" />

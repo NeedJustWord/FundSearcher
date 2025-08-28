@@ -107,7 +107,22 @@ namespace FundSearcher.Views
 
         private async void Query()
         {
-            var list = await fundDataBase.GetIndexInfos();
+            if (TryGetCancellationTokenFault(out var token))
+            {
+                MessageBoxEx.ShowError("已有任务正在执行，请等任务执行完成，或取消任务");
+                return;
+            }
+
+            var task = fundDataBase.GetIndexInfos(token);
+            SetRunTask(task);
+            var list = await task;
+            TaskCompleted();
+
+            if (TaskIsCancel)
+            {
+                return;
+            }
+
             SetItemsSource(false, list.CustomSort());
             Filter();
         }
@@ -120,7 +135,22 @@ namespace FundSearcher.Views
 
         private async void Refresh()
         {
-            var list = await fundDataBase.GetIndexInfos(true);
+            if (TryGetCancellationTokenFault(out var token))
+            {
+                MessageBoxEx.ShowError("已有任务正在执行，请等任务执行完成，或取消任务");
+                return;
+            }
+
+            var task = fundDataBase.GetIndexInfos(token, true);
+            SetRunTask(task);
+            var list = await task;
+            TaskCompleted();
+
+            if (TaskIsCancel)
+            {
+                return;
+            }
+
             SetItemsSource(true, list.CustomSort());
             Filter();
         }
@@ -215,9 +245,26 @@ namespace FundSearcher.Views
 
         private async void RefreshDetail()
         {
+            if (TryGetCancellationTokenFault(out var token))
+            {
+                MessageBoxEx.ShowError("已有任务正在执行，请等任务执行完成，或取消任务");
+                return;
+            }
+
             PublishStatusMessage("开始刷新关注指数详情");
-            await fundDataBase.GetFundBaseInfos(IndexInfos.Where(t => StarIndexes.Any(x => x.Key == t.IndexCode)), true);
-            PublishStatusMessage("刷新关注指数详情成功");
+            var task = fundDataBase.GetFundBaseInfos(IndexInfos.Where(t => StarIndexes.Any(x => x.Key == t.IndexCode)), token, true);
+            SetRunTask(task);
+            var list = await task;
+            TaskCompleted();
+
+            if (TaskIsCancel)
+            {
+                PublishStatusMessage("刷新关注指数详情任务已取消");
+            }
+            else
+            {
+                PublishStatusMessage("刷新关注指数详情成功");
+            }
         }
 
         private void SetItemsSource(bool isRefresh, IEnumerable<IndexInfo> infos)

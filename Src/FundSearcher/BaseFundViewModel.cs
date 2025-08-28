@@ -5,7 +5,7 @@ using Prism.Regions;
 
 namespace FundSearcher
 {
-    class BaseFundViewModel : BaseViewModel
+    class BaseFundViewModel : BaseTaskViewModel
     {
         public BaseFundViewModel(IRegionManager regionManager, IEventAggregator eventAggregator = null, FundDataBase fundDataBase = null) : base(regionManager, RegionName.Fund, eventAggregator, fundDataBase)
         {

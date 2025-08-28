@@ -5,6 +5,7 @@ using System.Windows;
 using Fund.Crawler.Models;
 using Fund.DataBase;
 using FundSearcher.Consts;
+using FundSearcher.Controls;
 using Prism.Events;
 using Prism.Regions;
 
@@ -48,7 +49,22 @@ namespace FundSearcher.Views
 
         private async void Query()
         {
-            var list = await fundDataBase.GetFundBaseInfos(indexInfo);
+            if (TryGetCancellationTokenFault(out var token))
+            {
+                MessageBoxEx.ShowError("已有任务正在执行，请等任务执行完成，或取消任务");
+                return;
+            }
+
+            var task = fundDataBase.GetFundBaseInfos(indexInfo, token);
+            SetRunTask(task);
+            var list = await task;
+            TaskCompleted();
+
+            if (TaskIsCancel)
+            {
+                return;
+            }
+
             SetItemsSource(list.CustomSort());
             Filter();
         }
@@ -61,7 +77,22 @@ namespace FundSearcher.Views
 
         private async void Refresh()
         {
-            var list = await fundDataBase.GetFundBaseInfos(indexInfo, true);
+            if (TryGetCancellationTokenFault(out var token))
+            {
+                MessageBoxEx.ShowError("已有任务正在执行，请等任务执行完成，或取消任务");
+                return;
+            }
+
+            var task = fundDataBase.GetFundBaseInfos(indexInfo, token, true);
+            SetRunTask(task);
+            var list = await task;
+            TaskCompleted();
+
+            if (TaskIsCancel)
+            {
+                return;
+            }
+
             SetItemsSource(list.CustomSort());
             Filter();
         }

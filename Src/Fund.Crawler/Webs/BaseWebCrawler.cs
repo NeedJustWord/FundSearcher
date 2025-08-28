@@ -48,22 +48,25 @@ namespace Fund.Crawler.Webs
         /// <para>若想知道批量爬取进度，调用此方法前调用<see cref="InitFundTotal(int)"/>方法初始化批量总数</para>
         /// </summary>
         /// <param name="key"></param>
+        /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public abstract Task<FundInfo> Start(FundKey key);
+        public abstract Task<FundInfo> Start(FundKey key, CancellationToken token);
 
         /// <summary>
         /// 根据key爬取指数相关基金信息
         /// <para>若想知道批量爬取进度，调用此方法前调用<see cref="InitIndexTotal(int)"/>方法初始化批量总数</para>
         /// </summary>
         /// <param name="key"></param>
+        /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public abstract Task<IndexInfo> Start(IndexKey key);
+        public abstract Task<IndexInfo> Start(IndexKey key, CancellationToken token);
 
         /// <summary>
         /// 爬取所有指数信息
         /// </summary>
+        /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public abstract Task<List<IndexInfo>> Start();
+        public abstract Task<List<IndexInfo>> Start(CancellationToken token);
 
         /// <summary>
         /// 创建基金信息
@@ -103,13 +106,20 @@ namespace Fund.Crawler.Webs
         /// <param name="url">爬虫URL地址</param>
         /// <param name="info">爬取信息</param>
         /// <param name="action">页面源码处理方法</param>
+        /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        protected async Task<string> StartSimpleCrawler<TInfo>(BaseKey key, string url, TInfo info, Action<string, TInfo> action)
+        protected async Task<string> StartSimpleCrawler<TInfo>(BaseKey key, string url, TInfo info, Action<string, TInfo> action, CancellationToken token)
         {
             var crawler = new SimpleCrawler();
             crawler.OnStartEvent += (sender, args) =>
             {
                 var keyStr = key.GetKey(url);
+                if (token.IsCancellationRequested)
+                {
+                    WriteLog($"{args.ThreadId} {keyStr}爬取开始时任务已取消");
+                    return;
+                }
+
                 if (key.Index != 0)
                 {
                     WriteLog($"{args.ThreadId} {keyStr}开始休眠");
@@ -121,6 +131,12 @@ namespace Fund.Crawler.Webs
             crawler.OnCompletedEvent += (sender, args) =>
             {
                 var keyStr = key.GetKey(url);
+                if (token.IsCancellationRequested)
+                {
+                    WriteLog($"{args.ThreadId} {keyStr}爬取结束，但任务已取消");
+                    return;
+                }
+
                 try
                 {
                     WriteLog($"{args.ThreadId} {keyStr}爬取结束，开始处理");
@@ -136,7 +152,12 @@ namespace Fund.Crawler.Webs
                     WriteLog($"{args.ThreadId} {keyStr}处理结束");
                 }
             };
-            return await crawler.Start(url);
+            crawler.OnCancelEvent += (sender, args) =>
+            {
+                var keyStr = key.GetKey(url);
+                WriteLog($"{args.ThreadId} {keyStr}任务已取消 {args.Message}");
+            };
+            return await crawler.Start(url, token);
         }
 
         /// <summary>
@@ -197,6 +218,16 @@ namespace Fund.Crawler.Webs
             {
                 Total = total,
                 Current = current,
+                Message = $"{DateTime.Now} {msg}",
+            });
+        }
+
+        public void Cancel(string msg)
+        {
+            eventAggregator.Publish<CrawlingProgressEvent, CrawlingProgressModel>(new CrawlingProgressModel()
+            {
+                Total = total,
+                Current = total,
                 Message = $"{DateTime.Now} {msg}",
             });
         }

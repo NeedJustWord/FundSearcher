@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Fund.Crawler;
 using Fund.Crawler.Models;
@@ -103,8 +104,9 @@ namespace Fund.DataBase
         /// </summary>
         /// <param name="fundKeys"></param>
         /// <param name="forceUpdate"></param>
+        /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public async Task<List<FundInfo>> Update(IEnumerable<FundKey> fundKeys, bool forceUpdate)
+        public async Task<List<FundInfo>> Update(IEnumerable<FundKey> fundKeys, bool forceUpdate, CancellationToken token)
         {
             return await Task.Run(() =>
             {
@@ -124,9 +126,9 @@ namespace Fund.DataBase
 
                 foreach (var updateItem in updateDict)
                 {
-                    if (crawlerDict.TryGetValue(updateItem.Key, out var crawler))
+                    if (crawlerDict.TryGetValue(updateItem.Key, out var crawler) && token.IsCancellationRequested == false)
                     {
-                        Add(crawler.Start(updateItem.Value.ToArray()).Result);
+                        Add(crawler.Start(token, updateItem.Value.ToArray()).Result);
                     }
                 }
 
@@ -171,8 +173,9 @@ namespace Fund.DataBase
         /// </summary>
         /// <param name="sourceName"></param>
         /// <param name="forceUpdate"></param>
+        /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public async Task<List<IndexInfo>> Update(string sourceName, bool forceUpdate)
+        public async Task<List<IndexInfo>> Update(string sourceName, bool forceUpdate, CancellationToken token)
         {
             return await Task.Run(() =>
             {
@@ -193,7 +196,11 @@ namespace Fund.DataBase
                 {
                     if (crawlerDict.TryGetValue(sourceName, out var crawler))
                     {
-                        infos = crawler.Start().Result;
+                        if (token.IsCancellationRequested)
+                        {
+                            return infos ?? emptyIndexInfos;
+                        }
+                        infos = crawler.Start(token).Result;
                         indexInfoDict[sourceName] = new Tuple<List<IndexInfo>, DateTime>(infos, DateTime.Now);
                         HasIndexUpdate = true;
                     }
@@ -208,8 +215,9 @@ namespace Fund.DataBase
         /// </summary>
         /// <param name="info"></param>
         /// <param name="forceUpdate"></param>
+        /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public async Task<List<FundBaseInfo>> Update(IndexInfo info, bool forceUpdate)
+        public async Task<List<FundBaseInfo>> Update(IndexInfo info, bool forceUpdate, CancellationToken token)
         {
             return await Task.Run(() =>
             {
@@ -218,7 +226,11 @@ namespace Fund.DataBase
                 {
                     if (crawlerDict.TryGetValue(info.InfoSource, out var crawler))
                     {
-                        var index = crawler.Start(info.IndexCode).Result;
+                        if (token.IsCancellationRequested)
+                        {
+                            return info.FundBaseInfos;
+                        }
+                        var index = crawler.Start(info.IndexCode, token).Result;
                         info.FundBaseInfos = index.FundBaseInfos;
                         info.TrackingCount = index.FundBaseInfos.Count;
                         HasIndexUpdate = true;

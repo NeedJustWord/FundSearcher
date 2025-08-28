@@ -60,5 +60,17 @@ namespace Fund.Crawler.Models
             get { return infoSource; }
             set { SetProperty(ref infoSource, value); }
         }
+
+        /// <summary>
+        /// 取消
+        /// </summary>
+        [JsonIgnore]
+        public bool IsCancel { get; private set; }
+
+        public T Cancel<T>() where T : BaseInfo
+        {
+            IsCancel = true;
+            return (T)this;
+        }
     }
 }

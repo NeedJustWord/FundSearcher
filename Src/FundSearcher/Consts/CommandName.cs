@@ -47,5 +47,9 @@
         /// 刷新详情命令
         /// </summary>
         public const string RefreshDetail = "RefreshDetailCommand";
+        /// <summary>
+        /// 取消任务命令
+        /// </summary>
+        public const string CancelTask = "CancelTaskCommand";
     }
 }

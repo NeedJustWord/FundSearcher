@@ -22,11 +22,14 @@ namespace FundSearcher.Extensions
             {
                 isHiddenRow = row.Visibility != Visibility.Visible;
                 var presenter = row.FindVisualTreeChild<DataGridCellsPresenter>();
-                cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
-                if (cell == null)
+                if (presenter != null)
                 {
-                    dataGrid.ScrollIntoView(row, dataGrid.Columns[columnIndex]);
                     cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
+                    if (cell == null)
+                    {
+                        dataGrid.ScrollIntoView(row, dataGrid.Columns[columnIndex]);
+                        cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(columnIndex);
+                    }
                 }
             }
             else

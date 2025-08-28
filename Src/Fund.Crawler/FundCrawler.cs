@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Fund.Crawler.Models;
 using Fund.Crawler.Webs;
@@ -26,9 +27,10 @@ namespace Fund.Crawler
         /// <summary>
         /// 开始爬取基金信息
         /// </summary>
+        /// <param name="token">任务取消token</param>
         /// <param name="fundIds"></param>
         /// <returns></returns>
-        public async Task<List<FundInfo>> Start(params string[] fundIds)
+        public async Task<List<FundInfo>> Start(CancellationToken token, params string[] fundIds)
         {
             return await Task.Run(() =>
             {
@@ -38,42 +40,57 @@ namespace Fund.Crawler
                     WebCrawler.InitFundTotal(fundIds.Length);
                     Parallel.ForEach(fundIds, (fundId, pls, index) =>
                     {
-                        result.Add(WebCrawler.Start(new FundKey(index, fundId)).Result);
+                        if (token.IsCancellationRequested)
+                        {
+                            WebCrawler.WriteLog($"爬取基金信息{fundId}任务已取消");
+                            return;
+                        }
+                        result.Add(WebCrawler.Start(new FundKey(index, fundId), token).Result);
                     });
-                    WebCrawler.WriteLog("爬取基金信息完成");
+
+                    if (token.IsCancellationRequested)
+                    {
+                        WebCrawler.Cancel("爬取基金信息任务已取消");
+                    }
+                    else
+                    {
+                        WebCrawler.WriteLog("爬取基金信息完成");
+                    }
                 }
                 return result;
-            });
+            }, token);
         }
 
         /// <summary>
         /// 开始爬取指数信息
         /// </summary>
+        /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public async Task<List<IndexInfo>> Start()
+        public async Task<List<IndexInfo>> Start(CancellationToken token)
         {
             return await Task.Run(() =>
             {
-                var result = WebCrawler.Start().Result;
+                var result = WebCrawler.Start(token).Result;
                 WebCrawler.WriteLog("爬取指数信息完成");
                 return result;
-            });
+            }, token);
         }
 
         /// <summary>
         /// 开始爬取指数相关基金信息
         /// </summary>
         /// <param name="indexCode"></param>
+        /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public async Task<IndexInfo> Start(string indexCode)
+        public async Task<IndexInfo> Start(string indexCode, CancellationToken token)
         {
             return await Task.Run(() =>
             {
                 var key = new IndexKey(0, indexCode);
-                var result = WebCrawler.Start(key).Result;
+                var result = WebCrawler.Start(key, token).Result;
                 WebCrawler.WriteLog("爬取指数相关基金信息完成");
                 return result;
-            });
+            }, token);
         }
     }
 }

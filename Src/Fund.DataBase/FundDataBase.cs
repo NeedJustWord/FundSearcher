@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Fund.Crawler.Models;
 using Fund.Crawler.Webs;
@@ -102,39 +103,41 @@ namespace Fund.DataBase
         /// 获取基金信息
         /// </summary>
         /// <param name="fundIds">基金代码</param>
+        /// <param name="token">任务取消token</param>
         /// <param name="sourceName">信息来源</param>
         /// <param name="forceUpdate">是否强制更新</param>
         /// <returns></returns>
-        public async Task<List<FundInfo>> GetFundInfos(string fundIds, string sourceName = EastMoneyCrawler.SourceNameKey, bool forceUpdate = false)
+        public async Task<List<FundInfo>> GetFundInfos(string fundIds, CancellationToken token, string sourceName = EastMoneyCrawler.SourceNameKey, bool forceUpdate = false)
         {
-            return await GetFundInfos(sourceName, forceUpdate, fundIds.InputSplit().Where(t => int.TryParse(t, out _)).SelectMany(GetFundIds).Distinct().ToArray());
+            return await GetFundInfos(sourceName, token, forceUpdate, fundIds.InputSplit().Where(t => int.TryParse(t, out _)).SelectMany(GetFundIds).Distinct().ToArray());
         }
 
         /// <summary>
         /// 获取基金信息
         /// </summary>
+        /// <param name="token">任务取消token</param>
         /// <param name="forceUpdate">是否强制更新</param>
         /// <param name="fundIds">基金代码</param>
         /// <returns></returns>
-        public async Task<List<FundInfo>> GetFundInfos(bool forceUpdate = false, params string[] fundIds)
+        public async Task<List<FundInfo>> GetFundInfos(CancellationToken token, bool forceUpdate = false, params string[] fundIds)
         {
-            return await GetFundInfos(EastMoneyCrawler.SourceNameKey, forceUpdate, fundIds);
+            return await GetFundInfos(EastMoneyCrawler.SourceNameKey, token, forceUpdate, fundIds);
         }
 
-        private async Task<List<FundInfo>> GetFundInfos(string sourceName, bool forceUpdate = false, params string[] fundIds)
+        private async Task<List<FundInfo>> GetFundInfos(string sourceName, CancellationToken token, bool forceUpdate = false, params string[] fundIds)
         {
             var keys = fundIds == null ? new FundKey[0] : fundIds.Select(t => new FundKey(t, sourceName));
-            return await GetFundInfos(keys, forceUpdate);
+            return await GetFundInfos(keys, forceUpdate, token);
         }
 
-        private async Task<List<FundInfo>> GetFundInfos(IEnumerable<FundKey> keys, bool forceUpdate)
+        private async Task<List<FundInfo>> GetFundInfos(IEnumerable<FundKey> keys, bool forceUpdate, CancellationToken token)
         {
             return await Task.Run(() =>
             {
                 List<FundInfo> fundInfos = new List<FundInfo>();
                 if (keys != null)
                 {
-                    fundInfos.AddRange(fundUpdate.Update(keys, forceUpdate).Result);
+                    fundInfos.AddRange(fundUpdate.Update(keys, forceUpdate, token).Result);
                 }
                 return fundInfos;
             });
@@ -155,13 +158,14 @@ namespace Fund.DataBase
         /// <summary>
         /// 获取指数信息
         /// </summary>
+        /// <param name="token">任务取消token</param>
         /// <param name="forceUpdate">是否强制更新</param>
         /// <returns></returns>
-        public async Task<List<IndexInfo>> GetIndexInfos(bool forceUpdate = false)
+        public async Task<List<IndexInfo>> GetIndexInfos(CancellationToken token, bool forceUpdate = false)
         {
             return await Task.Run(() =>
             {
-                return fundUpdate.Update(EastMoneyCrawler.SourceNameKey, forceUpdate);
+                return fundUpdate.Update(EastMoneyCrawler.SourceNameKey, forceUpdate, token);
             });
         }
 
@@ -169,13 +173,14 @@ namespace Fund.DataBase
         /// 获取指数相关基金基础信息
         /// </summary>
         /// <param name="info">指数信息</param>
+        /// <param name="token">任务取消token</param>
         /// <param name="forceUpdate">是否强制更新</param>
         /// <returns></returns>
-        public async Task<List<FundBaseInfo>> GetFundBaseInfos(IndexInfo info, bool forceUpdate = false)
+        public async Task<List<FundBaseInfo>> GetFundBaseInfos(IndexInfo info, CancellationToken token, bool forceUpdate = false)
         {
             return await Task.Run(() =>
             {
-                return fundUpdate.Update(info, forceUpdate);
+                return fundUpdate.Update(info, forceUpdate, token);
             });
         }
 
@@ -183,13 +188,14 @@ namespace Fund.DataBase
         /// 获取指数相关基金基础信息
         /// </summary>
         /// <param name="info">指数信息</param>
+        /// <param name="token">任务取消token</param>
         /// <param name="forceUpdate">是否强制更新</param>
         /// <returns></returns>
-        public async Task<List<FundBaseInfo>[]> GetFundBaseInfos(IEnumerable<IndexInfo> infos, bool forceUpdate = false)
+        public async Task<List<FundBaseInfo>[]> GetFundBaseInfos(IEnumerable<IndexInfo> infos, CancellationToken token, bool forceUpdate = false)
         {
             return await Task.Run(() =>
             {
-                return Task.WhenAll(infos.Select(t => fundUpdate.Update(t, forceUpdate)));
+                return Task.WhenAll(infos.Select(t => fundUpdate.Update(t, forceUpdate, token)));
             });
         }
     }

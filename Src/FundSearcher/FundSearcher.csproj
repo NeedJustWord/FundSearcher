@@ -62,6 +62,7 @@
     <Compile Include="AutoMapperProfile.cs" />
     <Compile Include="BaseFundViewModel.cs" />
     <Compile Include="BaseIndexViewModel.cs" />
+    <Compile Include="BaseTaskViewModel.cs" />
     <Compile Include="BaseViewModel.cs" />
     <Compile Include="BaseWindowViewModel.cs" />
     <Compile Include="Consts\CommandName.cs" />

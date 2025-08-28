@@ -5,7 +5,7 @@ using Prism.Regions;
 
 namespace FundSearcher
 {
-    class BaseIndexViewModel : BaseViewModel
+    class BaseIndexViewModel : BaseTaskViewModel
     {
         private string keyWord;
         /// <summary>

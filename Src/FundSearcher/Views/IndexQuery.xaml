@@ -71,6 +71,9 @@
                         Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Copy}"/>
                 <Button Content="刷新详情" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.RefreshDetail}"/>
+                <Button Content="取消任务" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}"
+                        CommandParameter="{x:Static consts:CommandName.CancelTask}"/>
             </StackPanel>
         </Grid>
 

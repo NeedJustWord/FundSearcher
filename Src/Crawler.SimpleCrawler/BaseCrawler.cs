@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Crawler.SimpleCrawler.Events;
 
@@ -25,23 +26,30 @@ namespace Crawler.SimpleCrawler
         public event EventHandler<OnErrorEventArgs> OnErrorEvent;
 
         /// <summary>
+        /// 爬虫取消事件
+        /// </summary>
+        public event EventHandler<OnCancelEventArgs> OnCancelEvent;
+
+        /// <summary>
         /// 异步爬虫
         /// </summary>
         /// <param name="uriString">爬虫URL地址</param>
+        /// <param name="token">任务取消token</param>
         /// <param name="proxy">代理服务器</param>
         /// <returns>网页源代码</returns>
-        public async Task<string> Start(string uriString, string proxy = null)
+        public async Task<string> Start(string uriString, CancellationToken token, string proxy = null)
         {
-            return await Start(new Uri(uriString), proxy);
+            return await Start(new Uri(uriString), token, proxy);
         }
 
         /// <summary>
         /// 异步爬虫
         /// </summary>
         /// <param name="uri">爬虫URL地址</param>
+        /// <param name="token">任务取消token</param>
         /// <param name="proxy">代理服务器</param>
         /// <returns>网页源代码</returns>
-        public abstract Task<string> Start(Uri uri, string proxy = null);
+        public abstract Task<string> Start(Uri uri, CancellationToken token, string proxy = null);
 
         /// <summary>
         /// 引发<see cref="OnStartEvent"/>事件
@@ -68,6 +76,15 @@ namespace Crawler.SimpleCrawler
         public void OnCompleted(OnCompletedEventArgs args)
         {
             OnCompletedEvent?.Invoke(this, args);
+        }
+
+        /// <summary>
+        /// 引发<see cref="OnCancelEvent"/>事件
+        /// </summary>
+        /// <param name="args"></param>
+        public void OnCancel(OnCancelEventArgs args)
+        {
+            OnCancelEvent?.Invoke(this, args);
         }
     }
 }
