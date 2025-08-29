@@ -11,7 +11,7 @@ namespace FundSearcher.Converters
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var nullValue = "--";
-            if (values[0] == DependencyProperty.UnsetValue) return nullValue;
+            if (values[0] == null || values[0] == DependencyProperty.UnsetValue) return nullValue;
 
             var dict = (Dictionary<string, double?>)values[0];
             var year = (int)values[1];
