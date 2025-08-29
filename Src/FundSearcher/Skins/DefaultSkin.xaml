@@ -11,6 +11,10 @@
 
     <sys:Double x:Key="QueryTextBoxHeight">25</sys:Double>
 
+    <sys:Int32 x:Key="Number1">1</sys:Int32>
+    <sys:Int32 x:Key="Number2">2</sys:Int32>
+    <sys:Int32 x:Key="Number3">3</sys:Int32>
+
     <sys:String x:Key="StringCounterIn">场内交易</sys:String>
     <sys:String x:Key="StringCounterOut">场外交易</sys:String>
     <sys:String x:Key="StringRate">费率</sys:String>
@@ -21,9 +25,11 @@
     <sys:String x:Key="StringRateSell">赎回费率</sys:String>
     <sys:String x:Key="StringFormatF2">F2</sys:String>
     <sys:String x:Key="StringFormatF4">F4</sys:String>
+    <sys:String x:Key="StringFormatP2">P2</sys:String>
 
     <converters:BuyUpperLimitAmountConverter x:Key="BuyUpperLimitAmountConverter"/>
     <converters:CompareRateDisplayConverter x:Key="CompareRateDisplayConverter"/>
+    <converters:SpecialDictDisplayConverter x:Key="SpecialDictDisplayConverter"/>
     <converters:ValueToPercentConverter x:Key="ValueToPercentConverter"/>
     <converters:DictRateConverter x:Key="DictRateConverter"/>
     <converters:FundSizeConverter x:Key="FundSizeConverter"/>

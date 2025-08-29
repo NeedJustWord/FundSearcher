@@ -18,7 +18,7 @@ namespace Fund.Crawler.Webs
     {
         public const string SourceNameKey = "天天基金";
 
-        public override int FundPageCount => 2;
+        public override int FundPageCount => 3;
 
         public override int IndexPageCount => 1;
 
@@ -37,7 +37,7 @@ namespace Fund.Crawler.Webs
                     return fundInfo.Cancel<FundInfo>();
                 }
 
-                var task = new Task[2];
+                var task = new Task[3];
                 task[0] = GetBaseInfo(key, fundInfo, token);
                 if (token.IsCancellationRequested)
                 {
@@ -46,6 +46,13 @@ namespace Fund.Crawler.Webs
                 }
 
                 task[1] = GetTransactionInfo(key, fundInfo, token);
+                if (token.IsCancellationRequested)
+                {
+                    WriteLog($"取消基金{key.FundId}的特色数据爬取任务");
+                    return fundInfo.Cancel<FundInfo>();
+                }
+
+                task[2] = GetSpecialInfo(key, fundInfo, token);
 
                 await Task.WhenAll(task);
                 return fundInfo;
@@ -159,6 +166,59 @@ namespace Fund.Crawler.Webs
                         break;
                 }
             }
+        }
+        #endregion
+
+        #region 特色数据
+        /// <summary>
+        /// 特色数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="fundInfo"></param>
+        /// <param name="token">任务取消token</param>
+        private async Task GetSpecialInfo(FundKey key, FundInfo fundInfo, CancellationToken token)
+        {
+            var url = $"http://fundf10.eastmoney.com/tsdata_{key.FundId}.html";
+            await StartSimpleCrawler(key, url, fundInfo, HandleSpecialInfoSource, token);
+        }
+
+        private void HandleSpecialInfoSource(string pageSource, FundInfo fundInfo)
+        {
+            var info = new SpecialInfo();
+            var content = pageSource.GetFirstHtmlTagValueByAttri("div", "class", "txt_in").GetHtmlTagContent();
+            var tables = content.GetHtmlTag("table");
+
+            string[] values;
+            var rows = tables[0].Value.GetHtmlTagValue("tr").ToArray();
+            var titles = rows[0].GetHtmlTagValue("th").Select(t => t.GetHtmlTagContent()).ToArray();
+            for (int i = 1; i < rows.Length; i++)
+            {
+                values = rows[i].GetHtmlTagValue("td").Select(t => t.GetHtmlTagContent()).ToArray();
+                SetSpecialInfo(info, titles, values);
+            }
+
+            rows = tables[1].Value.GetHtmlTagValue("tr").ToArray();
+            titles = rows[0].GetHtmlTagValue("th").Select(t => t.GetHtmlTagContent()).ToArray();
+            values = rows[1].GetHtmlTagValue("td").Select(t => t.GetHtmlTagContent()).ToArray();
+            var keyValues = titles.Select((t, i) =>
+            {
+                return new KeyValuePair<string, string>(t, values[i]);
+            });
+
+            foreach (var item in keyValues)
+            {
+                switch (item.Key)
+                {
+                    case "年化跟踪误差":
+                        info.AnnualizedTrackingError = item.Value.AsDoubleNullable();
+                        break;
+                    case "同类平均跟踪误差":
+                        info.AverageTrackingErrorOfTheSameType = item.Value.AsDoubleNullable();
+                        break;
+                }
+            }
+
+            fundInfo.SpecialInfo = info;
         }
         #endregion
 
@@ -443,6 +503,29 @@ namespace Fund.Crawler.Webs
             }
 
             return null;
+        }
+
+        private void SetSpecialInfo(SpecialInfo info, string[] titles, string[] values)
+        {
+            var dict = new Dictionary<string, double?>()
+            {
+                { titles[1],values[1].AsDoubleNullable()},
+                { titles[2],values[2].AsDoubleNullable()},
+                { titles[3],values[3].AsDoubleNullable()},
+            };
+
+            switch (values[0])
+            {
+                case "标准差":
+                    info.Volatility = dict;
+                    break;
+                case "夏普比率":
+                    info.SharpeRatio = dict;
+                    break;
+                case "信息比率":
+                    info.InfoRatio = dict;
+                    break;
+            }
         }
     }
 }

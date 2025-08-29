@@ -76,6 +76,7 @@
     <Compile Include="Converters\CompareRateDisplayConverter.cs" />
     <Compile Include="Converters\DictRateConverter.cs" />
     <Compile Include="Converters\FundSizeConverter.cs" />
+    <Compile Include="Converters\SpecialDictDisplayConverter.cs" />
     <Compile Include="Converters\ValueToPercentConverter.cs" />
     <Compile Include="Extensions\AutoMapperExtension.cs" />
     <Compile Include="Extensions\DataGridExtension.cs" />

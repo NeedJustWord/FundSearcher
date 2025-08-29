@@ -51,6 +51,7 @@
     <Compile Include="Models\FundInfo.cs" />
     <Compile Include="Models\IndexInfo.cs" />
     <Compile Include="Models\IndexKey.cs" />
+    <Compile Include="Models\SpecialInfo.cs" />
     <Compile Include="Models\TransactionInfo.cs" />
     <Compile Include="Models\TransactionRate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

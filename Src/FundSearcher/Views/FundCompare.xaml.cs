@@ -58,13 +58,34 @@ namespace FundSearcher.Views
 
         private void SetColumnHightLight()
         {
-            var maxColumns = new string[]
+            //取最大值的列，null当作最大值
+            var maxColumnsNullAsMaxValue = new string[]
             {
                 "日累计申购限额(元)",
                 "资产规模(亿元)",
                 "份额规模(亿份)",
             };
-            var minColumns = new string[]
+            //取最大值的列，null当作最小值
+            var maxColumnsNullAsMinValue = new string[]
+            {
+                "近1年夏普比率",
+                "近2年夏普比率",
+                "近3年夏普比率",
+                "近1年信息比率",
+                "近2年信息比率",
+                "近3年信息比率",
+            };
+            //取最小值的列，null当作最大值
+            var minColumnsNullAsMaxValue = new string[]
+            {
+                "近1年波动率",
+                "近2年波动率",
+                "近3年波动率",
+                "年化跟踪误差",
+                "同类平均跟踪误差",
+            };
+            //取最小值的列，null当作最小值
+            var minColumnsNullAsMinValue = new string[]
             {
                 "单位净值",
                 "购买费率",
@@ -79,11 +100,19 @@ namespace FundSearcher.Views
             for (int column = 0; column < dgCompare.Columns.Count; column++)
             {
                 header = dgCompare.Columns[column].Header.ToString();
-                if (maxColumns.Contains(header))
+                if (maxColumnsNullAsMaxValue.Contains(header))
                 {
                     SetColumnHightLight(dgCompare, column, double.MinValue, double.MaxValue, Math.Max, ref allCells, ref resultCells);
                 }
-                else if (minColumns.Contains(header))
+                else if (maxColumnsNullAsMinValue.Contains(header))
+                {
+                    SetColumnHightLight(dgCompare, column, double.MinValue, double.MinValue, Math.Max, ref allCells, ref resultCells);
+                }
+                else if (minColumnsNullAsMaxValue.Contains(header))
+                {
+                    SetColumnHightLight(dgCompare, column, double.MaxValue, double.MaxValue, Math.Min, ref allCells, ref resultCells);
+                }
+                else if (minColumnsNullAsMinValue.Contains(header))
                 {
                     SetColumnHightLight(dgCompare, column, double.MaxValue, double.MinValue, Math.Min, ref allCells, ref resultCells);
                 }

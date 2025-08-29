@@ -6,7 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="1000" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -91,6 +91,95 @@
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="卖出确认日" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
+
+                <DataGridTextColumn IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="特色数据" FontWeight="Bold"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="近1年波动率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                            <Binding Path="SpecialInfo.Volatility"/>
+                            <Binding Source="{StaticResource Number1}"/>
+                            <Binding Source="{StaticResource StringFormatP2}"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="近1年夏普比率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                            <Binding Path="SpecialInfo.SharpeRatio"/>
+                            <Binding Source="{StaticResource Number1}"/>
+                            <Binding Source="{StaticResource StringFormatF2}"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="近1年信息比率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                            <Binding Path="SpecialInfo.InfoRatio"/>
+                            <Binding Source="{StaticResource Number1}"/>
+                            <Binding Source="{StaticResource StringFormatF2}"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="近2年波动率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                            <Binding Path="SpecialInfo.Volatility"/>
+                            <Binding Source="{StaticResource Number2}"/>
+                            <Binding Source="{StaticResource StringFormatP2}"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="近2年夏普比率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                            <Binding Path="SpecialInfo.SharpeRatio"/>
+                            <Binding Source="{StaticResource Number2}"/>
+                            <Binding Source="{StaticResource StringFormatF2}"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="近2年信息比率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                            <Binding Path="SpecialInfo.InfoRatio"/>
+                            <Binding Source="{StaticResource Number2}"/>
+                            <Binding Source="{StaticResource StringFormatF2}"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="近3年波动率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                            <Binding Path="SpecialInfo.Volatility"/>
+                            <Binding Source="{StaticResource Number3}"/>
+                            <Binding Source="{StaticResource StringFormatP2}"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="近3年夏普比率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                            <Binding Path="SpecialInfo.SharpeRatio"/>
+                            <Binding Source="{StaticResource Number3}"/>
+                            <Binding Source="{StaticResource StringFormatF2}"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="近3年信息比率" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                            <Binding Path="SpecialInfo.InfoRatio"/>
+                            <Binding Source="{StaticResource Number3}"/>
+                            <Binding Source="{StaticResource StringFormatF2}"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="年化跟踪误差" IsReadOnly="True" Binding="{Binding SpecialInfo.AnnualizedTrackingError,StringFormat=P2,TargetNullValue=--}"/>
+                <DataGridTextColumn Header="同类平均跟踪误差" IsReadOnly="True" Binding="{Binding SpecialInfo.AverageTrackingErrorOfTheSameType,StringFormat=P2,TargetNullValue=--}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

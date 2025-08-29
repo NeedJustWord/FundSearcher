@@ -158,6 +158,16 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref trackingTarget, value); }
         }
 
+        private SpecialInfo specialInfo;
+        /// <summary>
+        /// 特色数据
+        /// </summary>
+        public SpecialInfo SpecialInfo
+        {
+            get { return specialInfo; }
+            set { SetProperty(ref specialInfo, value); }
+        }
+
         private TransactionInfo transactionInfo;
         /// <summary>
         /// 交易信息
