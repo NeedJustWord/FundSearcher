@@ -27,6 +27,7 @@
         </StackPanel>
 
         <DataGrid x:Name="dgCompare" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Loaded="DataGrid_Loaded"
+                  EnableColumnVirtualization="False" EnableRowVirtualization="False"
                   RowStyle="{StaticResource ShowDataGridRow}"
                   Style="{StaticResource CompareDataGrid}" ItemsSource="{Binding FundInfos}">
             <DataGrid.Columns>
