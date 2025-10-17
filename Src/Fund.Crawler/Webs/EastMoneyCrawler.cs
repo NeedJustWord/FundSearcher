@@ -364,7 +364,7 @@ namespace Fund.Crawler.Webs
             int trackingCount;
             foreach (var row in rows)
             {
-                if (int.TryParse(row.GetFirstHtmlTagValueByAttri("span", "class", "red").GetHtmlTagContent(), out trackingCount) == false)
+                if (int.TryParse(row.GetFirstHtmlTagValueByAttri("span", "class", "red")?.GetHtmlTagContent(), out trackingCount) == false)
                 {
                     trackingCount = 0;
                 }
