@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Fund.Crawler.Extensions;
 using Newtonsoft.Json;
 using Prism.Mvvm;
 
@@ -138,7 +139,17 @@ namespace Fund.Crawler.Models
         public List<TransactionRate> SellRates
         {
             get { return sellRates; }
-            set { SetProperty(ref sellRates, value); }
+            set
+            {
+                SetProperty(ref sellRates, value);
+                FreeSellDays = sellRates.GetFreeSellDays();
+            }
         }
+
+        /// <summary>
+        /// 免费赎回天数
+        /// </summary>
+        [JsonIgnore]
+        public int? FreeSellDays { get; private set; }
     }
 }

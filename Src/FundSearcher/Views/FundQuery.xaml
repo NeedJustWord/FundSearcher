@@ -168,8 +168,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="买入确认日" Width="70" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyConfirmDate}"/>
-                <DataGridTextColumn Header="卖出确认日" Width="70" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
+                <DataGridTextColumn Header="免费赎回天数" Width="90" IsReadOnly="True" Binding="{Binding TransactionInfo.FreeSellDays,TargetNullValue=无}"/>
                 <DataGridTextColumn Header="日累计申购限额(元)" Width="120" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
                 <DataGridTextColumn Header="单位净值" Width="60" IsReadOnly="True" Binding="{Binding TransactionInfo.Price,StringFormat=F4}"/>
                 <DataGridTextColumn Header="购买费率" Width="60" IsReadOnly="True">

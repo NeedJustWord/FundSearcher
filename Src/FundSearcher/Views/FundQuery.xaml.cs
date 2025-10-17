@@ -109,15 +109,15 @@ namespace FundSearcher.Views
             {
                 case "认购费率":
                     item.HiddenColumns = info.ApplyRatesHiddenColumns;
-                    item.ItemsSource = info.TransactionInfo.ApplyRates;
+                    item.ItemsSource = info.TransactionInfo?.ApplyRates;
                     break;
                 case "申购费率":
                     item.HiddenColumns = info.BuyRatesHiddenColumns;
-                    item.ItemsSource = info.TransactionInfo.BuyRates;
+                    item.ItemsSource = info.TransactionInfo?.BuyRates;
                     break;
                 case "赎回费率":
                     item.HiddenColumns = info.SellRatesHiddenColumns;
-                    item.ItemsSource = info.TransactionInfo.SellRates;
+                    item.ItemsSource = info.TransactionInfo?.SellRates;
                     break;
             }
         }
