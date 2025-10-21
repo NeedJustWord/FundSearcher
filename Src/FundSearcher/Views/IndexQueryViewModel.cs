@@ -79,6 +79,7 @@ namespace FundSearcher.Views
         public IndexQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator, dataBase)
         {
             eventAggregator.Subscribe<IndexQueryCheckAllEvent>(CheckAll);
+            eventAggregator.Subscribe<IndexInfoRefreshEvent>(IndexInfoRefresh);
             RegisterCommand(CommandName.Query, Query);
             RegisterCommand(CommandName.Reset, Reset);
             RegisterCommand(CommandName.Refresh, Refresh);
@@ -105,6 +106,13 @@ namespace FundSearcher.Views
             }
         }
 
+        private void IndexInfoRefresh()
+        {
+            var lastSelected = SelectedIndexInfo;
+            SetItemsSource(true, indexInfos.CustomSort().ToList());
+            SelectedIndexInfo = lastSelected;
+        }
+
         private async void Query()
         {
             if (TryGetCancellationTokenFault(out var token))
@@ -124,7 +132,6 @@ namespace FundSearcher.Views
             }
 
             SetItemsSource(false, list.CustomSort());
-            Filter();
         }
 
         private void Reset()
@@ -152,7 +159,6 @@ namespace FundSearcher.Views
             }
 
             SetItemsSource(true, list.CustomSort());
-            Filter();
         }
 
         private void Detail()
@@ -255,6 +261,7 @@ namespace FundSearcher.Views
             var task = fundDataBase.GetFundBaseInfos(IndexInfos.Where(t => StarIndexes.Any(x => x.Key == t.IndexCode)), token, true);
             SetRunTask(task);
             var list = await task;
+            IndexInfoRefresh();
             TaskCompleted();
 
             if (TaskIsCancel)
@@ -273,6 +280,8 @@ namespace FundSearcher.Views
             IndexInfos.AddRange(infos);
 
             InitFilterData(isRefresh);
+
+            Filter();
         }
 
         private void Filter()

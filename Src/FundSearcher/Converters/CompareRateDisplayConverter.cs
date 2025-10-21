@@ -23,13 +23,14 @@ namespace FundSearcher.Converters
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values[1] == DependencyProperty.UnsetValue) return "";
-
             var str = (string)values[0];
+            var obj = str == "赎回费率" || str == "场内交易" ? values[1] : values[2];
+            if (obj == DependencyProperty.UnsetValue) return "";
+
             if (str == "赎回费率")
             {
                 var sb = new StringBuilder();
-                foreach (var item in (List<TransactionRate>)values[1])
+                foreach (var item in (List<TransactionRate>)obj)
                 {
                     sb.AppendLine($"{GetApplicablePeriod(item.ApplicablePeriod)}：{item.Rate.Values.FirstOrDefault()}");
                 }
@@ -39,8 +40,7 @@ namespace FundSearcher.Converters
                 return result;
             }
 
-            var rates = str == "场内交易" ? (List<TransactionRate>)values[1] : (List<TransactionRate>)values[2];
-            var rate = rates.FirstOrDefault();
+            var rate = ((List<TransactionRate>)obj).FirstOrDefault();
             if (rate == null) return "";
 
             string value;

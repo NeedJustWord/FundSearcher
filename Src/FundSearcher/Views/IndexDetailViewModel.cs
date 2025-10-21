@@ -2,10 +2,12 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using Fund.DataBase;
 using FundSearcher.Consts;
 using FundSearcher.Controls;
+using FundSearcher.PubSubEvents;
 using Prism.Events;
 using Prism.Regions;
 
@@ -14,6 +16,7 @@ namespace FundSearcher.Views
     class IndexDetailViewModel : BaseIndexViewModel
     {
         private IndexInfo indexInfo;
+        private bool isRefresh;
 
         #region 属性
         private ObservableCollection<FundBaseInfo> fundInfos = new ObservableCollection<FundBaseInfo>();
@@ -36,6 +39,7 @@ namespace FundSearcher.Views
         {
             base.OnNavigatedTo(navigationContext);
 
+            isRefresh = false;
             KeyWord = null;
             FundInfos.Clear();
             if (navigationContext.Parameters.TryGetValue(ParameterName.DetailIndexInfo, out IndexInfo info))
@@ -45,6 +49,13 @@ namespace FundSearcher.Views
                 Filter();
             }
             PublishStatusMessage("指数详情数据加载完成");
+        }
+
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            base.OnNavigatedFrom(navigationContext);
+
+            if (isRefresh) eventAggregator.Publish<IndexInfoRefreshEvent>();
         }
 
         private async void Query()
@@ -66,7 +77,6 @@ namespace FundSearcher.Views
             }
 
             SetItemsSource(list.CustomSort());
-            Filter();
         }
 
         private void Reset()
@@ -94,7 +104,6 @@ namespace FundSearcher.Views
             }
 
             SetItemsSource(list.CustomSort());
-            Filter();
         }
 
         private void Copy()
@@ -106,8 +115,10 @@ namespace FundSearcher.Views
 
         private void SetItemsSource(IEnumerable<FundBaseInfo> infos)
         {
+            isRefresh = true;
             FundInfos.Clear();
             FundInfos.AddRange(infos);
+            Filter();
         }
 
         private void Filter()
