@@ -23,6 +23,23 @@ namespace Fund.Core.Helpers
                 }
             }
         }
+
+        private static string blackFunds;
+        /// <summary>
+        /// 黑名单基金
+        /// </summary>
+        public static string BlackFunds
+        {
+            get { return blackFunds; }
+            set
+            {
+                if (blackFunds != value)
+                {
+                    blackFunds = value;
+                    needSave = true;
+                }
+            }
+        }
         #endregion
 
         private static XmlDocument document;
@@ -38,6 +55,7 @@ namespace Fund.Core.Helpers
             appSettings = GetOrCreateXmlNode(document, "configuration", "appSettings");
 
             starIndexes = Get(nameof(StarIndexes));
+            blackFunds = Get(nameof(BlackFunds));
         }
 
         /// <summary>
@@ -48,6 +66,7 @@ namespace Fund.Core.Helpers
             if (needSave)
             {
                 Set(nameof(StarIndexes), StarIndexes);
+                Set(nameof(BlackFunds), BlackFunds);
                 document.Save(configPath);
             }
         }

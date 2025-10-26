@@ -19,6 +19,7 @@ namespace FundSearcher
             containerRegistry.RegisterForNavigation<FundManager>(NavigateName.FundManager);
             containerRegistry.RegisterForNavigation<FundQuery>(NavigateName.FundQuery);
             containerRegistry.RegisterForNavigation<FundCompare>(NavigateName.FundCompare);
+            containerRegistry.RegisterForNavigation<FundBlack>(NavigateName.FundBlack);
 
             containerRegistry.RegisterForNavigation<IndexManager>(NavigateName.IndexManager);
             containerRegistry.RegisterForNavigation<IndexQuery>(NavigateName.IndexQuery);

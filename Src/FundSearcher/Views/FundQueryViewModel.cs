@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using Fund.Core.Extensions;
+using Fund.Core.Helpers;
 using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using Fund.DataBase;
@@ -16,31 +17,27 @@ using Prism.Regions;
 
 namespace FundSearcher.Views
 {
-    class FundQueryViewModel : BaseFundViewModel
+    class FundQueryViewModel : BaseFundWithKeyWordViewModel
     {
         private readonly string[] applyRateColumnNames = new string[] { "费率", "原费率", "天天基金优惠费率", };
         private readonly string[] buyRateColumnNames = new string[] { "费率", "原费率", "银行卡购买", "活期宝购买", };
         private readonly string[] sellRateColumnNames = new string[] { "赎回费率", };
+        private List<string> blackFunds;
         private bool isFiltering;
         private bool filter;
 
         #region 属性
+        #region 基金列表
         private ObservableCollection<FundInfo> fundInfos = new ObservableCollection<FundInfo>();
+        /// <summary>
+        /// 基金列表
+        /// </summary>
         public ObservableCollection<FundInfo> FundInfos
         {
             get { return fundInfos; }
             set { SetProperty(ref fundInfos, value); }
         }
-
-        private string queryFundId;
-        /// <summary>
-        /// 查询基金代码
-        /// </summary>
-        public string QueryFundId
-        {
-            get { return queryFundId; }
-            set { SetProperty(ref queryFundId, value); }
-        }
+        #endregion
 
         #region 申购状态
         private ObservableCollection<FilterModel> buyStatuses = new ObservableCollection<FilterModel>();
@@ -238,13 +235,17 @@ namespace FundSearcher.Views
         public FundQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator, dataBase)
         {
             eventAggregator.Subscribe<FundQueryCheckAllEvent>(CheckAll);
+            eventAggregator.Subscribe<FundBlackRefreshEvent, List<string>>(RefreshBlack);
             RegisterCommand(CommandName.Query, Query);
             RegisterCommand(CommandName.Refresh, Refresh);
             RegisterCommand(CommandName.Compare, Compare);
             RegisterCommand(CommandName.Reset, Reset);
             RegisterCommand(CommandName.Delete, Delete);
+            RegisterCommand(CommandName.Add, AddBlack);
+            RegisterCommand(CommandName.Black, ShowBlack);
             InitCounters();
             InitFundClasses();
+            blackFunds = ConfigHelper.BlackFunds.SplitRemoveEmpty(',').ToList();
         }
 
         protected override void OnFirstLoad()
@@ -265,7 +266,7 @@ namespace FundSearcher.Views
         private async void Query()
         {
             List<FundInfo> list;
-            if (string.IsNullOrWhiteSpace(queryFundId))
+            if (string.IsNullOrWhiteSpace(KeyWord))
             {
                 list = fundDataBase.FundInfos;
             }
@@ -277,7 +278,7 @@ namespace FundSearcher.Views
                     return;
                 }
 
-                var task = fundDataBase.GetFundInfos(queryFundId, token);
+                var task = fundDataBase.GetFundInfos(KeyWord, token);
                 SetRunTask(task);
                 list = await task;
                 TaskCompleted();
@@ -363,7 +364,7 @@ namespace FundSearcher.Views
 
         private void Reset()
         {
-            QueryFundId = null;
+            KeyWord = null;
             Query();
         }
 
@@ -408,6 +409,54 @@ namespace FundSearcher.Views
                     item.OrderNumber = order++;
                 }
             }
+        }
+
+        private void RefreshBlack(List<string> blackFunds)
+        {
+            var cancelBlackFunds = this.blackFunds.Except(blackFunds).ToList();
+            foreach (var fundId in cancelBlackFunds)
+            {
+                var fund = fundInfos.FirstOrDefault(t => t.FundId == fundId);
+                if (fund != null) fund.IsChecked = false;
+            }
+
+            this.blackFunds = blackFunds;
+            RefreshBlack();
+        }
+
+        private void RefreshBlack()
+        {
+            ConfigHelper.BlackFunds = string.Join(",", blackFunds.OrderBy(t => t));
+            Filter(true);
+        }
+
+        private void AddBlack()
+        {
+            var infos = fundInfos.Where(t => t.IsShow && t.IsChecked).ToArray();
+            if (infos.Length == 0)
+            {
+                MessageBoxEx.ShowError("请勾选需要添加黑名单的基金");
+                return;
+            }
+
+            blackFunds.AddRange(infos.Select(t => t.FundId));
+            RefreshBlack();
+        }
+
+        private void ShowBlack()
+        {
+            var infos = fundInfos.Where(t => blackFunds.Contains(t.FundId)).ToArray();
+            var blackInfos = infos.Map<FundInfo, FundInfo>((t, index) =>
+            {
+                t.OrderNumber = index + 1;
+                t.IsShow = true;
+                t.IsChecked = false;
+            });
+            var param = new NavigationParameters
+            {
+                {ParameterName.BlackFundInfos, blackInfos},
+            };
+            Navigate(NavigateName.FundBlack, param);
         }
 
         private FundInfo Handle(FundInfo model)
@@ -466,6 +515,7 @@ namespace FundSearcher.Views
 
         private bool IsShow(FundInfo fund, bool checkRunningRate = true)
         {
+            if (blackFunds.Contains(fund.FundId)) return false;
             if (SelectTrackingTarget.Key.IsNotNullAndEmpty() && fund.TrackingTarget != SelectTrackingTarget.Key) return false;
             if (SelectBuyStatus.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.BuyStatus != SelectBuyStatus.Key)) return false;
             if (SelectSellStatus.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.SellStatus != SelectSellStatus.Key)) return false;

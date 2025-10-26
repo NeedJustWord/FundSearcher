@@ -81,7 +81,7 @@
             <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource QueryLabelBorder}">
                 <Label Content="基金代码：" Style="{StaticResource KeyValueLabel}"/>
             </Border>
-            <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding QueryFundId}"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding KeyWord}"/>
 
             <Label Grid.Row="1" Grid.Column="0" Content="基金类别：" Style="{StaticResource QueryLabel}"/>
             <ListView Grid.Row="1" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
@@ -126,6 +126,12 @@
                 <Button Content="取消任务" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.CancelTask}"/>
+                <Button Content="黑名单" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}"
+                        CommandParameter="{x:Static consts:CommandName.Black}"/>
+                <Button Content="添加黑名单" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}"
+                        CommandParameter="{x:Static consts:CommandName.Add}"/>
             </StackPanel>
         </Grid>
 

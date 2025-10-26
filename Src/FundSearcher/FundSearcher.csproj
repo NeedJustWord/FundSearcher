@@ -62,6 +62,7 @@
     </Compile>
     <Compile Include="AutoMapperProfile.cs" />
     <Compile Include="BaseFundViewModel.cs" />
+    <Compile Include="BaseFundWithKeyWordViewModel.cs" />
     <Compile Include="BaseIndexViewModel.cs" />
     <Compile Include="BaseTaskViewModel.cs" />
     <Compile Include="BaseViewModel.cs" />
@@ -84,6 +85,8 @@
     <Compile Include="Extensions\DependencyObjectExtension.cs" />
     <Compile Include="Models\FilterModel.cs" />
     <Compile Include="Module.cs" />
+    <Compile Include="PubSubEvents\FundBlackCheckAllEvent.cs" />
+    <Compile Include="PubSubEvents\FundBlackRefreshEvent.cs" />
     <Compile Include="PubSubEvents\FundCompareFilterModelClickEvent.cs" />
     <Compile Include="PubSubEvents\FundQueryCheckAllEvent.cs" />
     <Compile Include="PubSubEvents\FundQueryRefreshDetailEvent.cs" />
@@ -94,6 +97,10 @@
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
     <Compile Include="ShellViewModel.cs" />
+    <Compile Include="Views\FundBlack.xaml.cs">
+      <DependentUpon>FundBlack.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FundBlackViewModel.cs" />
     <Compile Include="Views\FundCompare.xaml.cs">
       <DependentUpon>FundCompare.xaml</DependentUpon>
     </Compile>
@@ -173,6 +180,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Skins\DefaultSkin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FundBlack.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

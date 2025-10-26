@@ -51,5 +51,9 @@
         /// 取消任务命令
         /// </summary>
         public const string CancelTask = "CancelTaskCommand";
+        /// <summary>
+        /// 黑名单命令
+        /// </summary>
+        public const string Black = "BlackCommand";
     }
 }
