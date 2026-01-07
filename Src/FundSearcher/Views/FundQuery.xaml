@@ -68,10 +68,6 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -83,31 +79,43 @@
             </Border>
             <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding KeyWord}"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Content="基金类别：" Style="{StaticResource QueryLabel}"/>
-            <ListView Grid.Row="1" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+            <WrapPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="2 0 0 0">
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Content="基金类别：" Style="{StaticResource QueryLabel}"/>
+                    <ListView Style="{StaticResource HorizontalFilterListViewWithRightMargin}"
                       ItemsSource="{Binding FundClasses}" SelectedItem="{Binding SelectFundClass}"/>
+                </StackPanel>
 
-            <Label Grid.Row="2" Grid.Column="0" Content="交易场所：" Style="{StaticResource QueryLabel}"/>
-            <ListView Grid.Row="2" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Content="交易场所：" Style="{StaticResource QueryLabel}"/>
+                    <ListView Style="{StaticResource HorizontalFilterListViewWithRightMargin}"
                       ItemsSource="{Binding Counters}" SelectedItem="{Binding SelectCounter}"/>
+                </StackPanel>
 
-            <Label Grid.Row="3" Grid.Column="0" Content="申购状态：" Style="{StaticResource QueryLabel}"/>
-            <ListView Grid.Row="3" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Content="申购状态：" Style="{StaticResource QueryLabel}"/>
+                    <ListView Style="{StaticResource HorizontalFilterListViewWithRightMargin}"
                       ItemsSource="{Binding BuyStatuses}" SelectedItem="{Binding SelectBuyStatus}"/>
+                </StackPanel>
 
-            <Label Grid.Row="4" Grid.Column="0" Content="赎回状态：" Style="{StaticResource QueryLabel}"/>
-            <ListView Grid.Row="4" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Content="赎回状态：" Style="{StaticResource QueryLabel}"/>
+                    <ListView Style="{StaticResource HorizontalFilterListViewWithRightMargin}"
                       ItemsSource="{Binding SellStatuses}" SelectedItem="{Binding SelectSellStatus}"/>
+                </StackPanel>
 
-            <Label Grid.Row="5" Grid.Column="0" Content="跟踪标的：" Style="{StaticResource QueryLabel}"/>
-            <ListView Grid.Row="5" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Content="跟踪标的：" Style="{StaticResource QueryLabel}"/>
+                    <ListView Style="{StaticResource HorizontalFilterListView}"
                       ItemsSource="{Binding TrackingTargets}" SelectedItem="{Binding SelectTrackingTarget}"/>
+                </StackPanel>
+            </WrapPanel>
 
-            <Label Grid.Row="6" Grid.Column="0" Content="运作费率：" Style="{StaticResource QueryLabel}"/>
-            <ListView Grid.Row="6" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
+            <Label Grid.Row="2" Grid.Column="0" Content="运作费率：" Style="{StaticResource QueryLabel}"/>
+            <ListView Grid.Row="2" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
                       ItemsSource="{Binding RunningRates}" SelectedItem="{Binding SelectRunningRate}"/>
 
-            <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                 <Button Content="查询" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Query}"/>
