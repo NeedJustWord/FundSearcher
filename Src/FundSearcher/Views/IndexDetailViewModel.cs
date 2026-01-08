@@ -48,7 +48,7 @@ namespace FundSearcher.Views
                 FundInfos.AddRange(info.FundBaseInfos.CustomSort());
                 Filter();
             }
-            PublishStatusMessage("指数详情数据加载完成");
+            PublishStatusMessage($"指数[{indexInfo?.IndexCode},{indexInfo?.IndexName}]详情数据加载完成");
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)

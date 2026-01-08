@@ -81,6 +81,9 @@
         <DataGrid Grid.Row="1" Margin="3" CanUserAddRows="False" CanUserSortColumns="False" AutoGenerateColumns="False"
                   RowStyle="{StaticResource ShowDataGridRow}"
                   ItemsSource="{Binding IndexInfos}" SelectedItem="{Binding SelectedIndexInfo}">
+            <DataGrid.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Detail}"/>
+            </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Width="20" HeaderStyle="{StaticResource dtCheckHeader}" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                     <DataGridCheckBoxColumn.ElementStyle>
