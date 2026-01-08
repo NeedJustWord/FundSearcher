@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:coreConsts="clr-namespace:Fund.Core.Consts;assembly=Fund.Core"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="1000" d:DesignWidth="800">
@@ -31,16 +32,16 @@
                   RowStyle="{StaticResource ShowDataGridRow}"
                   Style="{StaticResource CompareDataGrid}" ItemsSource="{Binding FundInfos}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="基金代码" IsReadOnly="True" Binding="{Binding FundId}"/>
-                <DataGridTextColumn Header="基金简称" IsReadOnly="True" Binding="{Binding FundName}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.FundId}" IsReadOnly="True" Binding="{Binding FundId}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.FundName}" IsReadOnly="True" Binding="{Binding FundName}"/>
 
                 <DataGridTextColumn IsReadOnly="True">
                     <DataGridTextColumn.Header>
-                        <TextBlock Text="信息速览" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static coreConsts:CommonName.FundInfo}" FontWeight="Bold"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="成立日期" IsReadOnly="True" Binding="{Binding BirthDay,Converter={StaticResource BirthDayConverter}}"/>
-                <DataGridTextColumn Header="资产规模(亿元)" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.BirthDay}" IsReadOnly="True" Binding="{Binding BirthDay,Converter={StaticResource BirthDayConverter}}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.AssetWithUnit}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource FundSizeConverter}">
                             <Binding Source="{StaticResource StringFormatF2}"/>
@@ -48,7 +49,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="份额规模(亿份)" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.ShareWithUnit}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource FundSizeConverter}">
                             <Binding Source="{StaticResource StringFormatF4}"/>
@@ -56,20 +57,20 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="基金类别" IsReadOnly="True" Binding="{Binding FundClass}"/>
-                <DataGridTextColumn Header="跟踪标的" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
-                <DataGridTextColumn Header="信息来源" IsReadOnly="True" Binding="{Binding InfoSource}"/>
-                <DataGridTextColumn Header="更新时间" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.FundClass}" IsReadOnly="True" Binding="{Binding FundClass}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.TrackingTarget}" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:CommonName.InfoSource}" IsReadOnly="True" Binding="{Binding InfoSource}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:CommonName.UpdateTime}" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
 
                 <DataGridTextColumn IsReadOnly="True">
                     <DataGridTextColumn.Header>
-                        <TextBlock Text="交易信息" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static coreConsts:CommonName.TransactionInfo}" FontWeight="Bold"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="交易场所" IsReadOnly="True" Binding="{Binding Counter}"/>
-                <DataGridTextColumn Header="单位净值" IsReadOnly="True" Binding="{Binding TransactionInfo.Price,StringFormat=F4}"/>
-                <DataGridTextColumn Header="日累计申购限额(元)" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
-                <DataGridTextColumn Header="购买费率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.Counter}" IsReadOnly="True" Binding="{Binding Counter}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.Price}" IsReadOnly="True" Binding="{Binding TransactionInfo.Price,StringFormat=F4}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.BuyUpperLimitAmountWithUnit}" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.NormalBuyRates}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource CompareRateDisplayConverter}">
                             <Binding Path="Counter"/>
@@ -78,27 +79,27 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="管理费率(每年)" IsReadOnly="True" Binding="{Binding TransactionInfo.ManageRate,StringFormat=0.00%}"/>
-                <DataGridTextColumn Header="托管费率(每年)" IsReadOnly="True" Binding="{Binding TransactionInfo.HostingRate,StringFormat=0.00%}"/>
-                <DataGridTextColumn Header="销售服务费率(每年)" IsReadOnly="True" Binding="{Binding TransactionInfo.SalesServiceRate,StringFormat=0.00%}"/>
-                <DataGridTextColumn Header="运作费用(每年)" IsReadOnly="True" Binding="{Binding TransactionInfo.RunningRate,StringFormat=0.00%}"/>
-                <DataGridTextColumn Header="买入确认日" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyConfirmDate}"/>
-                <DataGridTextColumn Header="赎回费率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.ManageRateWithUnit}" IsReadOnly="True" Binding="{Binding TransactionInfo.ManageRate,StringFormat=0.00%}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.HostingRateWithUnit}" IsReadOnly="True" Binding="{Binding TransactionInfo.HostingRate,StringFormat=0.00%}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.SalesServiceRateWithUnit}" IsReadOnly="True" Binding="{Binding TransactionInfo.SalesServiceRate,StringFormat=0.00%}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.RunningRateWithUnit}" IsReadOnly="True" Binding="{Binding TransactionInfo.RunningRate,StringFormat=0.00%}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.BuyConfirmDate}" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyConfirmDate}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.SellRates}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource CompareRateDisplayConverter}">
-                            <Binding Source="{StaticResource StringRateSell}"/>
+                            <Binding Source="{x:Static coreConsts:TransactionColumnName.SellRates}"/>
                             <Binding Path="TransactionInfo.SellRates"/>
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="卖出确认日" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.SellConfirmDate}" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
 
                 <DataGridTextColumn IsReadOnly="True">
                     <DataGridTextColumn.Header>
-                        <TextBlock Text="特色数据" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static coreConsts:CommonName.SpecialInfo}" FontWeight="Bold"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="近1年波动率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.VolatilityInThePastYear1}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                             <Binding Path="SpecialInfo.Volatility"/>
@@ -107,7 +108,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="近1年夏普比率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.SharpeRatioInThePastYear1}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                             <Binding Path="SpecialInfo.SharpeRatio"/>
@@ -116,7 +117,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="近1年信息比率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.InfoRatioInThePastYear1}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                             <Binding Path="SpecialInfo.InfoRatio"/>
@@ -125,7 +126,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="近2年波动率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.VolatilityInThePastYear2}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                             <Binding Path="SpecialInfo.Volatility"/>
@@ -134,7 +135,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="近2年夏普比率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.SharpeRatioInThePastYear2}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                             <Binding Path="SpecialInfo.SharpeRatio"/>
@@ -143,7 +144,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="近2年信息比率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.InfoRatioInThePastYear2}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                             <Binding Path="SpecialInfo.InfoRatio"/>
@@ -152,7 +153,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="近3年波动率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.VolatilityInThePastYear3}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                             <Binding Path="SpecialInfo.Volatility"/>
@@ -161,7 +162,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="近3年夏普比率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.SharpeRatioInThePastYear3}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                             <Binding Path="SpecialInfo.SharpeRatio"/>
@@ -170,7 +171,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="近3年信息比率" IsReadOnly="True">
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.InfoRatioInThePastYear3}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                             <Binding Path="SpecialInfo.InfoRatio"/>
@@ -179,8 +180,8 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="年化跟踪误差" IsReadOnly="True" Binding="{Binding SpecialInfo.AnnualizedTrackingError,StringFormat=P2,TargetNullValue=--}"/>
-                <DataGridTextColumn Header="同类平均跟踪误差" IsReadOnly="True" Binding="{Binding SpecialInfo.AverageTrackingErrorOfTheSameType,StringFormat=P2,TargetNullValue=--}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.AnnualizedTrackingError}" IsReadOnly="True" Binding="{Binding SpecialInfo.AnnualizedTrackingError,StringFormat=P2,TargetNullValue=--}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.AverageTrackingErrorOfTheSameType}" IsReadOnly="True" Binding="{Binding SpecialInfo.AverageTrackingErrorOfTheSameType,StringFormat=P2,TargetNullValue=--}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

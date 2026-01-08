@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:coreConsts="clr-namespace:Fund.Core.Consts;assembly=Fund.Core"
              xmlns:consts="clr-namespace:FundSearcher.Consts"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
@@ -55,11 +56,11 @@
                   RowStyle="{StaticResource ShowDataGridRow}"
                   ItemsSource="{Binding FundInfos}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="序号" Width="40" IsReadOnly="True" Binding="{Binding OrderNumber}"/>
-                <DataGridTextColumn Header="基金代码" Width="120" IsReadOnly="True" Binding="{Binding FundId}"/>
-                <DataGridTextColumn Header="基金简称" Width="500" IsReadOnly="True" Binding="{Binding FundName}"/>
-                <DataGridTextColumn Header="信息来源" Width="60" IsReadOnly="True" Binding="{Binding InfoSource}"/>
-                <DataGridTextColumn Header="更新时间" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:CommonName.OrderNumber}" Width="40" IsReadOnly="True" Binding="{Binding OrderNumber}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.FundId}" Width="120" IsReadOnly="True" Binding="{Binding FundId}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.FundName}" Width="500" IsReadOnly="True" Binding="{Binding FundName}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:CommonName.InfoSource}" Width="60" IsReadOnly="True" Binding="{Binding InfoSource}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:CommonName.UpdateTime}" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

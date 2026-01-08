@@ -15,14 +15,6 @@
     <sys:Int32 x:Key="Number2">2</sys:Int32>
     <sys:Int32 x:Key="Number3">3</sys:Int32>
 
-    <sys:String x:Key="StringCounterIn">场内交易</sys:String>
-    <sys:String x:Key="StringCounterOut">场外交易</sys:String>
-    <sys:String x:Key="StringRate">费率</sys:String>
-    <sys:String x:Key="StringRateOriginal">原费率</sys:String>
-    <sys:String x:Key="StringRateCardBuy">银行卡购买</sys:String>
-    <sys:String x:Key="StringRateCurrentBuy">活期宝购买</sys:String>
-    <sys:String x:Key="StringRateEastMoneyPreferred">天天基金优惠费率</sys:String>
-    <sys:String x:Key="StringRateSell">赎回费率</sys:String>
     <sys:String x:Key="StringFormatF2">F2</sys:String>
     <sys:String x:Key="StringFormatF4">F4</sys:String>
     <sys:String x:Key="StringFormatP2">P2</sys:String>

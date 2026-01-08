@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:coreConsts="clr-namespace:Fund.Core.Consts;assembly=Fund.Core"
              xmlns:consts="clr-namespace:FundSearcher.Consts"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
@@ -21,7 +22,7 @@
                     <ControlTemplate>
                         <Button BorderBrush="Transparent" Background="Transparent"
                                 Style="{x:Null}" Click="BtnCheckAll_Click">
-                            <TextBlock Text="#"/>
+                            <TextBlock Text="{x:Static coreConsts:CommonName.Well}"/>
                         </Button>
                     </ControlTemplate>
                 </Setter.Value>
@@ -89,12 +90,12 @@
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="序号" Width="40" IsReadOnly="True" Binding="{Binding OrderNumber}"/>
-                <DataGridTextColumn Header="指数代码" Width="120" IsReadOnly="True" Binding="{Binding IndexCode}"/>
-                <DataGridTextColumn Header="指数名称" Width="500" IsReadOnly="True" Binding="{Binding IndexName}"/>
-                <DataGridTextColumn Header="指数相关基金数量" Width="110" IsReadOnly="True" Binding="{Binding TrackingCount}"/>
-                <DataGridTextColumn Header="信息来源" Width="60" IsReadOnly="True" Binding="{Binding InfoSource}"/>
-                <DataGridTextColumn Header="更新时间" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:CommonName.OrderNumber}" Width="40" IsReadOnly="True" Binding="{Binding OrderNumber}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:IndexColumnName.IndexCode}" Width="120" IsReadOnly="True" Binding="{Binding IndexCode}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:IndexColumnName.IndexName}" Width="500" IsReadOnly="True" Binding="{Binding IndexName}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:IndexColumnName.TrackingCount}" Width="110" IsReadOnly="True" Binding="{Binding TrackingCount}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:CommonName.InfoSource}" Width="60" IsReadOnly="True" Binding="{Binding InfoSource}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:CommonName.UpdateTime}" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Crawler.DataHandler.Extensions;
+using Fund.Core.Consts;
 using Fund.Core.Extensions;
 using Fund.Crawler.Models;
 using Prism.Events;
@@ -134,34 +135,34 @@ namespace Fund.Crawler.Webs
                 var value = item.Value;
                 switch (key)
                 {
-                    case "基金全称":
+                    case FundColumnName.FundFullName:
                         fundInfo.FundFullName = value;
                         break;
-                    case "基金简称":
+                    case FundColumnName.FundName:
                         fundInfo.FundName = value;
                         break;
-                    case "基金类型":
+                    case FundColumnName.FundType:
                         fundInfo.FundType = value;
                         break;
-                    case "发行日期":
+                    case FundColumnName.IssueDay:
                         fundInfo.IssueDay = DateTime.Parse(value);
                         break;
-                    case "成立日期/规模":
+                    case FundColumnName.Birth:
                         {
                             var tmp = value.Split('/');
                             fundInfo.BirthDay = tmp[0].IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(tmp[0].TrimEnd());
                             fundInfo.BirthSize = GetSize(tmp[1].TrimStart());
                         }
                         break;
-                    case "资产规模":
+                    case FundColumnName.Asset:
                         fundInfo.AssetSize = GetSize(value);
                         fundInfo.AssetDeadline = GetDeadline(value);
                         break;
-                    case "份额规模":
+                    case FundColumnName.Share:
                         fundInfo.ShareSize = GetSize(value);
                         fundInfo.ShareDeadline = GetDeadline(value);
                         break;
-                    case "跟踪标的":
+                    case FundColumnName.TrackingTarget:
                         fundInfo.TrackingTarget = value.IsNullOrEmpty() || value == "该基金无跟踪标的" ? "无" : value;
                         break;
                 }
@@ -209,10 +210,10 @@ namespace Fund.Crawler.Webs
             {
                 switch (item.Key)
                 {
-                    case "年化跟踪误差":
+                    case SpecialColumnName.AnnualizedTrackingError:
                         info.AnnualizedTrackingError = item.Value.AsDoubleNullable();
                         break;
-                    case "同类平均跟踪误差":
+                    case SpecialColumnName.AverageTrackingErrorOfTheSameType:
                         info.AverageTrackingErrorOfTheSameType = item.Value.AsDoubleNullable();
                         break;
                 }
@@ -253,7 +254,7 @@ namespace Fund.Crawler.Webs
             {
                 switch (item.Key)
                 {
-                    case "交易确认日":
+                    case TransactionColumnName.ConfirmDate:
                         var temp = item.Value.GetHtmlTagValue("td").ToList();
                         if (temp.Count > 3)
                         {
@@ -261,7 +262,7 @@ namespace Fund.Crawler.Webs
                             info.SellConfirmDate = temp[3].GetHtmlTagContent();
                         }
                         break;
-                    case "运作费用":
+                    case TransactionColumnName.RunningRate:
                         temp = item.Value.GetHtmlTagValue("td").ToList();
                         if (temp.Count > 5)
                         {
@@ -270,7 +271,7 @@ namespace Fund.Crawler.Webs
                             info.SalesServiceRate = GetRate(temp[5].GetHtmlTagContent());
                         }
                         break;
-                    case "交易状态":
+                    case TransactionColumnName.Status:
                         temp = item.Value.GetHtmlTagValue("td").ToList();
                         if (temp.Count > 3)
                         {
@@ -278,7 +279,7 @@ namespace Fund.Crawler.Webs
                             info.SellStatus = temp[3].GetHtmlTagContent();
                         }
                         break;
-                    case "申购与赎回金额":
+                    case TransactionColumnName.BuyUpperLimitAmount:
                         temp = item.Value.GetHtmlTagValue("td").ToList();
                         if (temp.Count > 5)
                         {
@@ -286,15 +287,15 @@ namespace Fund.Crawler.Webs
                         }
                         break;
                     default:
-                        if (item.Key.Contains("认购费率"))
+                        if (item.Key.Contains(TransactionColumnName.ApplyRates))
                         {
                             info.ApplyRates = GetTransactionRates(item.Value);
                         }
-                        else if (item.Key.Contains("申购费率"))
+                        else if (item.Key.Contains(TransactionColumnName.BuyRates))
                         {
                             info.BuyRates = GetTransactionRates(item.Value);
                         }
-                        else if (item.Key.Contains("赎回费率"))
+                        else if (item.Key.Contains(TransactionColumnName.SellRates))
                         {
                             info.SellRates = GetTransactionRates(item.Value);
                         }
@@ -361,10 +362,9 @@ namespace Fund.Crawler.Webs
             var rows = pageSource.GetFirstHtmlTagValueByAttri("ul", "class", "clearfix all_index_ul ").GetHtmlTagValueByAttri("div", "class", "link").ToList();
             infos.Capacity = rows.Count;
 
-            int trackingCount;
             foreach (var row in rows)
             {
-                if (int.TryParse(row.GetFirstHtmlTagValueByAttri("span", "class", "red")?.GetHtmlTagContent(), out trackingCount) == false)
+                if (int.TryParse(row.GetFirstHtmlTagValueByAttri("span", "class", "red")?.GetHtmlTagContent(), out int trackingCount) == false)
                 {
                     trackingCount = 0;
                 }
@@ -516,13 +516,13 @@ namespace Fund.Crawler.Webs
 
             switch (values[0])
             {
-                case "标准差":
+                case SpecialColumnName.Volatility:
                     info.Volatility = dict;
                     break;
-                case "夏普比率":
+                case SpecialColumnName.SharpeRatio:
                     info.SharpeRatio = dict;
                     break;
-                case "信息比率":
+                case SpecialColumnName.InfoRatio:
                     info.InfoRatio = dict;
                     break;
             }

@@ -19,9 +19,7 @@ namespace Fund.Crawler
 
         public FundCrawler(BaseWebCrawler webCrawler)
         {
-            if (webCrawler == null) throw new ArgumentNullException($"{nameof(webCrawler)}为null");
-
-            WebCrawler = webCrawler;
+            WebCrawler = webCrawler ?? throw new ArgumentNullException($"{nameof(webCrawler)}为null");
         }
 
         /// <summary>

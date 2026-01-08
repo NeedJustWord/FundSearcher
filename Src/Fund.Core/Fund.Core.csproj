@@ -42,6 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Consts\CommonName.cs" />
+    <Compile Include="Consts\FundColumnName.cs" />
+    <Compile Include="Consts\IndexColumnName.cs" />
+    <Compile Include="Consts\SpecialColumnName.cs" />
+    <Compile Include="Consts\TransactionColumnName.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />
     <Compile Include="Extensions\JsonExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
@@ -51,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
+      <Version>13.0.4</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

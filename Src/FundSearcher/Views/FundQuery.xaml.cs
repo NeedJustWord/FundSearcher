@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Fund.Core.Consts;
 using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using FundSearcher.Controls;
@@ -40,7 +41,7 @@ namespace FundSearcher.Views
                 if (row != null)
                 {
                     var tag = row.FindVisualTreeChild<TextBlock>("tag");
-                    if (tag != null) tag.Text = "+";
+                    if (tag != null) tag.Text = CommonName.Plus;
                 }
             }
         }
@@ -54,15 +55,15 @@ namespace FundSearcher.Views
             var row = obj.FindVisualTreeParent<DataGridRow>();
             if (row == null) return;
 
-            if (tb.Text.IndexOf("-") > -1)
+            if (tb.Text.IndexOf(CommonName.Minus) > -1)
             {
                 row.DetailsVisibility = Visibility.Collapsed;
-                tb.Text = "+";
+                tb.Text = CommonName.Plus;
             }
             else
             {
                 row.DetailsVisibility = Visibility.Visible;
-                tb.Text = "-";
+                tb.Text = CommonName.Minus;
                 RefreshDetail((FundInfo)row.Item);
             }
         }
@@ -96,9 +97,9 @@ namespace FundSearcher.Views
 
             if (notFind)
             {
-                dictRefreshDetail[$"{info.OrderNumber},认购费率"] = info;
-                dictRefreshDetail[$"{info.OrderNumber},申购费率"] = info;
-                dictRefreshDetail[$"{info.OrderNumber},赎回费率"] = info;
+                dictRefreshDetail[$"{info.OrderNumber},{TransactionColumnName.ApplyRates}"] = info;
+                dictRefreshDetail[$"{info.OrderNumber},{TransactionColumnName.BuyRates}"] = info;
+                dictRefreshDetail[$"{info.OrderNumber},{TransactionColumnName.SellRates}"] = info;
             }
         }
 
@@ -107,15 +108,15 @@ namespace FundSearcher.Views
             item.ItemsSource = null;
             switch (header)
             {
-                case "认购费率":
+                case TransactionColumnName.ApplyRates:
                     item.HiddenColumns = info.ApplyRatesHiddenColumns;
                     item.ItemsSource = info.TransactionInfo?.ApplyRates;
                     break;
-                case "申购费率":
+                case TransactionColumnName.BuyRates:
                     item.HiddenColumns = info.BuyRatesHiddenColumns;
                     item.ItemsSource = info.TransactionInfo?.BuyRates;
                     break;
-                case "赎回费率":
+                case TransactionColumnName.SellRates:
                     item.HiddenColumns = info.SellRatesHiddenColumns;
                     item.ItemsSource = info.TransactionInfo?.SellRates;
                     break;

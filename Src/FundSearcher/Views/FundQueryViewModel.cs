@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using Fund.Core.Consts;
 using Fund.Core.Extensions;
 using Fund.Core.Helpers;
 using Fund.Crawler.Extensions;
@@ -19,9 +20,23 @@ namespace FundSearcher.Views
 {
     class FundQueryViewModel : BaseFundWithKeyWordViewModel
     {
-        private readonly string[] applyRateColumnNames = new string[] { "费率", "原费率", "天天基金优惠费率", };
-        private readonly string[] buyRateColumnNames = new string[] { "费率", "原费率", "银行卡购买", "活期宝购买", };
-        private readonly string[] sellRateColumnNames = new string[] { "赎回费率", };
+        private readonly string[] applyRateColumnNames = new string[]
+        {
+            TransactionColumnName.Rates,
+            TransactionColumnName.OriginalRates,
+            TransactionColumnName.EastMoneyPreferredRates,
+        };
+        private readonly string[] buyRateColumnNames = new string[]
+        {
+            TransactionColumnName.Rates,
+            TransactionColumnName.OriginalRates,
+            TransactionColumnName.CardBuyRates,
+            TransactionColumnName.CurrentBuyRates,
+        };
+        private readonly string[] sellRateColumnNames = new string[]
+        {
+            TransactionColumnName.SellRates,
+        };
         private List<string> blackFunds;
         private bool isFiltering;
         private bool filter;

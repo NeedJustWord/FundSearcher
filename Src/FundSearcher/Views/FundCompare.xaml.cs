@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Fund.Core.Consts;
 using Fund.Core.Extensions;
 using Fund.Crawler.Extensions;
 using FundSearcher.Extensions;
@@ -61,38 +62,38 @@ namespace FundSearcher.Views
             //取最大值的列，null当作最大值
             var maxColumnsNullAsMaxValue = new string[]
             {
-                "日累计申购限额(元)",
-                "资产规模(亿元)",
-                "份额规模(亿份)",
+                TransactionColumnName.BuyUpperLimitAmountWithUnit,
+                FundColumnName.AssetWithUnit,
+                FundColumnName.ShareWithUnit,
             };
             //取最大值的列，null当作最小值
             var maxColumnsNullAsMinValue = new string[]
             {
-                "近1年夏普比率",
-                "近2年夏普比率",
-                "近3年夏普比率",
-                "近1年信息比率",
-                "近2年信息比率",
-                "近3年信息比率",
+                SpecialColumnName.SharpeRatioInThePastYear1,
+                SpecialColumnName.SharpeRatioInThePastYear2,
+                SpecialColumnName.SharpeRatioInThePastYear3,
+                SpecialColumnName.InfoRatioInThePastYear1,
+                SpecialColumnName.InfoRatioInThePastYear2,
+                SpecialColumnName.InfoRatioInThePastYear3,
             };
             //取最小值的列，null当作最大值
             var minColumnsNullAsMaxValue = new string[]
             {
-                "近1年波动率",
-                "近2年波动率",
-                "近3年波动率",
-                "年化跟踪误差",
-                "同类平均跟踪误差",
+                SpecialColumnName.VolatilityInThePastYear1,
+                SpecialColumnName.VolatilityInThePastYear2,
+                SpecialColumnName.VolatilityInThePastYear3,
+                SpecialColumnName.AnnualizedTrackingError,
+                SpecialColumnName.AverageTrackingErrorOfTheSameType,
             };
             //取最小值的列，null当作最小值
             var minColumnsNullAsMinValue = new string[]
             {
-                "单位净值",
-                "购买费率",
-                "管理费率(每年)",
-                "托管费率(每年)",
-                "销售服务费率(每年)",
-                "运作费用(每年)",
+                TransactionColumnName.Price,
+                TransactionColumnName.NormalBuyRates,
+                TransactionColumnName.ManageRateWithUnit,
+                TransactionColumnName.HostingRateWithUnit,
+                TransactionColumnName.SalesServiceRateWithUnit,
+                TransactionColumnName.RunningRateWithUnit,
             };
             string header;
             var allCells = new List<DataGridCell>(dgCompare.Items.Count);
@@ -122,13 +123,12 @@ namespace FundSearcher.Views
         private void SetColumnHightLight(DataGrid dg, int column, double value, double nullAsValue, Func<double, double, double> compare, ref List<DataGridCell> allCells, ref List<DataGridCell> resultCells)
         {
             DataGridCell cell;
-            bool isHiddenRow;
             double cellValue, compareValue;
 
             allCells.Clear();
             for (int row = 0; row < dg.Items.Count; row++)
             {
-                cell = dg.GetCell(row, column, out isHiddenRow);
+                cell = dg.GetCell(row, column, out bool isHiddenRow);
                 if (isHiddenRow || cell == null) continue;
 
                 allCells.Add(cell);
