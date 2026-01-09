@@ -571,23 +571,17 @@ namespace FundSearcher.Views
 
         private void InitTrackingTargets()
         {
-            TrackingTargets.Clear();
-            TrackingTargets.Add(new FilterModel("", "全部"));
-            TrackingTargets.AddRange(fundDataBase.FundInfos.Select(t => new FilterModel(t.TrackingTarget, t.TrackingTarget)).Distinct(FilterModelEqualityComparer.Instance));
+            Init(TrackingTargets, fundDataBase.FundInfos.Select(t => new FilterModel(t.TrackingTarget, t.TrackingTarget)));
         }
 
         private void InitBuyStatuses()
         {
-            BuyStatuses.Clear();
-            BuyStatuses.Add(new FilterModel("", "全部"));
-            BuyStatuses.AddRange(fundDataBase.FundInfos.Where(t => t.TransactionInfo != null).Select(t => new FilterModel(t.TransactionInfo.BuyStatus, t.TransactionInfo.BuyStatus)).Distinct(FilterModelEqualityComparer.Instance));
+            Init(BuyStatuses, fundDataBase.FundInfos.Where(t => t.TransactionInfo != null).Select(t => new FilterModel(t.TransactionInfo.BuyStatus, t.TransactionInfo.BuyStatus)));
         }
 
         private void InitSellStatuses()
         {
-            SellStatuses.Clear();
-            SellStatuses.Add(new FilterModel("", "全部"));
-            SellStatuses.AddRange(fundDataBase.FundInfos.Where(t => t.TransactionInfo != null).Select(t => new FilterModel(t.TransactionInfo.SellStatus, t.TransactionInfo.SellStatus)).Distinct(FilterModelEqualityComparer.Instance));
+            Init(SellStatuses, fundDataBase.FundInfos.Where(t => t.TransactionInfo != null).Select(t => new FilterModel(t.TransactionInfo.SellStatus, t.TransactionInfo.SellStatus)));
         }
 
         private void InitRunningRates(string lastKey)
@@ -598,25 +592,24 @@ namespace FundSearcher.Views
 
         private void InitRunningRates()
         {
-            RunningRates.Clear();
-            RunningRates.Add(new FilterModel("", "全部"));
-            RunningRates.AddRange(FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, t.TransactionInfo.RunningRate.ToString("P2"))).Distinct(FilterModelEqualityComparer.Instance).OrderBy(t => t.Key));
+            Init(RunningRates, FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, t.TransactionInfo.RunningRate.ToString("P2"))));
         }
 
         private void InitCounters()
         {
-            Counters.Clear();
-            Counters.Add(new FilterModel("", "全部"));
-            Counters.Add(new FilterModel("场内交易", "场内交易"));
-            Counters.Add(new FilterModel("场外交易", "场外交易"));
+            Init(Counters, fundDataBase.FundInfos.Select(t => new FilterModel(t.Counter, t.Counter)));
         }
 
         private void InitFundClasses()
         {
-            FundClasses.Clear();
-            FundClasses.Add(new FilterModel("", "全部"));
-            FundClasses.Add(new FilterModel("A类", "A类"));
-            FundClasses.Add(new FilterModel("C类", "C类"));
+            Init(FundClasses, fundDataBase.FundInfos.Select(t => new FilterModel(t.FundClass, t.FundClass)));
+        }
+
+        private void Init(ObservableCollection<FilterModel> source, IEnumerable<FilterModel> data)
+        {
+            source.Clear();
+            source.Add(new FilterModel("", "全部"));
+            source.AddRange(data.Distinct(FilterModelEqualityComparer.Instance).OrderBy(t => t.Key));
         }
     }
 }

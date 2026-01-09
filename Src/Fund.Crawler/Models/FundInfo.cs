@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Fund.Crawler.Extensions;
 using Newtonsoft.Json;
 
 namespace Fund.Crawler.Models
@@ -42,11 +43,16 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref sellRatesHiddenColumns, value); }
         }
 
+        private string fundclass;
         /// <summary>
         /// 基金类别
         /// </summary>
         [JsonIgnore]
-        public string FundClass => FundName == null ? "" : (FundName.Contains("C") ? "C类" : "A类");
+        public string FundClass
+        {
+            get { return fundclass; }
+            set { SetProperty(ref fundclass, value); }
+        }
 
         private string fundFullName;
         /// <summary>
@@ -176,6 +182,11 @@ namespace Fund.Crawler.Models
         {
             get { return transactionInfo; }
             set { SetProperty(ref transactionInfo, value); }
+        }
+
+        protected override void OnFundNameChange(string fundName)
+        {
+            FundClass = fundName.GetFundClass();
         }
     }
 }

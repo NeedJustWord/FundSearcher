@@ -26,7 +26,17 @@ namespace Fund.Crawler.Models
         public string FundName
         {
             get { return fundName; }
-            set { SetProperty(ref fundName, value); }
+            set
+            {
+                if (SetProperty(ref fundName, value))
+                {
+                    OnFundNameChange(fundName);
+                }
+            }
+        }
+
+        protected virtual void OnFundNameChange(string fundName)
+        {
         }
     }
 }

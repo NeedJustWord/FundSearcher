@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\IEventAggregatorExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TransactionRateExtension.cs" />
     <Compile Include="FundCrawler.cs" />
     <Compile Include="Models\BaseInfo.cs" />
