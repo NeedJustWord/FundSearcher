@@ -42,9 +42,9 @@ namespace Fund.Core.Helpers
         }
         #endregion
 
-        private static XmlDocument document;
-        private static XmlNode appSettings;
-        private static string configPath;
+        private static readonly XmlDocument document;
+        private static readonly XmlNode appSettings;
+        private static readonly string configPath;
         private static bool needSave;
 
         static ConfigHelper()

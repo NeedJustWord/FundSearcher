@@ -72,7 +72,7 @@ namespace FundSearcher.Views
 
         #endregion
 
-        private List<string> starIndexCodes;
+        private readonly List<string> starIndexCodes;
 
         public IndexQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator, dataBase)
         {

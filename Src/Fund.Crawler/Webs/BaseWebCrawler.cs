@@ -15,8 +15,8 @@ namespace Fund.Crawler.Webs
     /// </summary>
     public abstract class BaseWebCrawler
     {
-        private static Random random = new Random();
-        private static object lockObj = new object();
+        private static readonly Random random = new Random();
+        private static readonly object lockObj = new object();
 
         /// <summary>
         /// 来源名称

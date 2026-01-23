@@ -23,7 +23,8 @@ namespace FundSearcher
         protected readonly FundDataBase fundDataBase;
         protected readonly string regionName;
         protected IRegionNavigationJournal journal;
-        private bool isFirstLoad = true;
+
+        protected bool IsFirstLoad { get; private set; } = true;
 
         public DelegateCommand LoadedCommand { get; private set; }
         public DelegateCommand GoBackCommand { get; private set; }
@@ -45,10 +46,10 @@ namespace FundSearcher
 
         private void InternalOnLoaded()
         {
-            if (isFirstLoad)
+            if (IsFirstLoad)
             {
-                isFirstLoad = false;
                 OnFirstLoad();
+                IsFirstLoad = false;
             }
             OnLoaded();
         }

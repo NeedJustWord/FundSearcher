@@ -38,10 +38,12 @@ namespace FundSearcher.Views
             TransactionColumnName.SellRates,
         };
         private List<string> blackFunds;
+        private bool isRefresh;
         private bool isFiltering;
-        private bool initFilter;
-        private bool selectFilter;
-        private bool initCollectionFilter;
+        private bool isInitFilterDataFinish;
+        private bool isInitCollectionFinish;
+        private bool isInitTrackingTargetsFinish;
+        private bool isSelectTrackingTargetChangedFinish;
 
         #region 属性
         #region 基金列表
@@ -256,15 +258,13 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.Black, ShowBlack);
             RegisterCommand(CommandName.SelectChanged, SelectChanged);
             RegisterCommand(CommandName.SelectTrackingTargetChanged, SelectTrackingTargetChanged);
-            InitCounters();
-            InitFundClasses();
             blackFunds = ConfigHelper.BlackFunds.SplitRemoveEmpty(',').ToList();
         }
 
         protected override void OnFirstLoad()
         {
             Query();
-            selectFilter = true;
+            isSelectTrackingTargetChangedFinish = true;
             PublishStatusMessage("基金数据加载完成");
         }
 
@@ -303,9 +303,11 @@ namespace FundSearcher.Views
                 }
             }
 
-            InitFilterData(false);
             var data = list.Select(t => Handle(t)).CustomSort().ToList();
             SetItemsSource(data);
+
+            isRefresh = false;
+            InitFilterData();
             Filter();
         }
 
@@ -334,7 +336,6 @@ namespace FundSearcher.Views
                 return;
             }
 
-            InitFilterData(true);
             foreach (var item in list)
             {
                 for (int i = 0; i < FundInfos.Count; i++)
@@ -348,6 +349,9 @@ namespace FundSearcher.Views
                     }
                 }
             }
+
+            isRefresh = true;
+            InitFilterData();
             Filter();
         }
 
@@ -475,27 +479,30 @@ namespace FundSearcher.Views
 
         private void SelectChanged(object[] objs)
         {
-            if (initFilter && selectFilter && initCollectionFilter)
+            if (isInitFilterDataFinish && isSelectTrackingTargetChangedFinish && isInitCollectionFinish)
             {
-                var isInitRunningRates = objs == null || objs.Length == 0 ? true : (bool)objs[0];
+                var isInitRunningRates = objs == null || objs.Length == 0 || (bool)objs[0];
                 if (isInitRunningRates)
                 {
                     InitRunningRates(SelectRunningRate.Key);
                 }
-                Filter(false);
+                Filter();
             }
         }
 
         private void SelectTrackingTargetChanged()
         {
-            selectFilter = false;
-            InitFundClasses(SelectFundClass.Key);
-            InitCounters(SelectCounter.Key);
-            InitBuyStatuses(SelectBuyStatus.Key);
-            InitSellStatuses(SelectSellStatus.Key);
-            InitRunningRates(SelectRunningRate.Key);
-            selectFilter = true;
-            Filter(false);
+            if (isInitTrackingTargetsFinish)
+            {
+                isSelectTrackingTargetChangedFinish = false;
+                InitFundClasses(isRefresh ? SelectFundClass?.Key : "");
+                InitCounters(isRefresh ? SelectCounter?.Key : "");
+                InitBuyStatuses(isRefresh ? SelectBuyStatus?.Key : "");
+                InitSellStatuses(isRefresh ? SelectSellStatus?.Key : "");
+                InitRunningRates(isRefresh ? SelectRunningRate?.Key : "");
+                isSelectTrackingTargetChangedFinish = true;
+                Filter();
+            }
         }
 
         private FundInfo Handle(FundInfo model)
@@ -532,12 +539,10 @@ namespace FundSearcher.Views
             FundInfos.AddRange(infos);
         }
 
-        private void Filter(bool isInitRunningRates = true)
+        private void Filter()
         {
             if (isFiltering) return;
             isFiltering = true;
-
-            if (isInitRunningRates) InitRunningRates(SelectRunningRate.Key);
 
             int order = 1;
             foreach (var item in FundInfos)
@@ -564,105 +569,69 @@ namespace FundSearcher.Views
             return true;
         }
 
-        private void InitFilterData(bool isRefresh)
+        private void InitFilterData()
         {
-            initFilter = false;
+            isInitFilterDataFinish = false;
 
-            var lastKey = isRefresh ? SelectTrackingTarget?.Key : "";
-            InitTrackingTargets();
+            InitTrackingTargets(isRefresh ? SelectTrackingTarget?.Key : "");
+            if (IsFirstLoad)
+            {
+                InitFundClasses(isRefresh ? SelectFundClass?.Key : "");
+                InitCounters(isRefresh ? SelectCounter?.Key : "");
+                InitBuyStatuses(isRefresh ? SelectBuyStatus?.Key : "");
+                InitSellStatuses(isRefresh ? SelectSellStatus?.Key : "");
+                InitRunningRates(isRefresh ? SelectRunningRate?.Key : "");
+            }
+
+            isInitFilterDataFinish = true;
+        }
+
+        private void InitTrackingTargets(string lastKey)
+        {
+            isInitTrackingTargetsFinish = false;
+            Init(TrackingTargets, fundDataBase.FundInfos.Select(t => new FilterModel(t.TrackingTarget, t.TrackingTarget)));
+            isInitTrackingTargetsFinish = true;
             lastSelectTrackingTarget = SelectTrackingTarget = GetDefaultSelectItem(TrackingTargets, lastKey);
-
-            lastKey = isRefresh ? SelectBuyStatus?.Key : "";
-            InitBuyStatuses();
-            lastSelectBuyStatus = SelectBuyStatus = GetDefaultSelectItem(BuyStatuses, lastKey);
-
-            lastKey = isRefresh ? SelectSellStatus?.Key : "";
-            InitSellStatuses();
-            lastSelectSellStatus = SelectSellStatus = GetDefaultSelectItem(SellStatuses, lastKey);
-
-            lastKey = isRefresh ? SelectCounter?.Key : "";
-            InitCounters();
-            lastSelectCounter = SelectCounter = GetDefaultSelectItem(Counters, lastKey);
-
-            lastKey = isRefresh ? SelectFundClass?.Key : "";
-            InitFundClasses();
-            lastSelectFundClass = SelectFundClass = GetDefaultSelectItem(FundClasses, lastKey);
-
-            lastKey = isRefresh ? SelectRunningRate?.Key : "";
-            InitRunningRates();
-            lastSelectRunningRate = SelectRunningRate = GetDefaultSelectItem(RunningRates, lastKey);
-
-            initFilter = true;
         }
 
         private void InitRunningRates(string lastKey)
         {
-            initCollectionFilter = false;
-            InitRunningRates();
+            isInitCollectionFinish = false;
+            Init(RunningRates, FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, t.TransactionInfo.RunningRate.ToString("P2"))));
             lastSelectRunningRate = SelectRunningRate = GetDefaultSelectItem(RunningRates, lastKey);
-            initCollectionFilter = true;
+            isInitCollectionFinish = true;
         }
 
         private void InitBuyStatuses(string lastKey)
         {
-            initCollectionFilter = false;
-            InitBuyStatuses();
+            isInitCollectionFinish = false;
+            Init(BuyStatuses, fundDataBase.FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.BuyStatus, t.TransactionInfo.BuyStatus)));
             lastSelectBuyStatus = SelectBuyStatus = GetDefaultSelectItem(BuyStatuses, lastKey);
-            initCollectionFilter = true;
+            isInitCollectionFinish = true;
         }
 
         private void InitSellStatuses(string lastKey)
         {
-            initCollectionFilter = false;
-            InitSellStatuses();
+            isInitCollectionFinish = false;
+            Init(SellStatuses, fundDataBase.FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.SellStatus, t.TransactionInfo.SellStatus)));
             lastSelectSellStatus = SelectSellStatus = GetDefaultSelectItem(SellStatuses, lastKey);
-            initCollectionFilter = true;
+            isInitCollectionFinish = true;
         }
 
         private void InitCounters(string lastKey)
         {
-            initCollectionFilter = false;
-            InitCounters();
+            isInitCollectionFinish = false;
+            Init(Counters, fundDataBase.FundInfos.Where(t => IsShow(t, false)).Select(t => new FilterModel(t.Counter, t.Counter)));
             lastSelectCounter = SelectCounter = GetDefaultSelectItem(Counters, lastKey);
-            initCollectionFilter = true;
+            isInitCollectionFinish = true;
         }
 
         private void InitFundClasses(string lastKey)
         {
-            initCollectionFilter = false;
-            InitFundClasses();
-            lastSelectFundClass = SelectFundClass = GetDefaultSelectItem(FundClasses, lastKey);
-            initCollectionFilter = true;
-        }
-
-        private void InitTrackingTargets()
-        {
-            Init(TrackingTargets, fundDataBase.FundInfos.Select(t => new FilterModel(t.TrackingTarget, t.TrackingTarget)));
-        }
-
-        private void InitBuyStatuses()
-        {
-            Init(BuyStatuses, fundDataBase.FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.BuyStatus, t.TransactionInfo.BuyStatus)));
-        }
-
-        private void InitSellStatuses()
-        {
-            Init(SellStatuses, fundDataBase.FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.SellStatus, t.TransactionInfo.SellStatus)));
-        }
-
-        private void InitRunningRates()
-        {
-            Init(RunningRates, FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.RunningRateStr, t.TransactionInfo.RunningRate.ToString("P2"))));
-        }
-
-        private void InitCounters()
-        {
-            Init(Counters, fundDataBase.FundInfos.Where(t => IsShow(t, false)).Select(t => new FilterModel(t.Counter, t.Counter)));
-        }
-
-        private void InitFundClasses()
-        {
+            isInitCollectionFinish = false;
             Init(FundClasses, fundDataBase.FundInfos.Where(t => IsShow(t, false)).Select(t => new FilterModel(t.FundClass, t.FundClass)));
+            lastSelectFundClass = SelectFundClass = GetDefaultSelectItem(FundClasses, lastKey);
+            isInitCollectionFinish = true;
         }
 
         private void Init(ObservableCollection<FilterModel> source, IEnumerable<FilterModel> data)

@@ -21,8 +21,7 @@ namespace FundSearcher.Controls
 
         private static void HiddenColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var dg = d as DataGrid;
-            if (dg == null || e.NewValue == e.OldValue) return;
+            if (!(d is DataGrid dg) || e.NewValue == e.OldValue) return;
 
             InternalSetHiddenColumns(dg, (List<string>)e.NewValue);
         }

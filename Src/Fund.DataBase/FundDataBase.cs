@@ -15,11 +15,11 @@ namespace Fund.DataBase
     /// </summary>
     public class FundDataBase
     {
-        private FundUpdate fundUpdate;
-        private string fundFileName;
-        private string fundFileNameWithExtension;
-        private string indexFileName;
-        private string indexFileNameWithExtension;
+        private readonly FundUpdate fundUpdate;
+        private readonly string fundFileName;
+        private readonly string fundFileNameWithExtension;
+        private readonly string indexFileName;
+        private readonly string indexFileNameWithExtension;
 
         /// <summary>
         /// 基金列表

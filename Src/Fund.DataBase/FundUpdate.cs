@@ -12,10 +12,10 @@ namespace Fund.DataBase
 {
     class FundUpdate
     {
-        private Dictionary<string, FundCrawler> crawlerDict = new Dictionary<string, FundCrawler>();
-        private Dictionary<FundKey, FundInfo> fundInfoDict = new Dictionary<FundKey, FundInfo>();
-        private Dictionary<string, Tuple<List<IndexInfo>, DateTime>> indexInfoDict = new Dictionary<string, Tuple<List<IndexInfo>, DateTime>>();
-        private List<IndexInfo> emptyIndexInfos = new List<IndexInfo>(0);
+        private readonly Dictionary<string, FundCrawler> crawlerDict = new Dictionary<string, FundCrawler>();
+        private readonly Dictionary<FundKey, FundInfo> fundInfoDict = new Dictionary<FundKey, FundInfo>();
+        private readonly Dictionary<string, Tuple<List<IndexInfo>, DateTime>> indexInfoDict = new Dictionary<string, Tuple<List<IndexInfo>, DateTime>>();
+        private readonly List<IndexInfo> emptyIndexInfos = new List<IndexInfo>(0);
         private bool isIniting;
 
         /// <summary>

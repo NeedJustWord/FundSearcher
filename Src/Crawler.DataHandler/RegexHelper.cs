@@ -9,7 +9,7 @@ namespace Crawler.DataHandler
     public static class RegexHelper
     {
         #region Html正则表达式
-        private static string htmlTagContentPattern = @"(?<=>)[\s\S]*(?=<)";
+        private static readonly string htmlTagContentPattern = @"(?<=>)[\s\S]*(?=<)";
         /// <summary>
         /// 获取Html标签内容的正则表达式
         /// </summary>
@@ -19,8 +19,8 @@ namespace Crawler.DataHandler
             return htmlTagContentPattern;
         }
 
-        private static string htmlTagPattern = @"<(?<HtmlTag>{0})[^>]*>(?><\k<HtmlTag>[^>]*>(?<groupName>)|</\k<HtmlTag>>(?<-groupName>)|(?:(?!</?\k<HtmlTag>\b)[\s\S])*)*(?(groupName)(?!))</\k<HtmlTag>>";
-        private static Dictionary<string, string> htmlTagPatternDict = new Dictionary<string, string>();
+        private static readonly string htmlTagPattern = @"<(?<HtmlTag>{0})[^>]*>(?><\k<HtmlTag>[^>]*>(?<groupName>)|</\k<HtmlTag>>(?<-groupName>)|(?:(?!</?\k<HtmlTag>\b)[\s\S])*)*(?(groupName)(?!))</\k<HtmlTag>>";
+        private static readonly Dictionary<string, string> htmlTagPatternDict = new Dictionary<string, string>();
         /// <summary>
         /// 获取指定Html标签的正则表达式
         /// </summary>
@@ -34,7 +34,7 @@ namespace Crawler.DataHandler
             return value;
         }
 
-        private static string htmlTagByAttriPattern = @"<(?<HtmlTag>{0})[^>]*\s{1}=(?<Quote>['""]?){2}\k<Quote>[^>]*>(?><\k<HtmlTag>[^>]*>(?<groupName>)|</\k<HtmlTag>>(?<-groupName>)|(?:(?!</?\k<HtmlTag>\b)[\s\S])*)*(?(groupName)(?!))</\k<HtmlTag>>";
+        private static readonly string htmlTagByAttriPattern = @"<(?<HtmlTag>{0})[^>]*\s{1}=(?<Quote>['""]?){2}\k<Quote>[^>]*>(?><\k<HtmlTag>[^>]*>(?<groupName>)|</\k<HtmlTag>>(?<-groupName>)|(?:(?!</?\k<HtmlTag>\b)[\s\S])*)*(?(groupName)(?!))</\k<HtmlTag>>";
         /// <summary>
         /// 获取指定Html标签具有指定属性的正则表达式
         /// </summary>
@@ -47,8 +47,8 @@ namespace Crawler.DataHandler
             return string.Format(htmlTagByAttriPattern, htmlTag, attriName, attriValue);
         }
 
-        private static string attriNamePattern = @"[^>]*\s{0}=(?<Quote>['""]?)([\s\S]*?)\k<Quote>";
-        private static Dictionary<string, string> attriNamePatternDict = new Dictionary<string, string>();
+        private static readonly string attriNamePattern = @"[^>]*\s{0}=(?<Quote>['""]?)([\s\S]*?)\k<Quote>";
+        private static readonly Dictionary<string, string> attriNamePatternDict = new Dictionary<string, string>();
         /// <summary>
         /// 获取当前Html标签指定属性的值
         /// </summary>

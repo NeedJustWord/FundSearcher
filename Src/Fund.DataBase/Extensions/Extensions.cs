@@ -6,7 +6,7 @@ namespace Fund.Crawler.Models
 {
     public static class Extensions
     {
-        private static char[] inputSeparator = new char[] { ' ', ',', '，', '-' };
+        private static readonly char[] inputSeparator = new char[] { ' ', ',', '，', '-' };
 
         /// <summary>
         /// 输入分割
