@@ -1,9 +1,13 @@
-﻿using Fund.Core.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Fund.Core.Helpers;
 using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using Fund.Crawler.PubSubEvents;
 using Fund.DataBase;
 using FundSearcher.Consts;
+using FundSearcher.Helpers;
 using FundSearcher.PubSubEvents;
 using Prism.Events;
 using Prism.Regions;
@@ -49,7 +53,19 @@ namespace FundSearcher
             get { return message; }
             set { SetProperty(ref message, value); }
         }
+
+        private string errorMessage;
+        /// <summary>
+        /// 异常消息
+        /// </summary>
+        public string ErrorMessage
+        {
+            get { return errorMessage; }
+            set { SetProperty(ref errorMessage, value); }
+        }
         #endregion
+
+        private List<Exception> exceptions = new List<Exception>();
 
         public ShellViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, RegionName.Shell, eventAggregator, dataBase)
         {
@@ -70,6 +86,24 @@ namespace FundSearcher
             Total = model.Total;
             Current = model.Current;
             Message = model.Message;
+
+            if (model.Exception != null)
+            {
+                ErrorMessage = "爬取过程中出现异常";
+                exceptions.Add(model.Exception);
+            }
+
+            if (ErrorMessage != null && model.Current == 0)
+            {
+                ErrorMessage = null;
+                exceptions.Clear();
+            }
+            else if (model.Finish && exceptions.Count > 0)
+            {
+                ErrorMessage = "爬取过程中出现异常，异常信息已复制到剪贴板";
+                var str = string.Join($"{Environment.NewLine}{Environment.NewLine}", exceptions.Select(t => $"异常消息：{t.Message}{Environment.NewLine}异常堆栈：{Environment.NewLine}{t.StackTrace}"));
+                ClipboardHelper.SetText(str);
+            }
         }
 
         private void HandleStatusMessage(string msg)

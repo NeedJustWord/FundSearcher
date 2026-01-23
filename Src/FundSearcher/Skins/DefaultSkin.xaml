@@ -121,6 +121,12 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
+    <Style TargetType="Label" x:Key="ErrorMessageLabel">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="Red"/>
+    </Style>
+
     <Style TargetType="ProgressBar" x:Key="StatusCrawlingProgress">
         <Setter Property="Minimum" Value="0"/>
         <Setter Property="Width" Value="500"/>

@@ -1,4 +1,6 @@
-﻿namespace Fund.Crawler.Models
+﻿using System;
+
+namespace Fund.Crawler.Models
 {
     public class CrawlingProgressModel
     {
@@ -16,5 +18,15 @@
         /// 消息
         /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// 是否已完成
+        /// </summary>
+        public bool Finish { get; set; }
+
+        /// <summary>
+        /// 异常
+        /// </summary>
+        public Exception Exception { get; set; }
     }
 }

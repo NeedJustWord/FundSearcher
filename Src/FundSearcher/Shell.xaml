@@ -50,6 +50,10 @@
             <Grid DockPanel.Dock="Left">
                 <Label Content="{Binding Message}" Style="{StaticResource StatusMessageLabel}"/>
             </Grid>
+
+            <Grid>
+                <Label Content="{Binding ErrorMessage}" Style="{StaticResource ErrorMessageLabel}"/>
+            </Grid>
         </DockPanel>
     </Grid>
 </Window>

@@ -144,7 +144,7 @@ namespace Fund.Crawler.Webs
                 }
                 catch (Exception ex)
                 {
-                    WriteLog($"{args.ThreadId} {keyStr}处理出现异常，{ex.Message}");
+                    WriteLog($"{args.ThreadId} {keyStr}处理出现异常", ex);
                 }
                 finally
                 {
@@ -161,7 +161,7 @@ namespace Fund.Crawler.Webs
             {
                 var keyStr = key.GetKey(url);
                 IncrementCurrent();
-                WriteLog($"{args.ThreadId} {keyStr}任务出现异常 {args.Exception.Message}");
+                WriteLog($"{args.ThreadId} {keyStr}任务出现异常", args.Exception);
             };
             return await crawler.Start(url, token);
         }
@@ -228,6 +228,28 @@ namespace Fund.Crawler.Webs
             });
         }
 
+        public void WriteLog(string msg, Exception exception)
+        {
+            eventAggregator.Publish<CrawlingProgressEvent, CrawlingProgressModel>(new CrawlingProgressModel()
+            {
+                Total = total,
+                Current = current,
+                Message = $"{DateTime.Now} {msg}",
+                Exception = exception,
+            });
+        }
+
+        public void Finish(string msg)
+        {
+            eventAggregator.Publish<CrawlingProgressEvent, CrawlingProgressModel>(new CrawlingProgressModel()
+            {
+                Total = total,
+                Current = current,
+                Message = $"{DateTime.Now} {msg}",
+                Finish = true,
+            });
+        }
+
         public void Cancel(string msg)
         {
             eventAggregator.Publish<CrawlingProgressEvent, CrawlingProgressModel>(new CrawlingProgressModel()
@@ -235,6 +257,7 @@ namespace Fund.Crawler.Webs
                 Total = total,
                 Current = total,
                 Message = $"{DateTime.Now} {msg}",
+                Finish = true,
             });
         }
     }
