@@ -589,7 +589,7 @@ namespace FundSearcher.Views
         private void InitTrackingTargets(string lastKey)
         {
             isInitTrackingTargetsFinish = false;
-            Init(TrackingTargets, fundDataBase.FundInfos.Select(t => new FilterModel(t.TrackingTarget, t.TrackingTarget)));
+            Init(TrackingTargets, FundInfos.Select(t => new FilterModel(t.TrackingTarget, t.TrackingTarget)));
             isInitTrackingTargetsFinish = true;
             lastSelectTrackingTarget = SelectTrackingTarget = GetDefaultSelectItem(TrackingTargets, lastKey);
         }
@@ -605,7 +605,7 @@ namespace FundSearcher.Views
         private void InitBuyStatuses(string lastKey)
         {
             isInitCollectionFinish = false;
-            Init(BuyStatuses, fundDataBase.FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.BuyStatus, t.TransactionInfo.BuyStatus)));
+            Init(BuyStatuses, FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.BuyStatus, t.TransactionInfo.BuyStatus)));
             lastSelectBuyStatus = SelectBuyStatus = GetDefaultSelectItem(BuyStatuses, lastKey);
             isInitCollectionFinish = true;
         }
@@ -613,7 +613,7 @@ namespace FundSearcher.Views
         private void InitSellStatuses(string lastKey)
         {
             isInitCollectionFinish = false;
-            Init(SellStatuses, fundDataBase.FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.SellStatus, t.TransactionInfo.SellStatus)));
+            Init(SellStatuses, FundInfos.Where(t => t.TransactionInfo != null && IsShow(t, false)).Select(t => new FilterModel(t.TransactionInfo.SellStatus, t.TransactionInfo.SellStatus)));
             lastSelectSellStatus = SelectSellStatus = GetDefaultSelectItem(SellStatuses, lastKey);
             isInitCollectionFinish = true;
         }
@@ -621,7 +621,7 @@ namespace FundSearcher.Views
         private void InitCounters(string lastKey)
         {
             isInitCollectionFinish = false;
-            Init(Counters, fundDataBase.FundInfos.Where(t => IsShow(t, false)).Select(t => new FilterModel(t.Counter, t.Counter)));
+            Init(Counters, FundInfos.Where(t => IsShow(t, false)).Select(t => new FilterModel(t.Counter, t.Counter)));
             lastSelectCounter = SelectCounter = GetDefaultSelectItem(Counters, lastKey);
             isInitCollectionFinish = true;
         }
@@ -629,7 +629,7 @@ namespace FundSearcher.Views
         private void InitFundClasses(string lastKey)
         {
             isInitCollectionFinish = false;
-            Init(FundClasses, fundDataBase.FundInfos.Where(t => IsShow(t, false)).Select(t => new FilterModel(t.FundClass, t.FundClass)));
+            Init(FundClasses, FundInfos.Where(t => IsShow(t, false)).Select(t => new FilterModel(t.FundClass, t.FundClass)));
             lastSelectFundClass = SelectFundClass = GetDefaultSelectItem(FundClasses, lastKey);
             isInitCollectionFinish = true;
         }
