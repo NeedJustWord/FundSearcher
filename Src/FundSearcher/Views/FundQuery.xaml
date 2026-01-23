@@ -84,37 +84,80 @@
                 <StackPanel Style="{StaticResource HorizontalStackPanel}">
                     <Label Content="跟踪标的：" Style="{StaticResource QueryLabel}"/>
                     <ListView Style="{StaticResource HorizontalFilterListViewWithRightMargin}"
-                      ItemsSource="{Binding TrackingTargets}" SelectedItem="{Binding SelectTrackingTarget}"/>
+                      ItemsSource="{Binding TrackingTargets}" SelectedItem="{Binding SelectTrackingTarget}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.SelectTrackingTargetChanged}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ListView>
                 </StackPanel>
 
                 <StackPanel Style="{StaticResource HorizontalStackPanel}">
                     <Label Content="基金类别：" Style="{StaticResource QueryLabel}"/>
                     <ListView Style="{StaticResource HorizontalFilterListViewWithRightMargin}"
-                      ItemsSource="{Binding FundClasses}" SelectedItem="{Binding SelectFundClass}"/>
+                      ItemsSource="{Binding FundClasses}" SelectedItem="{Binding SelectFundClass}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.SelectChanged}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ListView>
                 </StackPanel>
 
                 <StackPanel Style="{StaticResource HorizontalStackPanel}">
                     <Label Content="交易场所：" Style="{StaticResource QueryLabel}"/>
                     <ListView Style="{StaticResource HorizontalFilterListViewWithRightMargin}"
-                      ItemsSource="{Binding Counters}" SelectedItem="{Binding SelectCounter}"/>
+                      ItemsSource="{Binding Counters}" SelectedItem="{Binding SelectCounter}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.SelectChanged}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ListView>
                 </StackPanel>
 
                 <StackPanel Style="{StaticResource HorizontalStackPanel}">
                     <Label Content="申购状态：" Style="{StaticResource QueryLabel}"/>
                     <ListView Style="{StaticResource HorizontalFilterListViewWithRightMargin}"
-                      ItemsSource="{Binding BuyStatuses}" SelectedItem="{Binding SelectBuyStatus}"/>
+                      ItemsSource="{Binding BuyStatuses}" SelectedItem="{Binding SelectBuyStatus}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.SelectChanged}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ListView>
                 </StackPanel>
 
                 <StackPanel Style="{StaticResource HorizontalStackPanel}">
                     <Label Content="赎回状态：" Style="{StaticResource QueryLabel}"/>
                     <ListView Style="{StaticResource HorizontalFilterListView}"
-                      ItemsSource="{Binding SellStatuses}" SelectedItem="{Binding SelectSellStatus}"/>
+                      ItemsSource="{Binding SellStatuses}" SelectedItem="{Binding SelectSellStatus}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.SelectChanged}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ListView>
                 </StackPanel>
             </WrapPanel>
 
             <Label Grid.Row="2" Grid.Column="0" Content="运作费率：" Style="{StaticResource QueryLabel}"/>
             <ListView Grid.Row="2" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
-                      ItemsSource="{Binding RunningRates}" SelectedItem="{Binding SelectRunningRate}"/>
+                      ItemsSource="{Binding RunningRates}" SelectedItem="{Binding SelectRunningRate}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding DictCommand}">
+                            <i:InvokeCommandAction.CommandParameter>
+                                <MultiBinding Converter="{StaticResource DictCommandParameterConverter}">
+                                    <Binding Source="{x:Static consts:CommandName.SelectChanged}" />
+                                    <Binding Source="{StaticResource FalseValue}" />
+                                </MultiBinding>
+                            </i:InvokeCommandAction.CommandParameter>
+                        </i:InvokeCommandAction>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ListView>
 
             <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                 <Button Content="查询" Style="{StaticResource QueryButton}"

@@ -9,6 +9,9 @@
     <SolidColorBrush x:Key="QueryTextBoxBorderColorBrush" Color="{DynamicResource QueryTextBoxBorderColor}"/>
     <SolidColorBrush x:Key="FilterSelectedForegroundColorBrush" Color="{DynamicResource FilterSelectedForegroundColor}"/>
 
+    <sys:Boolean x:Key="TrueValue">True</sys:Boolean>
+    <sys:Boolean x:Key="FalseValue">False</sys:Boolean>
+
     <sys:Double x:Key="QueryTextBoxHeight">25</sys:Double>
 
     <sys:Int32 x:Key="Number1">1</sys:Int32>
@@ -21,6 +24,7 @@
 
     <converters:BuyUpperLimitAmountConverter x:Key="BuyUpperLimitAmountConverter"/>
     <converters:CompareRateDisplayConverter x:Key="CompareRateDisplayConverter"/>
+    <converters:DictCommandParameterConverter x:Key="DictCommandParameterConverter"/>
     <converters:SpecialDictDisplayConverter x:Key="SpecialDictDisplayConverter"/>
     <converters:ValueToPercentConverter x:Key="ValueToPercentConverter"/>
     <converters:DictRateConverter x:Key="DictRateConverter"/>

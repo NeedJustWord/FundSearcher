@@ -75,6 +75,7 @@
     <Compile Include="Controls\MessageBoxEx.cs" />
     <Compile Include="Converters\BirthDayConverter.cs" />
     <Compile Include="Converters\BuyUpperLimitAmountConverter.cs" />
+    <Compile Include="Converters\DictCommandParameterConverter.cs" />
     <Compile Include="Converters\CompareRateDisplayConverter.cs" />
     <Compile Include="Converters\DictRateConverter.cs" />
     <Compile Include="Converters\FundSizeConverter.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Extensions\AutoMapperExtension.cs" />
     <Compile Include="Extensions\DataGridExtension.cs" />
     <Compile Include="Extensions\DependencyObjectExtension.cs" />
+    <Compile Include="Models\CommandParameter.cs" />
     <Compile Include="Models\FilterModel.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="PubSubEvents\FundBlackCheckAllEvent.cs" />

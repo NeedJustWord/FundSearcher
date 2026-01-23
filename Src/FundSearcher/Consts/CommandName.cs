@@ -55,5 +55,13 @@
         /// 黑名单命令
         /// </summary>
         public const string Black = "BlackCommand";
+        /// <summary>
+        /// 选中项改变命令
+        /// </summary>
+        public const string SelectChanged = "SelectChangedCommand";
+        /// <summary>
+        /// 选中跟踪标的改变命令
+        /// </summary>
+        public const string SelectTrackingTargetChanged = "SelectTrackingTargetChangedCommand";
     }
 }

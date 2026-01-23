@@ -16,7 +16,7 @@ namespace FundSearcher
 {
     class BaseViewModel : BindableBase, INavigationAware
     {
-        private readonly Dictionary<string, Action<object>> dictDelegateCommand;
+        private readonly Dictionary<string, Action<object[]>> dictDelegateCommand;
 
         protected readonly IEventAggregator eventAggregator;
         protected readonly IRegionManager regionManager;
@@ -31,7 +31,7 @@ namespace FundSearcher
 
         public BaseViewModel(IRegionManager regionManager, string regionName, IEventAggregator eventAggregator = null, FundDataBase fundDataBase = null)
         {
-            dictDelegateCommand = new Dictionary<string, Action<object>>();
+            dictDelegateCommand = new Dictionary<string, Action<object[]>>();
 
             this.regionManager = regionManager;
             this.regionName = regionName;
@@ -90,7 +90,13 @@ namespace FundSearcher
                 {
                     action(null);
                 }
-                return;
+            }
+            else if (obj is CommandParameter cp)
+            {
+                if (dictDelegateCommand.TryGetValue(cp.CommandName, out var action))
+                {
+                    action(cp.Params);
+                }
             }
         }
 
@@ -99,7 +105,7 @@ namespace FundSearcher
             RegisterCommand(commandName, o => action());
         }
 
-        public void RegisterCommand(string commandName, Action<object> action)
+        public void RegisterCommand(string commandName, Action<object[]> action)
         {
             dictDelegateCommand[commandName] = action;
         }

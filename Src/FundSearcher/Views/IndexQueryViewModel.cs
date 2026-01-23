@@ -65,7 +65,6 @@ namespace FundSearcher.Views
                 {
                     lastSelectStarIndex = value;
                     SetValueSelected(value);
-                    if (filter) Filter();
                 }
             }
         }
@@ -74,7 +73,6 @@ namespace FundSearcher.Views
         #endregion
 
         private List<string> starIndexCodes;
-        private bool filter;
 
         public IndexQueryViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, eventAggregator, dataBase)
         {
@@ -88,6 +86,7 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.Delete, Delete);
             RegisterCommand(CommandName.Copy, Copy);
             RegisterCommand(CommandName.RefreshDetail, RefreshDetail);
+            RegisterCommand(CommandName.SelectChanged, SelectChanged);
             starIndexCodes = ConfigHelper.StarIndexes.SplitRemoveEmpty(',').ToList();
         }
 
@@ -274,6 +273,11 @@ namespace FundSearcher.Views
             }
         }
 
+        private void SelectChanged()
+        {
+            Filter();
+        }
+
         private void SetItemsSource(bool isRefresh, IEnumerable<IndexInfo> infos)
         {
             IndexInfos.Clear();
@@ -308,13 +312,9 @@ namespace FundSearcher.Views
 
         private void InitFilterData(bool isRefresh)
         {
-            filter = false;
-
             var lastKey = isRefresh ? SelectStarIndex?.Key : "";
             InitStarIndexes();
             lastSelectStarIndex = SelectStarIndex = GetDefaultSelectItem(StarIndexes, lastKey);
-
-            filter = true;
         }
 
         private void InitStarIndexes()
