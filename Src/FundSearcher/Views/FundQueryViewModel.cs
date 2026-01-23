@@ -408,25 +408,14 @@ namespace FundSearcher.Views
                 return;
             }
 
-            PublishStatusMessage(result.Count == infos.Length ? "删除成功" : "部分删除成功");
-            Delete(result);
-        }
-
-        private void Delete(List<FundInfo> infos)
-        {
             foreach (var item in infos)
             {
                 FundInfos.Remove(item);
             }
+            PublishStatusMessage(result.Count == infos.Length ? "删除成功" : "部分删除成功");
 
-            int order = 1;
-            foreach (var item in FundInfos)
-            {
-                if (item.IsShow)
-                {
-                    item.OrderNumber = order++;
-                }
-            }
+            isRefresh = true;
+            InitFilterData();
         }
 
         private void RefreshBlack(List<string> blackFunds)
