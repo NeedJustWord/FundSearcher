@@ -483,9 +483,15 @@ namespace Fund.Crawler.Webs
 
         private double? GetYuanAmount(string str)
         {
-            if (str == null) return null;
+            if (str == null || str == "无限额") return null;
 
-            if (str.EndsWith("元"))
+            if (str.EndsWith("美元"))
+            {
+                str = str.Replace("美元", "");
+                int factor = 1;
+                return double.Parse(str) * factor;
+            }
+            else if (str.EndsWith("元"))
             {
                 str = str.TrimEnd('元');
                 int factor = 1;

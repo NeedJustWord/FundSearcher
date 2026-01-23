@@ -157,6 +157,12 @@ namespace Fund.Crawler.Webs
                 var keyStr = key.GetKey(url);
                 WriteLog($"{args.ThreadId} {keyStr}任务已取消 {args.Message}");
             };
+            crawler.OnErrorEvent += (sender, args) =>
+            {
+                var keyStr = key.GetKey(url);
+                IncrementCurrent();
+                WriteLog($"{args.ThreadId} {keyStr}任务出现异常 {args.Exception.Message}");
+            };
             return await crawler.Start(url, token);
         }
 
