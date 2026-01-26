@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using Fund.Core.Extensions;
 using Fund.Core.Helpers;
 using Fund.Crawler.Extensions;
@@ -9,6 +8,7 @@ using Fund.Crawler.Models;
 using Fund.DataBase;
 using FundSearcher.Consts;
 using FundSearcher.Controls;
+using FundSearcher.Helpers;
 using FundSearcher.Models;
 using FundSearcher.PubSubEvents;
 using Prism.Events;
@@ -244,8 +244,14 @@ namespace FundSearcher.Views
         private void Copy()
         {
             var str = string.Join(",", IndexInfos.Where(t => StarIndexes.Any(x => x.Key == t.IndexCode)).SelectMany(t => t.FundBaseInfos.Select(f => f.FundId)));
-            Clipboard.SetText(str);
-            PublishStatusMessage("复制关注指数相关基金代码成功");
+            if (ClipboardHelper.SetText(str))
+            {
+                PublishStatusMessage("复制关注指数相关基金代码成功");
+            }
+            else
+            {
+                PublishStatusMessage("复制关注指数相关基金代码失败");
+            }
         }
 
         private async void RefreshDetail()

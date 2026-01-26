@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using Fund.DataBase;
 using FundSearcher.Consts;
 using FundSearcher.Controls;
+using FundSearcher.Helpers;
 using FundSearcher.PubSubEvents;
 using Prism.Events;
 using Prism.Regions;
@@ -109,8 +109,14 @@ namespace FundSearcher.Views
         private void Copy()
         {
             var str = string.Join(",", FundInfos.Select(t => t.FundId));
-            Clipboard.SetText(str);
-            PublishStatusMessage("复制基金代码成功");
+            if (ClipboardHelper.SetText(str))
+            {
+                PublishStatusMessage("复制基金代码成功");
+            }
+            else
+            {
+                PublishStatusMessage("复制基金代码失败");
+            }
         }
 
         private void SetItemsSource(IEnumerable<FundBaseInfo> infos)

@@ -65,7 +65,7 @@ namespace FundSearcher
         }
         #endregion
 
-        private List<Exception> exceptions = new List<Exception>();
+        private List<CrawlingProgressModel> errorModels = new List<CrawlingProgressModel>();
 
         public ShellViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, FundDataBase dataBase) : base(regionManager, RegionName.Shell, eventAggregator, dataBase)
         {
@@ -90,19 +90,25 @@ namespace FundSearcher
             if (model.Exception != null)
             {
                 ErrorMessage = "爬取过程中出现异常";
-                exceptions.Add(model.Exception);
+                errorModels.Add(model);
             }
 
             if (ErrorMessage != null && model.Current == 0)
             {
                 ErrorMessage = null;
-                exceptions.Clear();
+                errorModels.Clear();
             }
-            else if (model.Finish && exceptions.Count > 0)
+            else if (model.Finish && errorModels.Count > 0)
             {
-                ErrorMessage = "爬取过程中出现异常，异常信息已复制到剪贴板";
-                var str = string.Join($"{Environment.NewLine}{Environment.NewLine}", exceptions.Select(t => $"异常消息：{t.Message}{Environment.NewLine}异常堆栈：{Environment.NewLine}{t.StackTrace}"));
-                ClipboardHelper.SetText(str);
+                var str = string.Join($"{Environment.NewLine}{Environment.NewLine}", errorModels.Select(t => $"爬取消息：{t.Message}{Environment.NewLine}异常消息：{t.Exception.Message}{Environment.NewLine}异常堆栈：{Environment.NewLine}{t.Exception.StackTrace}"));
+                if (ClipboardHelper.SetText(str))
+                {
+                    ErrorMessage = "爬取过程中出现异常，异常信息已复制到剪贴板";
+                }
+                else
+                {
+                    ErrorMessage = "爬取过程中出现异常，但异常信息复制到剪贴板失败";
+                }
             }
         }
 
