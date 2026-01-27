@@ -24,7 +24,7 @@
                   ItemsSource="{Binding ShowFundInfos}" PreviewMouseLeftButtonDown="ListView_PreviewMouseLeftButtonDown"/>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <Button Content="返回" Style="{StaticResource QueryButton}" Command="{Binding GoBackCommand}"/>
+            <Button Content="返回" Style="{StaticResource QueryButton}" Command="{Binding GoBackCommand}" IsCancel="True"/>
         </StackPanel>
 
         <DataGrid x:Name="dgCompare" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Loaded="DataGrid_Loaded"

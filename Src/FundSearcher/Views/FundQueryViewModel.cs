@@ -56,6 +56,16 @@ namespace FundSearcher.Views
             get { return fundInfos; }
             set { SetProperty(ref fundInfos, value); }
         }
+
+        private FundInfo selectedFundInfo;
+        /// <summary>
+        /// 选中基金
+        /// </summary>
+        public FundInfo SelectedFundInfo
+        {
+            get { return selectedFundInfo; }
+            set { SetProperty(ref selectedFundInfo, value); }
+        }
         #endregion
 
         #region 申购状态
@@ -251,6 +261,7 @@ namespace FundSearcher.Views
             eventAggregator.Subscribe<FundBlackRefreshEvent, List<string>>(RefreshBlack);
             RegisterCommand(CommandName.Query, Query);
             RegisterCommand(CommandName.Refresh, Refresh);
+            RegisterCommand(CommandName.Detail, Detail);
             RegisterCommand(CommandName.Compare, Compare);
             RegisterCommand(CommandName.Reset, Reset);
             RegisterCommand(CommandName.Delete, Delete);
@@ -353,6 +364,21 @@ namespace FundSearcher.Views
             isRefresh = true;
             InitFilterData();
             Filter();
+        }
+
+        private void Detail()
+        {
+            if (SelectedFundInfo == null)
+            {
+                MessageBoxEx.ShowError("请选择需要查看详情的基金");
+                return;
+            }
+
+            var param = new NavigationParameters
+            {
+                {ParameterName.DetailFundInfo, SelectedFundInfo},
+            };
+            Navigate(NavigateName.FundDetail, param);
         }
 
         private void Compare()

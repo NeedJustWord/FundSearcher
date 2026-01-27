@@ -53,7 +53,7 @@
                         CommandParameter="{x:Static consts:CommandName.Reset}"/>
                 <Button Content="取消黑名单" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Delete}"/>
-                <Button Content="返回" Style="{StaticResource QueryButton}" Command="{Binding GoBackCommand}"/>
+                <Button Content="返回" Style="{StaticResource QueryButton}" Command="{Binding GoBackCommand}" IsCancel="True"/>
             </StackPanel>
         </Grid>
 

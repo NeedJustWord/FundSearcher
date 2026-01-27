@@ -6,6 +6,7 @@
         public const string FundQuery = "FundQueryNavigate";
         public const string FundCompare = "FundCompareNavigate";
         public const string FundBlack = "FundBlackNavigate";
+        public const string FundDetail = "FundDetailNavigate";
 
         public const string IndexManager = "IndexManagerNavigate";
         public const string IndexQuery = "IndexQueryNavigate";

@@ -1,0 +1,633 @@
+﻿<UserControl x:Class="FundSearcher.Views.FundDetail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:coreConsts="clr-namespace:Fund.Core.Consts;assembly=Fund.Core"
+             xmlns:controls="clr-namespace:FundSearcher.Controls"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="1800">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                <Button Content="返回" Style="{StaticResource QueryButton}" Command="{Binding GoBackCommand}" IsCancel="True"/>
+            </StackPanel>
+        </Grid>
+
+        <GroupBox Grid.Row="1" Style="{StaticResource FundDetailGroupBox}" Header="{x:Static coreConsts:CommonName.FundInfo}">
+            <UniformGrid Columns="3" HorizontalAlignment="Center">
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:FundColumnName.FundId}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.FundId}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:FundColumnName.FundName}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.FundName}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:FundColumnName.FundFullName}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.FundFullName}"/>
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:FundColumnName.FundClass}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.FundClass}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:FundColumnName.IssueDay}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.IssueDay,Converter={StaticResource BirthDayConverter}}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:FundColumnName.AssetWithUnit}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource FundSizeConverter}">
+                                <Binding Source="{StaticResource StringFormatF2}"/>
+                                <Binding Path="FundInfo.AssetSize"/>
+                                <Binding Path="FundInfo.AssetDeadline"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:FundColumnName.FundType}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.FundType}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:FundColumnName.BirthDay}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.BirthDay,Converter={StaticResource BirthDayConverter}}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:FundColumnName.ShareWithUnit}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource FundSizeConverter}">
+                                <Binding Source="{StaticResource StringFormatF4}"/>
+                                <Binding Path="FundInfo.ShareSize"/>
+                                <Binding Path="FundInfo.ShareDeadline"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:FundColumnName.TrackingTarget}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TrackingTarget}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:CommonName.UpdateTime}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:CommonName.InfoSource}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.InfoSource}"/>
+                </StackPanel>
+            </UniformGrid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="2" Style="{StaticResource FundDetailGroupBox}" Header="{x:Static coreConsts:CommonName.TransactionInfo}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <UniformGrid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Columns="4" HorizontalAlignment="Center">
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.Price}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.Price}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.BuyConfirmDate}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.BuyConfirmDate}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.SellConfirmDate}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.SellConfirmDate}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.BuyUpperLimitAmountWithUnit}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
+                    </StackPanel>
+
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:FundColumnName.Counter}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.Counter}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.BuyStatus}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.BuyStatus}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.SellStatus}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.SellStatus}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.FreeSellDays}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.FreeSellDays,TargetNullValue=无}"/>
+                    </StackPanel>
+
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.RunningRateWithUnit}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.RunningRate,StringFormat=P2}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.ManageRateWithUnit}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.ManageRate,StringFormat=P2}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.HostingRateWithUnit}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.HostingRate,StringFormat=P2}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                            <Label.Content>
+                                <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                    <Binding Source="{x:Static coreConsts:TransactionColumnName.SalesServiceRateWithUnit}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                </MultiBinding>
+                            </Label.Content>
+                        </Label>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.SalesServiceRate,StringFormat=P2}"/>
+                    </StackPanel>
+                </UniformGrid>
+
+                <GroupBox Grid.Row="1" Grid.Column="0" Style="{StaticResource TransactionInfoRatesGroupBox}" Header="{x:Static coreConsts:TransactionColumnName.ApplyRates}">
+                    <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding FundInfo.TransactionInfo.ApplyRates}" HiddenColumns="{Binding ApplyRatesHiddenColumns}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicableAmount}" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.Rates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.Rates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.OriginalRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.OriginalRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="110" Header="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </controls:DataGridEx>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TransactionInfoRatesGroupBox}" Header="{x:Static coreConsts:TransactionColumnName.BuyRates}">
+                    <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding FundInfo.TransactionInfo.BuyRates}" HiddenColumns="{Binding BuyRatesHiddenColumns}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicableAmount}" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.Rates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.Rates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.OriginalRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.OriginalRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.CardBuyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.CardBuyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.CurrentBuyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.CurrentBuyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </controls:DataGridEx>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Grid.Column="2" Style="{StaticResource TransactionInfoRatesGroupBox}" Header="{x:Static coreConsts:TransactionColumnName.SellRates}">
+                    <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding FundInfo.TransactionInfo.SellRates}" HiddenColumns="{Binding SellRatesHiddenColumns}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicablePeriod}" IsReadOnly="True" Binding="{Binding ApplicablePeriod}"/>
+                            <DataGridTextColumn Width="80" Header="{x:Static coreConsts:TransactionColumnName.SellRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.SellRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </controls:DataGridEx>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="3" Style="{StaticResource FundDetailGroupBox}" Header="{x:Static coreConsts:CommonName.SpecialInfo}">
+            <UniformGrid Columns="3" HorizontalAlignment="Center">
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.VolatilityInThePastYear1}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                                <Binding Path="FundInfo.SpecialInfo.Volatility"/>
+                                <Binding Source="{StaticResource Number1}"/>
+                                <Binding Source="{StaticResource StringFormatP2}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.SharpeRatioInThePastYear1}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                                <Binding Path="FundInfo.SpecialInfo.SharpeRatio"/>
+                                <Binding Source="{StaticResource Number1}"/>
+                                <Binding Source="{StaticResource StringFormatP2}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.InfoRatioInThePastYear1}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                                <Binding Path="FundInfo.SpecialInfo.InfoRatio"/>
+                                <Binding Source="{StaticResource Number1}"/>
+                                <Binding Source="{StaticResource StringFormatP2}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.VolatilityInThePastYear2}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                                <Binding Path="FundInfo.SpecialInfo.Volatility"/>
+                                <Binding Source="{StaticResource Number2}"/>
+                                <Binding Source="{StaticResource StringFormatP2}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.SharpeRatioInThePastYear2}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                                <Binding Path="FundInfo.SpecialInfo.SharpeRatio"/>
+                                <Binding Source="{StaticResource Number2}"/>
+                                <Binding Source="{StaticResource StringFormatP2}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.InfoRatioInThePastYear2}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                                <Binding Path="FundInfo.SpecialInfo.InfoRatio"/>
+                                <Binding Source="{StaticResource Number2}"/>
+                                <Binding Source="{StaticResource StringFormatP2}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.VolatilityInThePastYear3}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                                <Binding Path="FundInfo.SpecialInfo.Volatility"/>
+                                <Binding Source="{StaticResource Number3}"/>
+                                <Binding Source="{StaticResource StringFormatP2}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.SharpeRatioInThePastYear3}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                                <Binding Path="FundInfo.SpecialInfo.SharpeRatio"/>
+                                <Binding Source="{StaticResource Number3}"/>
+                                <Binding Source="{StaticResource StringFormatP2}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.InfoRatioInThePastYear3}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
+                                <Binding Path="FundInfo.SpecialInfo.InfoRatio"/>
+                                <Binding Source="{StaticResource Number3}"/>
+                                <Binding Source="{StaticResource StringFormatP2}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.AnnualizedTrackingError}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.SpecialInfo.AnnualizedTrackingError,StringFormat=P2,TargetNullValue=--}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource HorizontalStackPanel}">
+                    <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label.Content>
+                            <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                                <Binding Source="{x:Static coreConsts:SpecialColumnName.AverageTrackingErrorOfTheSameType}"/>
+                                <Binding Source="{StaticResource StringSeparator}"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.SpecialInfo.AverageTrackingErrorOfTheSameType,StringFormat=P2,TargetNullValue=--}"/>
+                </StackPanel>
+            </UniformGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>

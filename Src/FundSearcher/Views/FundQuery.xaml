@@ -169,6 +169,9 @@
                 <Button Content="刷新" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Refresh}"/>
+                <Button Content="详情" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}"
+                        CommandParameter="{x:Static consts:CommandName.Detail}"/>
                 <Button Content="比较" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Compare}"/>
@@ -189,7 +192,10 @@
 
         <DataGrid Grid.Row="1" x:Name="dgFundInfos" Margin="3" CanUserAddRows="False" CanUserSortColumns="False" AutoGenerateColumns="False"
                   RowStyle="{StaticResource ShowDataGridRow}"
-                  RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding FundInfos}">
+                  RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding FundInfos}" SelectedItem="{Binding SelectedFundInfo}">
+            <DataGrid.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Detail}"/>
+            </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Width="20" HeaderStyle="{StaticResource dtCheckHeader}" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                     <DataGridCheckBoxColumn.ElementStyle>
@@ -249,7 +255,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="{x:Static coreConsts:TransactionColumnName.ApplyRates}">
+                        <GroupBox Grid.Column="0" Style="{StaticResource TransactionInfoRatesGroupBox}" Header="{x:Static coreConsts:TransactionColumnName.ApplyRates}">
                             <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.ApplyRates}" HiddenColumns="{Binding ApplyRatesHiddenColumns}" Tag="{Binding OrderNumber}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicableAmount}" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
@@ -280,7 +286,7 @@
                                 </DataGrid.Columns>
                             </controls:DataGridEx>
                         </GroupBox>
-                        <GroupBox Grid.Column="1" Header="{x:Static coreConsts:TransactionColumnName.BuyRates}">
+                        <GroupBox Grid.Column="1" Style="{StaticResource TransactionInfoRatesGroupBox}" Header="{x:Static coreConsts:TransactionColumnName.BuyRates}">
                             <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.BuyRates}" HiddenColumns="{Binding BuyRatesHiddenColumns}" Tag="{Binding OrderNumber}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicableAmount}" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
@@ -319,7 +325,7 @@
                                 </DataGrid.Columns>
                             </controls:DataGridEx>
                         </GroupBox>
-                        <GroupBox Grid.Column="2" Header="{x:Static coreConsts:TransactionColumnName.SellRates}">
+                        <GroupBox Grid.Column="2" Style="{StaticResource TransactionInfoRatesGroupBox}" Header="{x:Static coreConsts:TransactionColumnName.SellRates}">
                             <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding TransactionInfo.SellRates}" HiddenColumns="{Binding SellRatesHiddenColumns}" Tag="{Binding OrderNumber}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicablePeriod}" IsReadOnly="True" Binding="{Binding ApplicablePeriod}"/>
