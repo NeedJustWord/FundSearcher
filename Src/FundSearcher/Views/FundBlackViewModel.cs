@@ -69,6 +69,8 @@ namespace FundSearcher.Views
 
         private void Query()
         {
+            if (KeyWordIsFocused) KeyWordIsFocused = false;
+
             Filter();
         }
 

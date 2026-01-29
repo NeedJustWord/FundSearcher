@@ -290,6 +290,8 @@ namespace FundSearcher.Views
 
         private async void Query()
         {
+            if (KeyWordIsFocused) KeyWordIsFocused = false;
+
             List<FundInfo> list;
             if (string.IsNullOrWhiteSpace(KeyWord))
             {

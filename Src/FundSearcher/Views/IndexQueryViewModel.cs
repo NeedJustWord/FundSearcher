@@ -114,6 +114,8 @@ namespace FundSearcher.Views
 
         private async void Query()
         {
+            if (KeyWordIsFocused) KeyWordIsFocused = false;
+
             if (TryGetCancellationTokenFault(out var token))
             {
                 MessageBoxEx.ShowError("已有任务正在执行，请等任务执行完成，或取消任务");

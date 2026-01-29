@@ -60,6 +60,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Attacheds\IsFocusedAttached.cs" />
     <Compile Include="AutoMapperProfile.cs" />
     <Compile Include="BaseFundViewModel.cs" />
     <Compile Include="BaseFundWithKeyWordViewModel.cs" />

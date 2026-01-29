@@ -16,6 +16,16 @@ namespace FundSearcher
             set { SetProperty(ref keyWord, value); }
         }
 
+        private bool keyWordIsFocused;
+        /// <summary>
+        /// 关键字是否具有焦点
+        /// </summary>
+        public bool KeyWordIsFocused
+        {
+            get { return keyWordIsFocused; }
+            set { SetProperty(ref keyWordIsFocused, value); }
+        }
+
         public BaseFundWithKeyWordViewModel(IRegionManager regionManager, IEventAggregator eventAggregator = null, FundDataBase fundDataBase = null) : base(regionManager, eventAggregator, fundDataBase)
         {
         }

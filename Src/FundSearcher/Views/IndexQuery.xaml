@@ -6,6 +6,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:coreConsts="clr-namespace:Fund.Core.Consts;assembly=Fund.Core"
+             xmlns:attacheds="clr-namespace:FundSearcher.Attacheds"
              xmlns:consts="clr-namespace:FundSearcher.Consts"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
@@ -49,7 +50,11 @@
             <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource QueryLabelBorder}">
                 <Label Content="关键字：" Style="{StaticResource KeyValueLabel}"/>
             </Border>
-            <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding KeyWord}"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding KeyWord}" attacheds:IsFocusedAttached.IsFocused="{Binding KeyWordIsFocused}">
+                <TextBox.InputBindings>
+                    <KeyBinding Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Query}" Key="Enter"/>
+                </TextBox.InputBindings>
+            </TextBox>
 
             <Label Grid.Row="1" Grid.Column="0" Content="关注指数：" Style="{StaticResource QueryLabel}"/>
             <ListView Grid.Row="1" Grid.Column="1" Style="{StaticResource HorizontalFilterListView}"
