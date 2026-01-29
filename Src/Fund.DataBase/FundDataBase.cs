@@ -102,14 +102,14 @@ namespace Fund.DataBase
         /// <summary>
         /// 获取基金信息
         /// </summary>
-        /// <param name="fundIds">基金代码</param>
+        /// <param name="keyWord">关键字</param>
         /// <param name="token">任务取消token</param>
         /// <param name="sourceName">信息来源</param>
         /// <param name="forceUpdate">是否强制更新</param>
         /// <returns></returns>
-        public async Task<List<FundInfo>> GetFundInfos(string fundIds, CancellationToken token, string sourceName = EastMoneyCrawler.SourceNameKey, bool forceUpdate = false)
+        public async Task<List<FundInfo>> GetFundInfos(string keyWord, CancellationToken token, string sourceName = EastMoneyCrawler.SourceNameKey, bool forceUpdate = false)
         {
-            return await GetFundInfos(sourceName, token, forceUpdate, fundIds.InputSplit().Where(t => int.TryParse(t, out _)).SelectMany(GetFundIds).Distinct().ToArray());
+            return await GetFundInfos(sourceName, token, forceUpdate, keyWord.InputSplit().SelectMany(GetFundIds).Distinct().ToArray());
         }
 
         /// <summary>
@@ -145,13 +145,11 @@ namespace Fund.DataBase
 
         private IEnumerable<string> GetFundIds(string input)
         {
-            if (input.Length == 6) yield return input;
-            if (input.Length < 6)
+            if (input.Length == 6 && int.TryParse(input, out _)) yield return input;
+            foreach (var item in FundInfos)
             {
-                foreach (var item in FundInfos)
-                {
-                    if (item.FundId.Contains(input)) yield return item.FundId;
-                }
+                if (item.FundId.Contains(input) || item.FundName.Contains(input) || item.FundFullName.Contains(input))
+                    yield return item.FundId;
             }
         }
 
