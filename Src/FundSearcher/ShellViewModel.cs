@@ -73,6 +73,7 @@ namespace FundSearcher
             eventAggregator.Subscribe<StatusMessageEvent, string>(HandleStatusMessage);
             RegisterCommand(CommandName.FundMenu, NavigateToFund);
             RegisterCommand(CommandName.IndexMenu, NavigateToIndex);
+            RegisterCommand(CommandName.Copy, CopyErrorMessage);
         }
 
         protected override void OnClosing()
@@ -98,7 +99,15 @@ namespace FundSearcher
                 ErrorMessage = null;
                 errorModels.Clear();
             }
-            else if (model.Finish && errorModels.Count > 0)
+            else if (model.Finish)
+            {
+                CopyErrorMessage();
+            }
+        }
+
+        private void CopyErrorMessage()
+        {
+            if (errorModels.Count > 0)
             {
                 var str = string.Join($"{Environment.NewLine}{Environment.NewLine}", errorModels.Select(t => $"爬取消息：{t.Message}{Environment.NewLine}异常消息：{t.Exception.Message}{Environment.NewLine}异常堆栈：{Environment.NewLine}{t.Exception.StackTrace}"));
                 if (ClipboardHelper.SetText(str))

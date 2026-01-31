@@ -52,7 +52,13 @@
             </Grid>
 
             <Grid>
-                <Label Content="{Binding ErrorMessage}" Style="{StaticResource ErrorMessageLabel}"/>
+                <Label Content="{Binding ErrorMessage}" Style="{StaticResource ErrorMessageLabel}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                            <prism:InvokeCommandAction Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Copy}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Label>
             </Grid>
         </DockPanel>
     </Grid>

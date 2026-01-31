@@ -148,7 +148,7 @@ namespace Fund.DataBase
             if (input.Length == 6 && int.TryParse(input, out _)) yield return input;
             foreach (var item in FundInfos)
             {
-                if (item.FundId.Contains(input) || item.FundName.Contains(input) || item.FundFullName.Contains(input))
+                if (item.FundId.Contains(input) || (item.FundName != null && item.FundName.Contains(input)) || (item.FundFullName != null && item.FundFullName.Contains(input)))
                     yield return item.FundId;
             }
         }

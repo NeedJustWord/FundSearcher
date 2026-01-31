@@ -416,6 +416,12 @@ namespace FundSearcher.Views
         private void Reset()
         {
             KeyWord = null;
+            SelectTrackingTarget = TrackingTargets[0];
+            SelectFundClass = FundClasses[0];
+            SelectCounter = Counters[0];
+            SelectBuyStatus = BuyStatuses[0];
+            SelectSellStatus = SellStatuses[0];
+            SelectRunningRate = RunningRates[0];
             Query();
         }
 
