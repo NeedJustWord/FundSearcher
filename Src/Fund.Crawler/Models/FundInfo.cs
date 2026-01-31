@@ -10,6 +10,17 @@ namespace Fund.Crawler.Models
     /// </summary>
     public class FundInfo : FundBaseInfo
     {
+        private bool isHolding;
+        /// <summary>
+        /// 是否持仓
+        /// </summary>
+        [JsonIgnore]
+        public bool IsHolding
+        {
+            get { return isHolding; }
+            set { SetProperty(ref isHolding, value); }
+        }
+
         private List<string> applyRatesHiddenColumns;
         /// <summary>
         /// 认购费率隐藏列

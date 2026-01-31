@@ -38,6 +38,7 @@ namespace FundSearcher.Views
             TransactionColumnName.SellRates,
         };
         private List<string> blackFunds;
+        private List<string> holdingFunds;
         private bool isRefresh;
         private bool isFiltering;
         private bool isInitFilterDataFinish;
@@ -267,9 +268,12 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.Delete, Delete);
             RegisterCommand(CommandName.Add, AddBlack);
             RegisterCommand(CommandName.Black, ShowBlack);
+            RegisterCommand(CommandName.HoldPosition, HoldPosition);
+            RegisterCommand(CommandName.ClearPosition, ClearPosition);
             RegisterCommand(CommandName.SelectChanged, SelectChanged);
             RegisterCommand(CommandName.SelectTrackingTargetChanged, SelectTrackingTargetChanged);
             blackFunds = ConfigHelper.BlackFunds.SplitRemoveEmpty(',').ToList();
+            holdingFunds = ConfigHelper.HoldingFunds.SplitRemoveEmpty(',').ToList();
         }
 
         protected override void OnFirstLoad()
@@ -505,6 +509,48 @@ namespace FundSearcher.Views
             Navigate(NavigateName.FundBlack, param);
         }
 
+        private void RefreshPosition()
+        {
+            ConfigHelper.HoldingFunds = string.Join(",", holdingFunds.OrderBy(t => t));
+            Query(true);
+        }
+
+        private void HoldPosition()
+        {
+            var infos = fundInfos.Where(t => t.IsShow && t.IsChecked).ToArray();
+            if (infos.Length == 0)
+            {
+                MessageBoxEx.ShowError("请勾选持仓的基金");
+                return;
+            }
+
+            foreach (var item in infos)
+            {
+                item.IsChecked = false;
+                if (holdingFunds.Contains(item.FundId) == false) holdingFunds.Add(item.FundId);
+            }
+
+            RefreshPosition();
+        }
+
+        private void ClearPosition()
+        {
+            var infos = fundInfos.Where(t => t.IsShow && t.IsChecked).ToArray();
+            if (infos.Length == 0)
+            {
+                MessageBoxEx.ShowError("请勾选清仓的基金");
+                return;
+            }
+
+            foreach (var item in infos)
+            {
+                item.IsChecked = false;
+                holdingFunds.Remove(item.FundId);
+            }
+
+            RefreshPosition();
+        }
+
         private void SelectChanged(object[] objs)
         {
             if (isInitFilterDataFinish && isSelectTrackingTargetChangedFinish && isInitCollectionFinish)
@@ -535,6 +581,8 @@ namespace FundSearcher.Views
 
         private FundInfo Handle(FundInfo model)
         {
+            model.IsHolding = holdingFunds.Contains(model.FundId);
+
             if (model.TransactionInfo == null) return model;
 
             var rateNames = GetRateNames(model.TransactionInfo.ApplyRates);

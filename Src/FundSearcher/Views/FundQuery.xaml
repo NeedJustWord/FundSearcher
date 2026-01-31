@@ -180,6 +180,12 @@
                 <Button Content="比较" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Compare}"/>
+                <Button Content="持仓" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}"
+                        CommandParameter="{x:Static consts:CommandName.HoldPosition}"/>
+                <Button Content="清仓" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}"
+                        CommandParameter="{x:Static consts:CommandName.ClearPosition}"/>
                 <Button Content="删除" Style="{StaticResource QueryButton}"
                         Command="{Binding DictCommand}"
                         CommandParameter="{x:Static consts:CommandName.Delete}"/>
@@ -252,6 +258,18 @@
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.RunningRateWithUnit}" Width="90" IsReadOnly="True" Binding="{Binding TransactionInfo.RunningRate,StringFormat=0.00%}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:CommonName.UpdateTime}" Width="130" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
             </DataGrid.Columns>
+            <DataGrid.CellStyle>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsHolding}" Value="True">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsHolding}" Value="False">
+                            <Setter Property="Foreground" Value="Black"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <Grid>

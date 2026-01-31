@@ -40,6 +40,23 @@ namespace Fund.Core.Helpers
                 }
             }
         }
+
+        private static string holdingFunds;
+        /// <summary>
+        /// 持仓基金
+        /// </summary>
+        public static string HoldingFunds
+        {
+            get { return holdingFunds; }
+            set
+            {
+                if (holdingFunds != value)
+                {
+                    holdingFunds = value;
+                    needSave = true;
+                }
+            }
+        }
         #endregion
 
         private static readonly XmlDocument document;
@@ -56,6 +73,7 @@ namespace Fund.Core.Helpers
 
             starIndexes = Get(nameof(StarIndexes));
             blackFunds = Get(nameof(BlackFunds));
+            holdingFunds = Get(nameof(HoldingFunds));
         }
 
         /// <summary>
@@ -67,6 +85,7 @@ namespace Fund.Core.Helpers
             {
                 Set(nameof(StarIndexes), StarIndexes);
                 Set(nameof(BlackFunds), BlackFunds);
+                Set(nameof(HoldingFunds), HoldingFunds);
                 document.Save(configPath);
             }
         }

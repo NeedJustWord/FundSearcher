@@ -63,5 +63,13 @@
         /// 选中跟踪标的改变命令
         /// </summary>
         public const string SelectTrackingTargetChanged = "SelectTrackingTargetChangedCommand";
+        /// <summary>
+        /// 持仓命令
+        /// </summary>
+        public const string HoldPosition = "HoldPositionCommand";
+        /// <summary>
+        /// 清仓命令
+        /// </summary>
+        public const string ClearPosition = "ClearPositionCommand";
     }
 }
