@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Crawler.SimpleCrawler.Events;
@@ -140,8 +142,22 @@ namespace Crawler.SimpleCrawler
             var path = "Cache";
             DirectoryHelper.Ensure(path);
 
-            var fileName = uri.AbsolutePath.Trim('\\', '/');
-            return Path.Combine(path, fileName);
+            var fileName = new StringBuilder(uri.PathAndQuery);
+            var chars = Path.GetInvalidFileNameChars();
+            for (int i = 0; i < fileName.Length; i++)
+            {
+                var c = fileName[i];
+                if (chars.Any(t => t == c))
+                {
+                    fileName[i] = '_';
+                }
+            }
+
+            if (uri.PathAndQuery.EndsWith(".html") == false)
+            {
+                fileName.Append(".html");
+            }
+            return Path.Combine(path, fileName.ToString().Trim('_'));
         }
         #endregion
     }
