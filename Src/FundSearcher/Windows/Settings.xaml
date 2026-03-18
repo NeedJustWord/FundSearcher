@@ -1,0 +1,55 @@
+﻿<Window x:Class="FundSearcher.Windows.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:consts="clr-namespace:FundSearcher.Consts"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        mc:Ignorable="d"
+        Title="设置" Height="300" Width="450"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Style="{StaticResource HorizontalCenterStackPanel}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SettingsKeyLabel}" Content="是否缓存页面源代码"/>
+                <ComboBox Grid.Row="0" Grid.Column="1" Style="{StaticResource SettingsControl}"
+                          ItemsSource="{Binding YesNoSource}" SelectedItem="{Binding CachePageSource}" DisplayMemberPath="Value"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource SettingsKeyLabel}" Content="页面源代码缓存过期天数"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsValueTextBox}" Text="{Binding CacheOverDay}"/>
+
+                <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource SettingsKeyLabel}" Content="基金信息过期天数"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource SettingsValueTextBox}" Text="{Binding FundOverDay}"/>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Style="{StaticResource HorizontalCenterStackPanel}">
+            <Button Content="保存" Style="{StaticResource QueryButton}"
+                        Command="{Binding DictCommand}"
+                        CommandParameter="{x:Static consts:CommandName.Save}"/>
+            <Button Content="重置" Style="{StaticResource QueryButton}" Margin="50 3 3 3"
+                        Command="{Binding DictCommand}"
+                        CommandParameter="{x:Static consts:CommandName.Reset}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Style="{StaticResource HorizontalCenterStackPanel}">
+            <TextBlock Text="{Binding Message}" Foreground="Red" Margin="0 5 0 0"/>
+        </StackPanel>
+    </Grid>
+</Window>

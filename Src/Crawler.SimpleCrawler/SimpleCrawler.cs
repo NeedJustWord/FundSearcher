@@ -45,74 +45,19 @@ namespace Crawler.SimpleCrawler
                         return pageSource;
                     }
 
-                    var watch = new Stopwatch();
-                    watch.Start();
-                    var request = (HttpWebRequest)WebRequest.Create(uri);
-                    request.Accept = "*/*";
-                    request.ServicePoint.Expect100Continue = false;//加快载入速度
-                    request.ServicePoint.UseNagleAlgorithm = false;//禁止Nagle算法加快载入速度
-                    request.AllowWriteStreamBuffering = false;//禁止缓冲加快载入速度
-                    request.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");//定义gzip压缩页面支持
-                    request.ContentType = "application/x-www-form-urlencoded";//定义文档类型及编码
-                    request.AllowAutoRedirect = false;//禁止自动跳转
-                    request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36";//设置User-Agent，伪装成Google Chrome浏览器
-                    request.Timeout = 5000;//定义请求超时时间为5秒
-                    request.KeepAlive = true;//启用长连接
-                    request.Method = "GET";//定义请求方式为GET
-                    if (proxy != null) request.Proxy = new WebProxy(proxy);//设置代理服务器IP，伪装请求地址
-                    request.CookieContainer = CookiesContainer;//附加Cookie容器
-                    request.ServicePoint.ConnectionLimit = int.MaxValue;//定义最大连接数
-
-                    using (var response = (HttpWebResponse)request.GetResponse())//获取请求响应
+                    if (ReadPageSourceFromCache(uri, out pageSource, out var elapsed) == false)
                     {
-                        if (IsCancel(token, uri, threadId, "爬取任务获取请求响应后取消任务"))
+                        if (GetPageSourceFromWeb(uri, token, proxy, threadId, out pageSource, out elapsed) == false)
                         {
-                            request.Abort();
-                            watch.Stop();
                             return pageSource;
                         }
-                        foreach (Cookie cookie in response.Cookies) CookiesContainer.Add(cookie);//将Cookie加入容器，保存登录状态
-
-                        var encoding = Encoding.GetEncoding(response.CharacterSet);
-                        if (response.ContentEncoding.ToLower().Contains("gzip"))//解压
-                        {
-                            using (GZipStream stream = new GZipStream(response.GetResponseStream(), CompressionMode.Decompress))
-                            {
-                                using (StreamReader reader = new StreamReader(stream, encoding))
-                                {
-                                    pageSource = reader.ReadToEnd();
-                                }
-                            }
-                        }
-                        else if (response.ContentEncoding.ToLower().Contains("deflate"))//解压
-                        {
-                            using (DeflateStream stream = new DeflateStream(response.GetResponseStream(), CompressionMode.Decompress))
-                            {
-                                using (StreamReader reader = new StreamReader(stream, encoding))
-                                {
-                                    pageSource = reader.ReadToEnd();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            using (Stream stream = response.GetResponseStream())//原始
-                            {
-                                using (StreamReader reader = new StreamReader(stream, encoding))
-                                {
-                                    pageSource = reader.ReadToEnd();
-                                }
-                            }
-                        }
                     }
-                    request.Abort();
-                    watch.Stop();
-                    var milliseconds = watch.ElapsedMilliseconds;//获取请求执行时间
+
                     if (IsCancel(token, uri, threadId, "爬取任务完成事件开始前取消任务"))
                     {
                         return pageSource;
                     }
-                    OnCompleted(new OnCompletedEventArgs(uri, threadId, milliseconds, pageSource));
+                    OnCompleted(new OnCompletedEventArgs(uri, threadId, elapsed, pageSource));
                 }
                 catch (Exception ex)
                 {
@@ -120,6 +65,76 @@ namespace Crawler.SimpleCrawler
                 }
                 return pageSource;
             });
+        }
+
+        private bool GetPageSourceFromWeb(Uri uri, CancellationToken token, string proxy, int threadId, out string pageSource, out TimeSpan elapsed)
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+            var request = (HttpWebRequest)WebRequest.Create(uri);
+            request.Accept = "*/*";
+            request.ServicePoint.Expect100Continue = false;//加快载入速度
+            request.ServicePoint.UseNagleAlgorithm = false;//禁止Nagle算法加快载入速度
+            request.AllowWriteStreamBuffering = false;//禁止缓冲加快载入速度
+            request.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");//定义gzip压缩页面支持
+            request.ContentType = "application/x-www-form-urlencoded";//定义文档类型及编码
+            request.AllowAutoRedirect = false;//禁止自动跳转
+            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36";//设置User-Agent，伪装成Google Chrome浏览器
+            request.Timeout = 5000;//定义请求超时时间为5秒
+            request.KeepAlive = true;//启用长连接
+            request.Method = "GET";//定义请求方式为GET
+            if (proxy != null) request.Proxy = new WebProxy(proxy);//设置代理服务器IP，伪装请求地址
+            request.CookieContainer = CookiesContainer;//附加Cookie容器
+            request.ServicePoint.ConnectionLimit = int.MaxValue;//定义最大连接数
+
+            using (var response = (HttpWebResponse)request.GetResponse())//获取请求响应
+            {
+                if (IsCancel(token, uri, threadId, "爬取任务获取请求响应后取消任务"))
+                {
+                    request.Abort();
+                    watch.Stop();
+                    pageSource = string.Empty;
+                    elapsed = watch.Elapsed;
+                    return false;
+                }
+                foreach (Cookie cookie in response.Cookies) CookiesContainer.Add(cookie);//将Cookie加入容器，保存登录状态
+
+                var encoding = Encoding.GetEncoding(response.CharacterSet);
+                if (response.ContentEncoding.ToLower().Contains("gzip"))//解压
+                {
+                    using (GZipStream stream = new GZipStream(response.GetResponseStream(), CompressionMode.Decompress))
+                    {
+                        using (StreamReader reader = new StreamReader(stream, encoding))
+                        {
+                            pageSource = reader.ReadToEnd();
+                        }
+                    }
+                }
+                else if (response.ContentEncoding.ToLower().Contains("deflate"))//解压
+                {
+                    using (DeflateStream stream = new DeflateStream(response.GetResponseStream(), CompressionMode.Decompress))
+                    {
+                        using (StreamReader reader = new StreamReader(stream, encoding))
+                        {
+                            pageSource = reader.ReadToEnd();
+                        }
+                    }
+                }
+                else
+                {
+                    using (Stream stream = response.GetResponseStream())//原始
+                    {
+                        using (StreamReader reader = new StreamReader(stream, encoding))
+                        {
+                            pageSource = reader.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            request.Abort();
+            watch.Stop();
+            elapsed = watch.Elapsed;
+            return true;
         }
 
         private bool IsCancel(CancellationToken token, Uri uri, int threadId, string message)

@@ -10,7 +10,15 @@
         /// 指数菜单
         /// </summary>
         public const string IndexMenu = "IndexMenu";
+        /// <summary>
+        /// 设置菜单
+        /// </summary>
+        public const string SettingsMenu = "SettingsMenu";
 
+        /// <summary>
+        /// 保存命令
+        /// </summary>
+        public const string Save = "SaveCommand";
         /// <summary>
         /// 查询命令
         /// </summary>

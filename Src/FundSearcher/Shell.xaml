@@ -30,6 +30,8 @@
                       Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.FundMenu}"/>
             <MenuItem Header="指数" Style="{StaticResource MainMenuItem}"
                       Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.IndexMenu}"/>
+            <MenuItem Header="设置" Style="{StaticResource MainMenuItem}"
+                      Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.SettingsMenu}"/>
         </Menu>
 
         <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static consts:RegionName.Shell}"/>

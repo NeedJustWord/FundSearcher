@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Crawler.SimpleCrawler.Events;
+using Fund.Core.Helpers;
 
 namespace Crawler.SimpleCrawler
 {
@@ -86,5 +89,60 @@ namespace Crawler.SimpleCrawler
         {
             OnCancelEvent?.Invoke(this, args);
         }
+
+        #region 页面源代码缓存
+        public void WritePageSourceToCache(Uri uri, string pageSource)
+        {
+            var filePath = GetPageSourceCacheFilePath(uri);
+            if (ConfigHelper.CachePageSource && IsCacheValid(filePath) == false)
+            {
+                File.WriteAllText(filePath, pageSource);
+            }
+        }
+
+        protected bool ReadPageSourceFromCache(Uri uri, out string pageSource, out TimeSpan elapsed)
+        {
+            bool result;
+            var watch = Stopwatch.StartNew();
+            var filePath = GetPageSourceCacheFilePath(uri);
+            if (ConfigHelper.CachePageSource && IsCacheValid(filePath))
+            {
+                pageSource = File.ReadAllText(filePath);
+                result = true;
+            }
+            else
+            {
+                pageSource = string.Empty;
+                result = false;
+            }
+            watch.Stop();
+            elapsed = watch.Elapsed;
+            return result;
+        }
+
+        /// <summary>
+        /// 缓存是否有效
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        private bool IsCacheValid(string filePath)
+        {
+            return File.Exists(filePath) && File.GetLastWriteTime(filePath) >= DateTime.Today.AddDays(-ConfigHelper.CacheOverDay);
+        }
+
+        /// <summary>
+        /// 获取缓存文件路径
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        private string GetPageSourceCacheFilePath(Uri uri)
+        {
+            var path = "Cache";
+            DirectoryHelper.Ensure(path);
+
+            var fileName = uri.AbsolutePath.Trim('\\', '/');
+            return Path.Combine(path, fileName);
+        }
+        #endregion
     }
 }

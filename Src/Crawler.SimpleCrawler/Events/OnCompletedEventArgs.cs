@@ -12,13 +12,13 @@ namespace Crawler.SimpleCrawler.Events
         /// </summary>
         public string PageSource { get; }
         /// <summary>
-        /// 爬虫请求执行时间，单位毫秒
+        /// 爬虫请求执行时间
         /// </summary>
-        public long Milliseconds { get; }
+        public TimeSpan Elapsed { get; }
 
-        public OnCompletedEventArgs(Uri uri, int threadId, long milliseconds, string pageSource) : base(uri, threadId)
+        public OnCompletedEventArgs(Uri uri, int threadId, TimeSpan elapsed, string pageSource) : base(uri, threadId)
         {
-            Milliseconds = milliseconds;
+            Elapsed = elapsed;
             PageSource = pageSource;
         }
     }

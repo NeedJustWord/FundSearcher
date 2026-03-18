@@ -9,6 +9,7 @@ using Fund.DataBase;
 using FundSearcher.Consts;
 using FundSearcher.Helpers;
 using FundSearcher.PubSubEvents;
+using FundSearcher.Windows;
 using Prism.Events;
 using Prism.Regions;
 
@@ -73,6 +74,7 @@ namespace FundSearcher
             eventAggregator.Subscribe<StatusMessageEvent, string>(HandleStatusMessage);
             RegisterCommand(CommandName.FundMenu, NavigateToFund);
             RegisterCommand(CommandName.IndexMenu, NavigateToIndex);
+            RegisterCommand(CommandName.SettingsMenu, NavigateToSettings);
             RegisterCommand(CommandName.Copy, CopyErrorMessage);
         }
 
@@ -134,6 +136,12 @@ namespace FundSearcher
         private void NavigateToIndex()
         {
             Navigate(NavigateName.IndexManager);
+        }
+
+        private void NavigateToSettings()
+        {
+            var settings = new Settings();
+            settings.ShowDialog();
         }
     }
 }

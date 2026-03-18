@@ -51,5 +51,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleCrawler.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fund.Core\Fund.Core.csproj">
+      <Project>{0d6ac1fc-2927-42ba-af8c-fa59946830fe}</Project>
+      <Name>Fund.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -63,5 +63,25 @@
 
             return false;
         }
+
+        public static bool AsBool(this string str)
+        {
+            if (str == null) return false;
+            switch (str.ToLower())
+            {
+                case "1":
+                case "y":
+                case "yes":
+                case "true":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static byte AsByte(this string str, byte defaultValue)
+        {
+            return byte.TryParse(str, out var value) ? value : defaultValue;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Xml;
+using Fund.Core.Extensions;
 
 namespace Fund.Core.Helpers
 {
@@ -57,6 +58,57 @@ namespace Fund.Core.Helpers
                 }
             }
         }
+
+        private static bool cachePageSource;
+        /// <summary>
+        /// 是否缓存页面源代码
+        /// </summary>
+        public static bool CachePageSource
+        {
+            get { return cachePageSource; }
+            set
+            {
+                if (cachePageSource != value)
+                {
+                    cachePageSource = value;
+                    needSave = true;
+                }
+            }
+        }
+
+        private static byte cacheOverDay;
+        /// <summary>
+        /// 页面源代码缓存过期天数
+        /// </summary>
+        public static byte CacheOverDay
+        {
+            get { return cacheOverDay; }
+            set
+            {
+                if (cacheOverDay != value)
+                {
+                    cacheOverDay = value;
+                    needSave = true;
+                }
+            }
+        }
+
+        private static byte fundOverDay;
+        /// <summary>
+        /// 基金信息过期天数
+        /// </summary>
+        public static byte FundOverDay
+        {
+            get { return fundOverDay; }
+            set
+            {
+                if (fundOverDay != value)
+                {
+                    fundOverDay = value;
+                    needSave = true;
+                }
+            }
+        }
         #endregion
 
         private static readonly XmlDocument document;
@@ -74,6 +126,9 @@ namespace Fund.Core.Helpers
             starIndexes = Get(nameof(StarIndexes));
             blackFunds = Get(nameof(BlackFunds));
             holdingFunds = Get(nameof(HoldingFunds));
+            cachePageSource = Get(nameof(CachePageSource)).AsBool();
+            cacheOverDay = Get(nameof(CacheOverDay)).AsByte(0);
+            fundOverDay = Get(nameof(FundOverDay)).AsByte(7);
         }
 
         /// <summary>
@@ -86,6 +141,9 @@ namespace Fund.Core.Helpers
                 Set(nameof(StarIndexes), StarIndexes);
                 Set(nameof(BlackFunds), BlackFunds);
                 Set(nameof(HoldingFunds), HoldingFunds);
+                Set(nameof(CachePageSource), CachePageSource);
+                Set(nameof(CacheOverDay), CacheOverDay);
+                Set(nameof(FundOverDay), FundOverDay);
                 document.Save(configPath);
             }
         }
@@ -104,6 +162,28 @@ namespace Fund.Core.Helpers
         {
             var node = GetXmlNode(key);
             return node == null ? "" : node.Attributes["value"].Value;
+        }
+
+        /// <summary>
+        /// 设置配置
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static bool Set(string key, bool value)
+        {
+            return Set(key, value ? "1" : "0");
+        }
+
+        /// <summary>
+        /// 设置配置
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static bool Set(string key, byte value)
+        {
+            return Set(key, value.ToString());
         }
 
         /// <summary>

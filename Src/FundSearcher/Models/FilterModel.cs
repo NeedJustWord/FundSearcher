@@ -3,6 +3,29 @@ using Prism.Mvvm;
 
 namespace FundSearcher.Models
 {
+    class FilterModel<TKey> : BindableBase
+    {
+        private bool isSelected;
+        /// <summary>
+        /// 是否选中
+        /// </summary>
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set { SetProperty(ref isSelected, value); }
+        }
+
+        public TKey Key { get; set; }
+        public string Value { get; set; }
+
+        public FilterModel(TKey key, string value, bool isSelected = false)
+        {
+            Key = key;
+            Value = value;
+            IsSelected = isSelected;
+        }
+    }
+
     class FilterModel : BindableBase
     {
         private bool isSelected;

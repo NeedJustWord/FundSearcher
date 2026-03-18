@@ -141,6 +141,7 @@ namespace Fund.Crawler.Webs
                 {
                     WriteLog($"{args.ThreadId} {keyStr}爬取结束，开始处理");
                     action?.Invoke(args.PageSource, info);
+                    crawler.WritePageSourceToCache(args.Uri, args.PageSource);
                 }
                 catch (Exception ex)
                 {

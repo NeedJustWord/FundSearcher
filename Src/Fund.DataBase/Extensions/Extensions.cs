@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Fund.Core.Helpers;
 
 namespace Fund.Crawler.Models
 {
@@ -36,7 +37,7 @@ namespace Fund.Crawler.Models
         /// <returns></returns>
         public static bool IsNeedUpdate(this DateTime time)
         {
-            return time < DateTime.Now.AddDays(-30);
+            return time < DateTime.Today.AddDays(-ConfigHelper.FundOverDay);
         }
 
         /// <summary>
