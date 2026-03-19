@@ -113,56 +113,56 @@ namespace Fund.Crawler.Webs
             var crawler = new SimpleCrawler();
             crawler.OnStartEvent += (sender, args) =>
             {
-                var keyStr = key.GetKey(url);
+                var keyStr = key.GetKey(url, args.ThreadId);
                 if (token.IsCancellationRequested)
                 {
-                    WriteLog($"{args.ThreadId} {keyStr}爬取开始时任务已取消");
+                    WriteLog($"{keyStr}爬取开始时任务已取消");
                     return;
                 }
 
                 if (key.Index != 0)
                 {
-                    WriteLog($"{args.ThreadId} {keyStr}开始休眠");
+                    WriteLog($"{keyStr}开始休眠");
                     RandomSleep(keyStr, 1000, 3000);
-                    WriteLog($"{args.ThreadId} {keyStr}休眠结束");
+                    WriteLog($"{keyStr}休眠结束");
                 }
-                WriteLog($"{args.ThreadId} {keyStr}开始爬取");
+                WriteLog($"{keyStr}开始爬取");
             };
             crawler.OnCompletedEvent += (sender, args) =>
             {
-                var keyStr = key.GetKey(url);
+                var keyStr = key.GetKey(url, args.ThreadId);
                 if (token.IsCancellationRequested)
                 {
-                    WriteLog($"{args.ThreadId} {keyStr}爬取结束，但任务已取消");
+                    WriteLog($"{keyStr}爬取结束，但任务已取消");
                     return;
                 }
 
                 try
                 {
-                    WriteLog($"{args.ThreadId} {keyStr}爬取结束，开始处理");
+                    WriteLog($"{keyStr}爬取结束，开始处理");
                     action?.Invoke(args.PageSource, info);
                     crawler.WritePageSourceToCache(args.Uri, args.PageSource);
                 }
                 catch (Exception ex)
                 {
-                    WriteLog($"{args.ThreadId} {keyStr}处理出现异常", ex);
+                    WriteLog($"{keyStr}处理出现异常", ex);
                 }
                 finally
                 {
                     IncrementCurrent();
-                    WriteLog($"{args.ThreadId} {keyStr}处理结束");
+                    WriteLog($"{keyStr}处理结束");
                 }
             };
             crawler.OnCancelEvent += (sender, args) =>
             {
-                var keyStr = key.GetKey(url);
-                WriteLog($"{args.ThreadId} {keyStr}任务已取消 {args.Message}");
+                var keyStr = key.GetKey(url, args.ThreadId);
+                WriteLog($"{keyStr}任务已取消 {args.Message}");
             };
             crawler.OnErrorEvent += (sender, args) =>
             {
-                var keyStr = key.GetKey(url);
+                var keyStr = key.GetKey(url, args.ThreadId);
                 IncrementCurrent();
-                WriteLog($"{args.ThreadId} {keyStr}任务出现异常", args.Exception);
+                WriteLog($"{keyStr}任务出现异常", args.Exception);
             };
             return await crawler.Start(url, token);
         }

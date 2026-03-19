@@ -142,7 +142,7 @@ namespace Crawler.SimpleCrawler
             var path = "Cache";
             DirectoryHelper.Ensure(path);
 
-            var fileName = new StringBuilder(uri.PathAndQuery);
+            var fileName = new StringBuilder(uri.PathAndQuery.TrimStart('/'));
             var chars = Path.GetInvalidFileNameChars();
             for (int i = 0; i < fileName.Length; i++)
             {
@@ -157,7 +157,7 @@ namespace Crawler.SimpleCrawler
             {
                 fileName.Append(".html");
             }
-            return Path.Combine(path, fileName.ToString().Trim('_'));
+            return Path.Combine(path, fileName.ToString());
         }
         #endregion
     }

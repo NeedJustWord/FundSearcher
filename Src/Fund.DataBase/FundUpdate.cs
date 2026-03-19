@@ -128,7 +128,7 @@ namespace Fund.DataBase
                 {
                     if (crawlerDict.TryGetValue(updateItem.Key, out var crawler) && token.IsCancellationRequested == false)
                     {
-                        Add(crawler.Start(token, updateItem.Value.ToArray()).Result);
+                        Add(crawler.StartFund(token, updateItem.Value.ToArray()).Result);
                     }
                 }
 
@@ -200,7 +200,7 @@ namespace Fund.DataBase
                         {
                             return infos ?? emptyIndexInfos;
                         }
-                        infos = crawler.Start(token).Result;
+                        infos = crawler.StartIndex(token).Result;
                         indexInfoDict[sourceName] = new Tuple<List<IndexInfo>, DateTime>(infos, DateTime.Now);
                         HasIndexUpdate = true;
                     }
@@ -213,30 +213,44 @@ namespace Fund.DataBase
         /// <summary>
         /// 更新指数相关基金
         /// </summary>
-        /// <param name="info"></param>
+        /// <param name="infos"></param>
         /// <param name="forceUpdate"></param>
         /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public async Task<List<FundBaseInfo>> Update(IndexInfo info, bool forceUpdate, CancellationToken token)
+        public async Task<IEnumerable<IndexInfo>> Update(IEnumerable<IndexInfo> infos, bool forceUpdate, CancellationToken token)
         {
             return await Task.Run(() =>
             {
-                bool needUpdate = forceUpdate || (info.FundBaseInfos.Count > 0 && info.FundBaseInfos[0].UpdateTime.IsNeedUpdate());
-                if (needUpdate)
+                var updateDict = new Dictionary<string, List<string>>();
+                foreach (var info in infos)
                 {
-                    if (crawlerDict.TryGetValue(info.InfoSource, out var crawler))
+                    if (forceUpdate || (info.FundBaseInfos.Count > 0 && info.FundBaseInfos[0].UpdateTime.IsNeedUpdate()))
                     {
-                        if (token.IsCancellationRequested)
+                        if (updateDict.TryGetValue(info.InfoSource, out var list) == false)
                         {
-                            return info.FundBaseInfos;
+                            list = new List<string>();
+                            updateDict[info.InfoSource] = list;
                         }
-                        var index = crawler.Start(info.IndexCode, token).Result;
-                        info.FundBaseInfos = index.FundBaseInfos;
-                        info.TrackingCount = index.FundBaseInfos.Count;
-                        HasIndexUpdate = true;
+                        list.Add(info.IndexCode);
                     }
                 }
-                return info.FundBaseInfos;
+
+                foreach (var updateItem in updateDict)
+                {
+                    if (crawlerDict.TryGetValue(updateItem.Key, out var crawler) && token.IsCancellationRequested == false)
+                    {
+                        var newInfos = crawler.StartIndex(token, updateItem.Value.ToArray()).Result;
+                        foreach (var newInfo in newInfos)
+                        {
+                            var info = infos.First(t => t.IndexCode == newInfo.IndexCode);
+                            info.FundBaseInfos = newInfo.FundBaseInfos;
+                            info.TrackingCount = newInfo.FundBaseInfos.Count;
+                            HasIndexUpdate = true;
+                        }
+                    }
+                }
+
+                return infos;
             });
         }
         #endregion

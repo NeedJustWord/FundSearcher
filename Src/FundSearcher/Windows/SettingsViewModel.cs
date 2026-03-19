@@ -2,6 +2,7 @@
 using System.Linq;
 using Fund.Core.Helpers;
 using FundSearcher.Consts;
+using FundSearcher.Helpers;
 using FundSearcher.Models;
 
 namespace FundSearcher.Windows
@@ -61,6 +62,16 @@ namespace FundSearcher.Windows
             }
         }
 
+        private string cacheSize;
+        /// <summary>
+        /// 缓存大小
+        /// </summary>
+        public string CacheSize
+        {
+            get { return cacheSize; }
+            set { SetProperty(ref cacheSize, value); }
+        }
+
         private string message;
         /// <summary>
         /// 错误消息
@@ -72,6 +83,8 @@ namespace FundSearcher.Windows
         }
         #endregion
 
+        private string cachePath = "Cache";
+
         public SettingsViewModel() : base(null, null)
         {
             YesNoSource = new ObservableCollection<FilterModel<bool>>
@@ -81,6 +94,7 @@ namespace FundSearcher.Windows
             };
             RegisterCommand(CommandName.Save, Save);
             RegisterCommand(CommandName.Reset, Reset);
+            RegisterCommand(CommandName.Delete, Delete);
             Reset();
         }
 
@@ -108,6 +122,21 @@ namespace FundSearcher.Windows
             CachePageSource = YesNoSource.First(t => t.Key == ConfigHelper.CachePageSource);
             CacheOverDay = ConfigHelper.CacheOverDay.ToString();
             FundOverDay = ConfigHelper.FundOverDay.ToString();
+            CacheSize = DirectoryHelper.GetDirSizeWithUnit(cachePath);
+        }
+
+        private void Delete()
+        {
+            if (DirectoryHelper.Delete(cachePath, true, out var error))
+            {
+                Message = "清理缓存成功";
+            }
+            else
+            {
+                ClipboardHelper.SetText(error);
+                Message = $"清理缓存出现异常，异常信息已复制到剪贴板";
+            }
+            CacheSize = DirectoryHelper.GetDirSizeWithUnit(cachePath);
         }
     }
 }

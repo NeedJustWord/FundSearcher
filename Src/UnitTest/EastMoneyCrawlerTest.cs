@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Fund.Core.Helpers;
+using Fund.Crawler;
 using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using Fund.Crawler.PubSubEvents;
@@ -55,10 +56,9 @@ namespace UnitTest
             return Task.Run(() =>
             {
                 var crawler = GetCrawler();
-                crawler.InitIndexTotal(indexCodes.Length);
-                foreach (var item in indexCodes)
+                var infos = crawler.StartIndex(CancellationToken.None, indexCodes).Result;
+                foreach (var info in infos)
                 {
-                    var info = GetIndexInfo(crawler, item).Result;
                     action(info);
                 }
             });
@@ -69,7 +69,7 @@ namespace UnitTest
             return Task.Run(() =>
             {
                 var crawler = GetCrawler();
-                var infos = crawler.Start(CancellationToken.None).Result;
+                var infos = crawler.StartIndex(CancellationToken.None).Result;
                 action(infos);
             });
         }
@@ -84,17 +84,11 @@ namespace UnitTest
             Debug.WriteLine(string.Join(",", info.FundBaseInfos.Select(t => t.FundId)));
         }
 
-        private Task<IndexInfo> GetIndexInfo(BaseWebCrawler crawler, string indexCode)
-        {
-            var key = new IndexKey(0, indexCode);
-            return crawler.Start(key, CancellationToken.None);
-        }
-
-        private EastMoneyCrawler GetCrawler()
+        private FundCrawler GetCrawler()
         {
             var aggregator = new EventAggregator();
             aggregator.Subscribe<CrawlingProgressEvent, CrawlingProgressModel>(HandleCrawleProgress);
-            return new EastMoneyCrawler(aggregator);
+            return new FundCrawler(new EastMoneyCrawler(aggregator));
         }
 
         private void HandleCrawleProgress(CrawlingProgressModel model)

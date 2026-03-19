@@ -19,5 +19,10 @@
         {
             return $"[{Index},{url}]";
         }
+
+        public string GetKey(string url, int threadId)
+        {
+            return $"{threadId} {GetKey(url)}";
+        }
     }
 }

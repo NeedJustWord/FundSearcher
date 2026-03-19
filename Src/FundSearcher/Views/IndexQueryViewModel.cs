@@ -245,14 +245,20 @@ namespace FundSearcher.Views
 
         private void Copy()
         {
-            var str = string.Join(",", IndexInfos.Where(t => StarIndexes.Any(x => x.Key == t.IndexCode)).SelectMany(t => t.FundBaseInfos.Select(f => f.FundId)));
+            if (GetIndexCodes(out var temp, out var title) == false)
+            {
+                MessageBoxEx.ShowError("请先勾选指数或关注指数");
+                return;
+            }
+
+            var str = string.Join(",", temp.SelectMany(t => t.FundBaseInfos.Select(f => f.FundId)));
             if (ClipboardHelper.SetText(str))
             {
-                PublishStatusMessage("复制关注指数相关基金代码成功");
+                PublishStatusMessage($"复制{title}相关基金代码成功");
             }
             else
             {
-                PublishStatusMessage("复制关注指数相关基金代码失败");
+                PublishStatusMessage($"复制{title}相关基金代码失败");
             }
         }
 
@@ -264,20 +270,42 @@ namespace FundSearcher.Views
                 return;
             }
 
-            PublishStatusMessage("开始刷新关注指数详情");
-            var task = fundDataBase.GetFundBaseInfos(IndexInfos.Where(t => StarIndexes.Any(x => x.Key == t.IndexCode)), token, true);
+            if (GetIndexCodes(out var temp, out var title) == false)
+            {
+                MessageBoxEx.ShowError("请先勾选指数或关注指数");
+                return;
+            }
+
+            PublishStatusMessage($"开始刷新{title}详情");
+            var task = fundDataBase.GetFundBaseInfos(temp, token, true);
             SetRunTask(task);
-            var list = await task;
+            var _ = await task;
             IndexInfoRefresh();
             TaskCompleted();
 
             if (TaskIsCancel)
             {
-                PublishStatusMessage("刷新关注指数详情任务已取消");
+                PublishStatusMessage($"刷新{title}详情任务已取消");
             }
             else
             {
-                PublishStatusMessage("刷新关注指数详情成功");
+                PublishStatusMessage($"刷新{title}详情成功");
+            }
+        }
+
+        private bool GetIndexCodes(out IEnumerable<IndexInfo> result, out string title)
+        {
+            result = indexInfos.Where(t => t.IsShow && t.IsChecked);
+            if (result.Any())
+            {
+                title = "勾选指数";
+                return true;
+            }
+            else
+            {
+                title = "关注指数";
+                result = IndexInfos.Where(t => StarIndexes.Any(x => x.Key == t.IndexCode));
+                return result.Any();
             }
         }
 

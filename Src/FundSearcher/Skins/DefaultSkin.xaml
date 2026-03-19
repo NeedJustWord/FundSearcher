@@ -144,8 +144,11 @@
         <Setter Property="Margin" Value="0 10 0 10"/>
     </Style>
 
-    <Style TargetType="Label" x:Key="SettingsKeyLabel" BasedOn="{StaticResource SettingsControl}">
+    <Style TargetType="Label" x:Key="SettingsValueLabel" BasedOn="{StaticResource SettingsControl}">
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="SettingsKeyLabel" BasedOn="{StaticResource SettingsValueLabel}">
         <Setter Property="HorizontalContentAlignment" Value="Right"/>
     </Style>
 

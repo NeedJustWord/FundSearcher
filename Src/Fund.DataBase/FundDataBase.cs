@@ -178,7 +178,7 @@ namespace Fund.DataBase
         {
             return await Task.Run(() =>
             {
-                return fundUpdate.Update(info, forceUpdate, token);
+                return GetFundBaseInfos(new IndexInfo[] { info }, token, forceUpdate).Result.First().FundBaseInfos;
             });
         }
 
@@ -189,11 +189,11 @@ namespace Fund.DataBase
         /// <param name="token">任务取消token</param>
         /// <param name="forceUpdate">是否强制更新</param>
         /// <returns></returns>
-        public async Task<List<FundBaseInfo>[]> GetFundBaseInfos(IEnumerable<IndexInfo> infos, CancellationToken token, bool forceUpdate = false)
+        public async Task<IEnumerable<IndexInfo>> GetFundBaseInfos(IEnumerable<IndexInfo> infos, CancellationToken token, bool forceUpdate = false)
         {
             return await Task.Run(() =>
             {
-                return Task.WhenAll(infos.Select(t => fundUpdate.Update(t, forceUpdate, token)));
+                return fundUpdate.Update(infos, forceUpdate, token);
             });
         }
     }

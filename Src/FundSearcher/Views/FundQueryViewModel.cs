@@ -37,8 +37,8 @@ namespace FundSearcher.Views
         {
             TransactionColumnName.SellRates,
         };
-        private List<string> blackFunds;
-        private List<string> holdingFunds;
+        private List<string> blackFundIds;
+        private List<string> holdingFundIds;
         private bool isRefresh;
         private bool isFiltering;
         private bool isInitFilterDataFinish;
@@ -272,8 +272,8 @@ namespace FundSearcher.Views
             RegisterCommand(CommandName.ClearPosition, ClearPosition);
             RegisterCommand(CommandName.SelectChanged, SelectChanged);
             RegisterCommand(CommandName.SelectTrackingTargetChanged, SelectTrackingTargetChanged);
-            blackFunds = ConfigHelper.BlackFunds.SplitRemoveEmpty(',').ToList();
-            holdingFunds = ConfigHelper.HoldingFunds.SplitRemoveEmpty(',').ToList();
+            blackFundIds = ConfigHelper.BlackFunds.SplitRemoveEmpty(',').ToList();
+            holdingFundIds = ConfigHelper.HoldingFunds.SplitRemoveEmpty(',').ToList();
         }
 
         protected override void OnFirstLoad()
@@ -338,8 +338,13 @@ namespace FundSearcher.Views
             var fundIds = fundInfos.Where(t => t.IsShow && t.IsChecked).Select(t => t.FundId).ToArray();
             if (fundIds.Length == 0)
             {
-                MessageBoxEx.ShowError("请勾选需要刷新的基金");
-                return;
+                if (holdingFundIds.Count == 0)
+                {
+                    MessageBoxEx.ShowError("请先勾选基金或持仓基金");
+                    return;
+                }
+
+                fundIds = holdingFundIds.ToArray();
             }
 
             if (TryGetCancellationTokenFault(out var token))
@@ -461,22 +466,22 @@ namespace FundSearcher.Views
             InitFilterData();
         }
 
-        private void RefreshBlack(List<string> blackFunds)
+        private void RefreshBlack(List<string> blackFundIds)
         {
-            var cancelBlackFunds = this.blackFunds.Except(blackFunds).ToList();
+            var cancelBlackFunds = this.blackFundIds.Except(blackFundIds).ToList();
             foreach (var fundId in cancelBlackFunds)
             {
                 var fund = fundInfos.FirstOrDefault(t => t.FundId == fundId);
                 if (fund != null) fund.IsChecked = false;
             }
 
-            this.blackFunds = blackFunds;
+            this.blackFundIds = blackFundIds;
             RefreshBlack();
         }
 
         private void RefreshBlack()
         {
-            ConfigHelper.BlackFunds = string.Join(",", blackFunds.OrderBy(t => t));
+            ConfigHelper.BlackFunds = string.Join(",", blackFundIds.OrderBy(t => t));
             Query(true);
         }
 
@@ -489,13 +494,13 @@ namespace FundSearcher.Views
                 return;
             }
 
-            blackFunds.AddRange(infos.Select(t => t.FundId));
+            blackFundIds.AddRange(infos.Select(t => t.FundId));
             RefreshBlack();
         }
 
         private void ShowBlack()
         {
-            var infos = fundInfos.Where(t => blackFunds.Contains(t.FundId)).ToArray();
+            var infos = fundInfos.Where(t => blackFundIds.Contains(t.FundId)).ToArray();
             var blackInfos = infos.Map<FundInfo, FundInfo>((t, index) =>
             {
                 t.OrderNumber = index + 1;
@@ -511,7 +516,7 @@ namespace FundSearcher.Views
 
         private void RefreshPosition()
         {
-            ConfigHelper.HoldingFunds = string.Join(",", holdingFunds.OrderBy(t => t));
+            ConfigHelper.HoldingFunds = string.Join(",", holdingFundIds.OrderBy(t => t));
             Query(true);
         }
 
@@ -527,7 +532,7 @@ namespace FundSearcher.Views
             foreach (var item in infos)
             {
                 item.IsChecked = false;
-                if (holdingFunds.Contains(item.FundId) == false) holdingFunds.Add(item.FundId);
+                if (holdingFundIds.Contains(item.FundId) == false) holdingFundIds.Add(item.FundId);
             }
 
             RefreshPosition();
@@ -545,7 +550,7 @@ namespace FundSearcher.Views
             foreach (var item in infos)
             {
                 item.IsChecked = false;
-                holdingFunds.Remove(item.FundId);
+                holdingFundIds.Remove(item.FundId);
             }
 
             RefreshPosition();
@@ -581,7 +586,7 @@ namespace FundSearcher.Views
 
         private FundInfo Handle(FundInfo model)
         {
-            model.IsHolding = holdingFunds.Contains(model.FundId);
+            model.IsHolding = holdingFundIds.Contains(model.FundId);
 
             if (model.TransactionInfo == null) return model;
 
@@ -635,7 +640,7 @@ namespace FundSearcher.Views
 
         private bool IsShow(FundInfo fund, bool checkRunningRate = false)
         {
-            if (blackFunds != null && blackFunds.Contains(fund.FundId)) return false;
+            if (blackFundIds != null && blackFundIds.Contains(fund.FundId)) return false;
             if (SelectTrackingTarget != null && SelectTrackingTarget.Key.IsNotNullAndEmpty() && fund.TrackingTarget != SelectTrackingTarget.Key) return false;
             if (SelectBuyStatus != null && SelectBuyStatus.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.BuyStatus != SelectBuyStatus.Key)) return false;
             if (SelectSellStatus != null && SelectSellStatus.Key.IsNotNullAndEmpty() && (fund.TransactionInfo == null || fund.TransactionInfo.SellStatus != SelectSellStatus.Key)) return false;
