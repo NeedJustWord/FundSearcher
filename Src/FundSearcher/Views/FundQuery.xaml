@@ -245,7 +245,7 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.FreeSellDays}" Width="90" IsReadOnly="True" Binding="{Binding TransactionInfo.FreeSellDays,TargetNullValue=无}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.BuyUpperLimitAmountWithUnit}" Width="120" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
-                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.Price}" Width="60" IsReadOnly="True" Binding="{Binding TransactionInfo.Price,StringFormat=F4}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.Price}" Width="90" IsReadOnly="True" Binding="{Binding TransactionInfo.PriceStr}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.NormalBuyRates}" Width="60" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource CompareRateDisplayConverter}">

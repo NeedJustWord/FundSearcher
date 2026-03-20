@@ -8,7 +8,15 @@ namespace FundSearcher.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return values?.Length > 1 ? $"{values[0]}{values[1]}" : "";
+            switch (values?.Length)
+            {
+                case 2:
+                    return $"{values[0]}{values[1]}";
+                case 3:
+                    return $"{values[0]}({values[2]}){values[1]}";
+                default:
+                    return "";
+            }
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

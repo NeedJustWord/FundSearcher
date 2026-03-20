@@ -239,8 +239,10 @@ namespace Fund.Crawler.Webs
         private void HandleTransactionInfoSource(string pageSource, FundInfo fundInfo)
         {
             var info = new TransactionInfo();
-            var price = pageSource.GetFirstHtmlTagValueByAttri("p", "class", "row row1").GetFirstHtmlTagValue("b").GetHtmlTagContent();
+            var priceStr = pageSource.GetFirstHtmlTagValueByAttri("p", "class", "row row1");
+            var price = priceStr.GetFirstHtmlTagValue("b").GetHtmlTagContent();
             info.Price = price.Substring(0, price.IndexOf('(')).Trim().AsDouble(0);
+            info.PriceDay = priceStr.Substring(priceStr.IndexOf('（') + 1, 5);
 
             var keyValues = pageSource.GetHtmlTagValueByAttri("div", "class", "boxitem w790")
             .Select(t =>
@@ -399,13 +401,15 @@ namespace Fund.Crawler.Webs
                 isFront = false;
             }
 
+            var headerContents = input.GetHtmlTagValue("th").Select(t => t.GetHtmlTagContent()).ToArray();
+            var applicableName = headerContents[0];
             var sgyh = input.GetHtmlTagValueByAttri("div", "class", "sgyh").FirstOrDefault();
             string[] columns;
             if (sgyh == null)
             {
                 columns = new string[]
                 {
-                    input.GetHtmlTagValue("th", 2).GetHtmlTagContent().GetHtmlTagContent(true),
+                     headerContents[1].GetHtmlTagContent(true),
                 };
             }
             else
@@ -428,17 +432,34 @@ namespace Fund.Crawler.Webs
                 columns = list.ToArray();
             }
 
+            Action<TransactionRate, string> action = null;
+            if (applicableName == "适用金额")
+            {
+                action = (rate, value) =>
+                {
+                    rate.ApplicableAmount = value;
+                    rate.ApplicablePeriod = "---";
+                };
+            }
+            else if (applicableName == "适用期限")
+            {
+                action = (rate, value) =>
+                {
+                    rate.ApplicableAmount = "---";
+                    rate.ApplicablePeriod = value;
+                };
+            }
+
             var rows = input.GetFirstHtmlTagValue("tbody").GetHtmlTagValue("tr");
             foreach (var row in rows)
             {
                 var rate = new TransactionRate() { IsFront = isFront };
 
                 var tds = row.GetHtmlTagValue("td").ToList();
-                rate.ApplicableAmount = tds[0].GetHtmlTagContent();
-                rate.ApplicablePeriod = tds[1].GetHtmlTagContent();
+                action?.Invoke(rate, tds[0].GetHtmlTagContent());
 
                 rate.Rate = new Dictionary<string, string>();
-                var temp = tds[2].GetHtmlTagContent().Replace("&nbsp;", "").Replace("</strike>", "");
+                var temp = tds[1].GetHtmlTagContent().Replace("&nbsp;", "").Replace("</strike>", "");
                 var index = temp.IndexOf(">");
                 if (index > -1)
                 {

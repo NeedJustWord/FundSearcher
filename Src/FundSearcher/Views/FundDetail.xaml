@@ -206,15 +206,16 @@
 
                 <UniformGrid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Columns="4" HorizontalAlignment="Center">
                     <StackPanel Style="{StaticResource HorizontalStackPanel}">
-                        <Label Style="{StaticResource FundDetailKeyLabel}">
+                        <Label Style="{StaticResource FundDetailKeyLabel}" DataContext="{Binding FundInfo.TransactionInfo}">
                             <Label.Content>
                                 <MultiBinding Converter="{StaticResource SeparatorConvert}">
                                     <Binding Source="{x:Static coreConsts:TransactionColumnName.Price}"/>
                                     <Binding Source="{StaticResource StringSeparator}"/>
+                                    <Binding Path="PriceDay"/>
                                 </MultiBinding>
                             </Label.Content>
                         </Label>
-                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.Price}"/>
+                        <TextBlock Style="{StaticResource FundDetailValueTextBlock}" Text="{Binding FundInfo.TransactionInfo.Price,StringFormat=F4}"/>
                     </StackPanel>
                     <StackPanel Style="{StaticResource HorizontalStackPanel}">
                         <Label Style="{StaticResource FundDetailKeyLabel}">

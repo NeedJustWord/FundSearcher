@@ -20,6 +20,22 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref price, value); }
         }
 
+        private string priceDay;
+        /// <summary>
+        /// 单位净值日期
+        /// </summary>
+        public string PriceDay
+        {
+            get { return priceDay; }
+            set { SetProperty(ref priceDay, value); }
+        }
+
+        /// <summary>
+        /// 单位净值字符串
+        /// </summary>
+        [JsonIgnore]
+        public string PriceStr => $"{Price:F4}({PriceDay})";
+
         private double? buyUpperLimitAmount;
         /// <summary>
         /// 日累计申购限额，单位元
