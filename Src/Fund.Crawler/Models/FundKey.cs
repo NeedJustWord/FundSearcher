@@ -10,7 +10,7 @@
         /// </summary>
         public string FundId { get; set; }
 
-        public FundKey(long index, string fundId) : base(index)
+        public FundKey(long index, string fundId) : base(index, $"Fund:{fundId}")
         {
             FundId = fundId;
         }

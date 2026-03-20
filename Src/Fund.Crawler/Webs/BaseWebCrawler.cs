@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Crawler.SimpleCrawler;
 using Fund.Crawler.Extensions;
+using Fund.Crawler.Interfaces;
 using Fund.Crawler.Models;
 using Fund.Crawler.PubSubEvents;
 using Prism.Events;
@@ -66,7 +68,7 @@ namespace Fund.Crawler.Webs
         /// </summary>
         /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public abstract Task<List<IndexInfo>> Start(CancellationToken token);
+        public abstract Task<IndexInfoList> Start(CancellationToken token);
 
         /// <summary>
         /// 创建基金信息
@@ -108,7 +110,7 @@ namespace Fund.Crawler.Webs
         /// <param name="action">页面源码处理方法</param>
         /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        protected async Task<string> StartSimpleCrawler<TInfo>(BaseKey key, string url, TInfo info, Action<string, TInfo> action, CancellationToken token)
+        protected async Task<string> StartSimpleCrawler<TInfo>(BaseKey key, string url, TInfo info, Action<string, TInfo> action, CancellationToken token) where TInfo : ICrawlerInfo
         {
             var crawler = new SimpleCrawler();
             crawler.OnStartEvent += (sender, args) =>
@@ -120,7 +122,12 @@ namespace Fund.Crawler.Webs
                     return;
                 }
 
-                if (key.Index != 0)
+                info.CrawlerInfo = new CrawlerInfo
+                {
+                    Name = key.Name,
+                    UseCache = crawler.IsCacheValid(args.Uri),
+                };
+                if (key.Index != 0 && info.CrawlerInfo.UseCache == false)
                 {
                     WriteLog($"{keyStr}开始休眠");
                     RandomSleep(keyStr, 1000, 3000);
@@ -130,6 +137,7 @@ namespace Fund.Crawler.Webs
             };
             crawler.OnCompletedEvent += (sender, args) =>
             {
+                info.CrawlerInfo.CrawlerTime = args.Elapsed;
                 var keyStr = key.GetKey(url, args.ThreadId);
                 if (token.IsCancellationRequested)
                 {
@@ -137,11 +145,14 @@ namespace Fund.Crawler.Webs
                     return;
                 }
 
+                var handleSuccess = false;
+                var watch = Stopwatch.StartNew();
                 try
                 {
                     WriteLog($"{keyStr}爬取结束，开始处理");
                     action?.Invoke(args.PageSource, info);
                     crawler.WritePageSourceToCache(args.Uri, args.PageSource);
+                    handleSuccess = true;
                 }
                 catch (Exception ex)
                 {
@@ -149,9 +160,12 @@ namespace Fund.Crawler.Webs
                 }
                 finally
                 {
+                    watch.Stop();
                     IncrementCurrent();
                     WriteLog($"{keyStr}处理结束");
                 }
+                info.CrawlerInfo.HandleTime = watch.Elapsed;
+                info.CrawlerInfo.HandleSuccess = handleSuccess;
             };
             crawler.OnCancelEvent += (sender, args) =>
             {

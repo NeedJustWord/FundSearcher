@@ -10,7 +10,7 @@
         /// </summary>
         public string IndexCode { get; set; }
 
-        public IndexKey(long index, string indexCode) : base(index)
+        public IndexKey(long index, string indexCode) : base(index, $"Index:{indexCode}")
         {
             IndexCode = indexCode;
         }

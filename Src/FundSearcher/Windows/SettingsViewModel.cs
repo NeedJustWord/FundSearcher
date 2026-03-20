@@ -83,8 +83,6 @@ namespace FundSearcher.Windows
         }
         #endregion
 
-        private string cachePath = "Cache";
-
         public SettingsViewModel() : base(null, null)
         {
             YesNoSource = new ObservableCollection<FilterModel<bool>>
@@ -122,12 +120,12 @@ namespace FundSearcher.Windows
             CachePageSource = YesNoSource.First(t => t.Key == ConfigHelper.CachePageSource);
             CacheOverDay = ConfigHelper.CacheOverDay.ToString();
             FundOverDay = ConfigHelper.FundOverDay.ToString();
-            CacheSize = DirectoryHelper.GetDirSizeWithUnit(cachePath);
+            CacheSize = DirectoryHelper.GetDirSizeWithUnit(ConfigHelper.CachePath);
         }
 
         private void Delete()
         {
-            if (DirectoryHelper.Delete(cachePath, true, out var error))
+            if (DirectoryHelper.Delete(ConfigHelper.CachePath, true, out var error))
             {
                 Message = "清理缓存成功";
             }
@@ -136,7 +134,7 @@ namespace FundSearcher.Windows
                 ClipboardHelper.SetText(error);
                 Message = $"清理缓存出现异常，异常信息已复制到剪贴板";
             }
-            CacheSize = DirectoryHelper.GetDirSizeWithUnit(cachePath);
+            CacheSize = DirectoryHelper.GetDirSizeWithUnit(ConfigHelper.CachePath);
         }
     }
 }

@@ -94,6 +94,18 @@
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Detail}"/>
             </DataGrid.InputBindings>
+            <DataGrid.CellStyle>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsStar}" Value="True">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsStar}" Value="False">
+                            <Setter Property="Foreground" Value="Black"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Width="20" HeaderStyle="{StaticResource dtCheckHeader}" Binding="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                     <DataGridCheckBoxColumn.ElementStyle>

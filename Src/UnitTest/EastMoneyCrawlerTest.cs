@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -64,7 +63,7 @@ namespace UnitTest
             });
         }
 
-        private Task GetAllIndexInfo(Action<List<IndexInfo>> action)
+        private Task GetAllIndexInfo(Action<IndexInfoList> action)
         {
             return Task.Run(() =>
             {

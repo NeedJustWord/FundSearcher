@@ -67,7 +67,7 @@ namespace Fund.Crawler.Models
         /// <returns></returns>
         public static IEnumerable<IndexInfo> CustomSort(this IEnumerable<IndexInfo> list)
         {
-            return list.OrderByDescending(t => t.TrackingCount > 0).ThenBy(t => t.IndexCode);
+            return list.OrderByDescending(t => t.IsStar).ThenByDescending(t => t.TrackingCount > 0).ThenBy(t => t.IndexCode);
         }
 
         /// <summary>

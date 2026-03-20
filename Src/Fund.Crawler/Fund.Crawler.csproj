@@ -42,17 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\CrawlerInfoExtension.cs" />
     <Compile Include="Extensions\IEventAggregatorExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TransactionRateExtension.cs" />
     <Compile Include="FundCrawler.cs" />
+    <Compile Include="Interfaces\ICrawlerInfo.cs" />
     <Compile Include="Models\BaseInfo.cs" />
     <Compile Include="Models\BaseKey.cs" />
+    <Compile Include="Models\CrawlerInfo.cs" />
     <Compile Include="Models\CrawlingProgressModel.cs" />
     <Compile Include="Models\FundKey.cs" />
     <Compile Include="Models\FundBaseInfo.cs" />
     <Compile Include="Models\FundInfo.cs" />
     <Compile Include="Models\IndexInfo.cs" />
+    <Compile Include="Models\IndexInfoList.cs" />
     <Compile Include="Models\IndexKey.cs" />
     <Compile Include="Models\SpecialInfo.cs" />
     <Compile Include="Models\TransactionInfo.cs" />

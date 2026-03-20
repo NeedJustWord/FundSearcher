@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Fund.Crawler.Extensions;
+using Fund.Crawler.Interfaces;
 using Newtonsoft.Json;
 
 namespace Fund.Crawler.Models
@@ -8,8 +9,14 @@ namespace Fund.Crawler.Models
     /// <summary>
     /// 基金信息
     /// </summary>
-    public class FundInfo : FundBaseInfo
+    public class FundInfo : FundBaseInfo, ICrawlerInfo
     {
+        /// <summary>
+        /// 爬取信息
+        /// </summary>
+        [JsonIgnore]
+        public CrawlerInfo CrawlerInfo { get; set; }
+
         private bool isHolding;
         /// <summary>
         /// 是否持仓

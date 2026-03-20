@@ -26,6 +26,26 @@ namespace Fund.DataBase
         /// </summary>
         public List<FundInfo> FundInfos => fundUpdate.FundInfos;
 
+        /// <summary>
+        /// 指数列表
+        /// </summary>
+        public List<IndexInfo> IndexInfos => fundUpdate.IndexInfos;
+
+        /// <summary>
+        /// 打印基金爬取信息
+        /// </summary>
+        public string FundPrintCrawlerInfo => fundUpdate.FundPrintCrawlerInfo;
+
+        /// <summary>
+        /// 打印指数爬取信息
+        /// </summary>
+        public string IndexPrintCrawlerInfo => fundUpdate.IndexPrintCrawlerInfo;
+
+        /// <summary>
+        /// 打印指数明细爬取信息
+        /// </summary>
+        public string IndexDetailPrintCrawlerInfo => fundUpdate.IndexDetailPrintCrawlerInfo;
+
         public FundDataBase(IEventAggregator eventAggregator, string fundFileName = "FundInfos", string indexFileName = "IndexInfos")
         {
             this.fundFileName = fundFileName;
@@ -159,7 +179,7 @@ namespace Fund.DataBase
         /// <param name="token">任务取消token</param>
         /// <param name="forceUpdate">是否强制更新</param>
         /// <returns></returns>
-        public async Task<List<IndexInfo>> GetIndexInfos(CancellationToken token, bool forceUpdate = false)
+        public async Task<IndexInfoList> GetIndexInfos(CancellationToken token, bool forceUpdate = false)
         {
             return await Task.Run(() =>
             {

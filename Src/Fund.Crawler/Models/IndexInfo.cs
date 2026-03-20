@@ -1,12 +1,31 @@
 ﻿using System.Collections.Generic;
+using Fund.Crawler.Interfaces;
+using Newtonsoft.Json;
 
 namespace Fund.Crawler.Models
 {
     /// <summary>
     /// 指数信息
     /// </summary>
-    public class IndexInfo : BaseInfo
+    public class IndexInfo : BaseInfo, ICrawlerInfo
     {
+        /// <summary>
+        /// 爬取信息
+        /// </summary>
+        [JsonIgnore]
+        public CrawlerInfo CrawlerInfo { get; set; }
+
+        private bool isStar;
+        /// <summary>
+        /// 是否关注
+        /// </summary>
+        [JsonIgnore]
+        public bool IsStar
+        {
+            get { return isStar; }
+            set { SetProperty(ref isStar, value); }
+        }
+
         private string indexCode;
         /// <summary>
         /// 指数代码

@@ -132,7 +132,7 @@ namespace FundSearcher.Views
                 return;
             }
 
-            SetItemsSource(false, list.CustomSort());
+            SetItemsSource(false, list.IndexInfos.Select(t => Handle(t)).CustomSort());
         }
 
         private void Reset()
@@ -159,7 +159,13 @@ namespace FundSearcher.Views
                 return;
             }
 
-            SetItemsSource(true, list.CustomSort());
+            SetItemsSource(true, list.IndexInfos.Select(t => Handle(t)).CustomSort());
+        }
+
+        private IndexInfo Handle(IndexInfo info)
+        {
+            info.IsStar = starIndexCodes.Contains(info.IndexCode);
+            return info;
         }
 
         private void Detail()

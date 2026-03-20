@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Fund.Crawler;
+using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
 using Fund.Crawler.Webs;
 using Prism.Events;
@@ -14,8 +15,7 @@ namespace Fund.DataBase
     {
         private readonly Dictionary<string, FundCrawler> crawlerDict = new Dictionary<string, FundCrawler>();
         private readonly Dictionary<FundKey, FundInfo> fundInfoDict = new Dictionary<FundKey, FundInfo>();
-        private readonly Dictionary<string, Tuple<List<IndexInfo>, DateTime>> indexInfoDict = new Dictionary<string, Tuple<List<IndexInfo>, DateTime>>();
-        private readonly List<IndexInfo> emptyIndexInfos = new List<IndexInfo>(0);
+        private readonly Dictionary<string, IndexInfoList> indexInfoDict = new Dictionary<string, IndexInfoList>();
         private bool isIniting;
 
         /// <summary>
@@ -24,9 +24,24 @@ namespace Fund.DataBase
         public List<FundInfo> FundInfos => fundInfoDict.Values.ToList();
 
         /// <summary>
+        /// 打印基金爬取信息
+        /// </summary>
+        public string FundPrintCrawlerInfo => fundInfoDict.Values.Select(t => t.CrawlerInfo).PrintCrawlerInfo();
+
+        /// <summary>
         /// 指数列表
         /// </summary>
-        public List<IndexInfo> IndexInfos => indexInfoDict.Values.SelectMany(t => t.Item1).ToList();
+        public List<IndexInfo> IndexInfos => indexInfoDict.Values.SelectMany(t => t.IndexInfos).ToList();
+
+        /// <summary>
+        /// 打印指数爬取信息
+        /// </summary>
+        public string IndexPrintCrawlerInfo => indexInfoDict.Values.Select(t => t.CrawlerInfo).PrintCrawlerInfo();
+
+        /// <summary>
+        /// 打印指数明细爬取信息
+        /// </summary>
+        public string IndexDetailPrintCrawlerInfo => indexInfoDict.Values.SelectMany(t => t.IndexInfos).Select(t => t.CrawlerInfo).PrintCrawlerInfo();
 
         /// <summary>
         /// 基金列表是否有更新
@@ -160,7 +175,7 @@ namespace Fund.DataBase
             {
                 if (dict.Values.Count > 0)
                 {
-                    indexInfoDict[item.Key] = new Tuple<List<IndexInfo>, DateTime>(item.Value, item.Value.First().UpdateTime);
+                    indexInfoDict[item.Key] = new IndexInfoList(item.Value, item.Value.First().UpdateTime);
                 }
             }
 
@@ -175,38 +190,27 @@ namespace Fund.DataBase
         /// <param name="forceUpdate"></param>
         /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public async Task<List<IndexInfo>> Update(string sourceName, bool forceUpdate, CancellationToken token)
+        public async Task<IndexInfoList> Update(string sourceName, bool forceUpdate, CancellationToken token)
         {
             return await Task.Run(() =>
             {
-                List<IndexInfo> infos = null;
-                bool needUpdate = false;
-
-                if (indexInfoDict.TryGetValue(sourceName, out var tuple))
-                {
-                    infos = tuple.Item1;
-                    needUpdate = forceUpdate || tuple.Item2.IsNeedUpdate();
-                }
-                else
-                {
-                    needUpdate = true;
-                }
-
+                var needUpdate = indexInfoDict.TryGetValue(sourceName, out var infos) == false || forceUpdate || infos.UpdateTime.IsNeedUpdate();
                 if (needUpdate)
                 {
                     if (crawlerDict.TryGetValue(sourceName, out var crawler))
                     {
                         if (token.IsCancellationRequested)
                         {
-                            return infos ?? emptyIndexInfos;
+                            return infos ?? IndexInfoList.EmptyValue;
                         }
                         infos = crawler.StartIndex(token).Result;
-                        indexInfoDict[sourceName] = new Tuple<List<IndexInfo>, DateTime>(infos, DateTime.Now);
+                        infos.UpdateTime = DateTime.Now;
+                        indexInfoDict[sourceName] = infos;
                         HasIndexUpdate = true;
                     }
                 }
 
-                return infos ?? emptyIndexInfos;
+                return infos ?? IndexInfoList.EmptyValue;
             });
         }
 
@@ -243,6 +247,7 @@ namespace Fund.DataBase
                         foreach (var newInfo in newInfos)
                         {
                             var info = infos.First(t => t.IndexCode == newInfo.IndexCode);
+                            info.CrawlerInfo = newInfo.CrawlerInfo;
                             info.FundBaseInfos = newInfo.FundBaseInfos;
                             info.TrackingCount = newInfo.FundBaseInfos.Count;
                             HasIndexUpdate = true;

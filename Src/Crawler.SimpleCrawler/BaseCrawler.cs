@@ -125,6 +125,17 @@ namespace Crawler.SimpleCrawler
         /// <summary>
         /// 缓存是否有效
         /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public bool IsCacheValid(Uri uri)
+        {
+            var filePath = GetPageSourceCacheFilePath(uri);
+            return ConfigHelper.CachePageSource && IsCacheValid(filePath);
+        }
+
+        /// <summary>
+        /// 缓存是否有效
+        /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
         private bool IsCacheValid(string filePath)
@@ -139,8 +150,7 @@ namespace Crawler.SimpleCrawler
         /// <returns></returns>
         private string GetPageSourceCacheFilePath(Uri uri)
         {
-            var path = "Cache";
-            DirectoryHelper.Ensure(path);
+            DirectoryHelper.Ensure(ConfigHelper.CachePath);
 
             var fileName = new StringBuilder(uri.PathAndQuery.TrimStart('/'));
             var chars = Path.GetInvalidFileNameChars();
@@ -157,7 +167,7 @@ namespace Crawler.SimpleCrawler
             {
                 fileName.Append(".html");
             }
-            return Path.Combine(path, fileName.ToString());
+            return Path.Combine(ConfigHelper.CachePath, fileName.ToString());
         }
         #endregion
     }

@@ -109,6 +109,11 @@ namespace Fund.Core.Helpers
                 }
             }
         }
+
+        /// <summary>
+        /// 缓存目录
+        /// </summary>
+        public static string CachePath => "Cache";
         #endregion
 
         private static readonly XmlDocument document;

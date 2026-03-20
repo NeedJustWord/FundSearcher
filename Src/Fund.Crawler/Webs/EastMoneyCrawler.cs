@@ -76,11 +76,11 @@ namespace Fund.Crawler.Webs
             });
         }
 
-        public async override Task<List<IndexInfo>> Start(CancellationToken token)
+        public async override Task<IndexInfoList> Start(CancellationToken token)
         {
             return await Task.Run(async () =>
             {
-                var infos = new List<IndexInfo>();
+                var infos = new IndexInfoList();
                 if (token.IsCancellationRequested)
                 {
                     WriteLog($"取消所有指数信息的爬取任务");
@@ -350,15 +350,16 @@ namespace Fund.Crawler.Webs
         /// <param name="result"></param>
         /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        private async Task GetIndexInfo(List<IndexInfo> result, CancellationToken token)
+        private async Task GetIndexInfo(IndexInfoList result, CancellationToken token)
         {
             var url = $"https://zhishubao.1234567.com.cn/home/AllIndex";
-            await StartSimpleCrawler(new BaseKey(0), url, result, HandleIndexInfoSource, token);
+            await StartSimpleCrawler(new BaseKey(0, "指数信息"), url, result, HandleIndexInfoSource, token);
         }
 
-        private void HandleIndexInfoSource(string pageSource, List<IndexInfo> infos)
+        private void HandleIndexInfoSource(string pageSource, IndexInfoList result)
         {
             var now = DateTime.Now;
+            var infos = result.IndexInfos;
             var rows = pageSource.GetFirstHtmlTagValueByAttri("ul", "class", "clearfix all_index_ul ").GetHtmlTagValueByAttri("div", "class", "link").ToList();
             infos.Capacity = rows.Count;
 

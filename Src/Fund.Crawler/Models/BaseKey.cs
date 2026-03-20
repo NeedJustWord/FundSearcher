@@ -6,12 +6,18 @@
     public class BaseKey
     {
         /// <summary>
+        /// Key名字
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// 索引
         /// </summary>
         public long Index { get; set; }
 
-        public BaseKey(long index)
+        public BaseKey(long index, string name)
         {
+            Name = name;
             Index = index;
         }
 

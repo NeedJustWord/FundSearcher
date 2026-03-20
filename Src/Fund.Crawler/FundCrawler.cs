@@ -64,7 +64,7 @@ namespace Fund.Crawler
         /// </summary>
         /// <param name="token">任务取消token</param>
         /// <returns></returns>
-        public async Task<List<IndexInfo>> StartIndex(CancellationToken token)
+        public async Task<IndexInfoList> StartIndex(CancellationToken token)
         {
             return await Task.Run(() =>
             {
