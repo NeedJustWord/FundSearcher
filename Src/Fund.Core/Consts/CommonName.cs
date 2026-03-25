@@ -21,6 +21,16 @@
         public const string Minus = "-";
 
         /// <summary>
+        /// 左括号
+        /// </summary>
+        public const string LeftBracket = "(";
+
+        /// <summary>
+        /// 右括号
+        /// </summary>
+        public const string RightBracket = ")";
+
+        /// <summary>
         /// 序号
         /// </summary>
         public const string OrderNumber = "序号";
@@ -49,5 +59,15 @@
         /// 特色数据
         /// </summary>
         public const string SpecialInfo = "特色数据";
+
+        /// <summary>
+        /// 前端
+        /// </summary>
+        public const string FrontEnd = "前端";
+
+        /// <summary>
+        /// 后端
+        /// </summary>
+        public const string BackEnd = "后端";
     }
 }

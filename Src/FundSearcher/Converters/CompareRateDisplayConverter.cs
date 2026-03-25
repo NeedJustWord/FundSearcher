@@ -41,7 +41,7 @@ namespace FundSearcher.Converters
                 return result;
             }
 
-            var rate = ((List<TransactionRate>)obj).FirstOrDefault();
+            var rate = ((List<TransactionRate>)obj).FirstOrDefault(t => t.IsFront != false);
             if (rate == null) return "";
 
             foreach (var rateName in rateNames)

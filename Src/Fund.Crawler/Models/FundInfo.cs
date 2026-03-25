@@ -39,6 +39,28 @@ namespace Fund.Crawler.Models
             set { SetProperty(ref applyRatesHiddenColumns, value); }
         }
 
+        private List<string> frontEndApplyRatesHiddenColumns;
+        /// <summary>
+        /// 前端认购费率隐藏列
+        /// </summary>
+        [JsonIgnore]
+        public List<string> FrontEndApplyRatesHiddenColumns
+        {
+            get { return frontEndApplyRatesHiddenColumns; }
+            set { SetProperty(ref frontEndApplyRatesHiddenColumns, value); }
+        }
+
+        private List<string> backEndApplyRatesHiddenColumns;
+        /// <summary>
+        /// 后端认购费率隐藏列
+        /// </summary>
+        [JsonIgnore]
+        public List<string> BackEndApplyRatesHiddenColumns
+        {
+            get { return backEndApplyRatesHiddenColumns; }
+            set { SetProperty(ref backEndApplyRatesHiddenColumns, value); }
+        }
+
         private List<string> buyRatesHiddenColumns;
         /// <summary>
         /// 申购费率隐藏列
@@ -48,6 +70,28 @@ namespace Fund.Crawler.Models
         {
             get { return buyRatesHiddenColumns; }
             set { SetProperty(ref buyRatesHiddenColumns, value); }
+        }
+
+        private List<string> frontEndBuyRatesHiddenColumns;
+        /// <summary>
+        /// 前端申购费率隐藏列
+        /// </summary>
+        [JsonIgnore]
+        public List<string> FrontEndBuyRatesHiddenColumns
+        {
+            get { return frontEndBuyRatesHiddenColumns; }
+            set { SetProperty(ref frontEndBuyRatesHiddenColumns, value); }
+        }
+
+        private List<string> backEndBuyRatesHiddenColumns;
+        /// <summary>
+        /// 后端申购费率隐藏列
+        /// </summary>
+        [JsonIgnore]
+        public List<string> BackEndBuyRatesHiddenColumns
+        {
+            get { return backEndBuyRatesHiddenColumns; }
+            set { SetProperty(ref backEndBuyRatesHiddenColumns, value); }
         }
 
         private List<string> sellRatesHiddenColumns;

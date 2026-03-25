@@ -74,6 +74,7 @@
     <Compile Include="Consts\RegionName.cs" />
     <Compile Include="Controls\DataGridEx.cs" />
     <Compile Include="Controls\MessageBoxEx.cs" />
+    <Compile Include="Converters\RatesToVisibilityConverter.cs" />
     <Compile Include="Converters\SeparatorConvert.cs" />
     <Compile Include="Converters\BirthDayConverter.cs" />
     <Compile Include="Converters\BuyUpperLimitAmountConverter.cs" />

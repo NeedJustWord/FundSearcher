@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using Fund.Core.Consts;
 using Fund.Crawler.Models;
@@ -11,6 +12,11 @@ namespace FundSearcher.Views
     /// </summary>
     public partial class FundDetail : UserControl
     {
+        private const string FrontEndApplyRates = TransactionColumnName.ApplyRates + CommonName.LeftBracket + CommonName.FrontEnd + CommonName.RightBracket;
+        private const string BackEndApplyRates = TransactionColumnName.ApplyRates + CommonName.LeftBracket + CommonName.BackEnd + CommonName.RightBracket;
+        private const string FrontEndBuyRates = TransactionColumnName.BuyRates + CommonName.LeftBracket + CommonName.FrontEnd + CommonName.RightBracket;
+        private const string BackEndBuyRates = TransactionColumnName.BuyRates + CommonName.LeftBracket + CommonName.BackEnd + CommonName.RightBracket;
+
         public FundDetail()
         {
             InitializeComponent();
@@ -33,9 +39,25 @@ namespace FundSearcher.Views
                     item.HiddenColumns = info.ApplyRatesHiddenColumns;
                     item.ItemsSource = info.TransactionInfo?.ApplyRates;
                     break;
+                case FrontEndApplyRates:
+                    item.HiddenColumns = info.FrontEndApplyRatesHiddenColumns;
+                    item.ItemsSource = info.TransactionInfo?.ApplyRates.Where(t => t.IsFront == true).ToList();
+                    break;
+                case BackEndApplyRates:
+                    item.HiddenColumns = info.BackEndApplyRatesHiddenColumns;
+                    item.ItemsSource = info.TransactionInfo?.ApplyRates.Where(t => t.IsFront == false).ToList();
+                    break;
                 case TransactionColumnName.BuyRates:
                     item.HiddenColumns = info.BuyRatesHiddenColumns;
                     item.ItemsSource = info.TransactionInfo?.BuyRates;
+                    break;
+                case FrontEndBuyRates:
+                    item.HiddenColumns = info.FrontEndBuyRatesHiddenColumns;
+                    item.ItemsSource = info.TransactionInfo?.BuyRates.Where(t => t.IsFront == true).ToList();
+                    break;
+                case BackEndBuyRates:
+                    item.HiddenColumns = info.BackEndBuyRatesHiddenColumns;
+                    item.ItemsSource = info.TransactionInfo?.BuyRates.Where(t => t.IsFront == false).ToList();
                     break;
                 case TransactionColumnName.SellRates:
                     item.HiddenColumns = info.SellRatesHiddenColumns;

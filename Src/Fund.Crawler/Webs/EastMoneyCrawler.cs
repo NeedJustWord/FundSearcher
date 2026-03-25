@@ -291,15 +291,15 @@ namespace Fund.Crawler.Webs
                     default:
                         if (item.Key.Contains(TransactionColumnName.ApplyRates))
                         {
-                            info.ApplyRates = GetTransactionRates(item.Value);
+                            info.ApplyRates.AddRange(GetTransactionRates(item.Value));
                         }
                         else if (item.Key.Contains(TransactionColumnName.BuyRates))
                         {
-                            info.BuyRates = GetTransactionRates(item.Value);
+                            info.BuyRates.AddRange(GetTransactionRates(item.Value));
                         }
                         else if (item.Key.Contains(TransactionColumnName.SellRates))
                         {
-                            info.SellRates = GetTransactionRates(item.Value);
+                            info.SellRates.AddRange(GetTransactionRates(item.Value));
                         }
                         break;
                 }
@@ -499,7 +499,6 @@ namespace Fund.Crawler.Webs
         private double GetRate(string str)
         {
             if (str == "---") return 0;
-            if (str.IndexOf("每年") == -1) return -1;
             return double.Parse(str.Substring(0, str.IndexOf('%'))) / 100;
         }
 

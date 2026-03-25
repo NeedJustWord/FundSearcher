@@ -1,20 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using Fund.Crawler.Models;
 
 namespace FundSearcher.Converters
 {
-    class ValueToPercentConverter : IMultiValueConverter
+    internal class RatesToVisibilityConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values.Any(t => t == DependencyProperty.UnsetValue)) return "";
-
-            double value = System.Convert.ToDouble(values[0]);
-            double maximum = System.Convert.ToDouble(values[1]);
-            return (maximum == 0 ? 1 : (value / maximum)).ToString("P2");
+            var list = (List<TransactionRate>)values[0];
+            var isFront = (bool?)values[1];
+            return list.Any(t => t.IsFront == isFront) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

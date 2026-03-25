@@ -193,25 +193,31 @@
         </GroupBox>
 
         <GroupBox Grid.Row="2" Style="{StaticResource FundDetailGroupBox}" Header="{x:Static coreConsts:CommonName.TransactionInfo}">
-            <Grid>
+            <Grid HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <UniformGrid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Columns="4" HorizontalAlignment="Center">
+                <UniformGrid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7" Columns="4" HorizontalAlignment="Center">
                     <StackPanel Style="{StaticResource HorizontalStackPanel}">
                         <Label Style="{StaticResource FundDetailKeyLabel}" DataContext="{Binding FundInfo.TransactionInfo}">
                             <Label.Content>
                                 <MultiBinding Converter="{StaticResource SeparatorConvert}">
                                     <Binding Source="{x:Static coreConsts:TransactionColumnName.Price}"/>
-                                    <Binding Source="{StaticResource StringSeparator}"/>
+                                    <Binding Source="{x:Static coreConsts:CommonName.LeftBracket}"/>
                                     <Binding Path="PriceDay"/>
+                                    <Binding Source="{x:Static coreConsts:CommonName.RightBracket}"/>
+                                    <Binding Source="{StaticResource StringSeparator}"/>
                                 </MultiBinding>
                             </Label.Content>
                         </Label>
@@ -342,7 +348,7 @@
                     </StackPanel>
                 </UniformGrid>
 
-                <GroupBox Grid.Row="1" Grid.Column="0" Style="{StaticResource TransactionInfoRatesGroupBox}" Header="{x:Static coreConsts:TransactionColumnName.ApplyRates}">
+                <GroupBox Grid.Row="1" Grid.Column="0" Style="{StaticResource TransactionInfoRatesGroupBox}" Visibility="{Binding ApplyRatesVisibility}" Header="{x:Static coreConsts:TransactionColumnName.ApplyRates}">
                     <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding FundInfo.TransactionInfo.ApplyRates}" HiddenColumns="{Binding ApplyRatesHiddenColumns}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicableAmount}" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
@@ -370,10 +376,112 @@
                                     </MultiBinding>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
+                            <DataGridTextColumn Width="110" Header="{x:Static coreConsts:TransactionColumnName.ApplyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.ApplyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
                         </DataGrid.Columns>
                     </controls:DataGridEx>
                 </GroupBox>
-                <GroupBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TransactionInfoRatesGroupBox}" Header="{x:Static coreConsts:TransactionColumnName.BuyRates}">
+                <GroupBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TransactionInfoRatesGroupBox}" Visibility="{Binding FrontEndApplyRatesVisibility}">
+                    <GroupBox.Header>
+                        <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                            <Binding Source="{x:Static coreConsts:TransactionColumnName.ApplyRates}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.LeftBracket}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.FrontEnd}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.RightBracket}"/>
+                        </MultiBinding>
+                    </GroupBox.Header>
+                    <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding FundInfo.TransactionInfo.ApplyRates}" HiddenColumns="{Binding ApplyRatesHiddenColumns}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicableAmount}" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.Rates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.Rates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.OriginalRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.OriginalRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="110" Header="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="110" Header="{x:Static coreConsts:TransactionColumnName.ApplyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.ApplyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </controls:DataGridEx>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Grid.Column="2" Style="{StaticResource TransactionInfoRatesGroupBox}" Visibility="{Binding BackEndApplyRatesVisibility}">
+                    <GroupBox.Header>
+                        <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                            <Binding Source="{x:Static coreConsts:TransactionColumnName.ApplyRates}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.LeftBracket}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.BackEnd}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.RightBracket}"/>
+                        </MultiBinding>
+                    </GroupBox.Header>
+                    <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding FundInfo.TransactionInfo.ApplyRates}" HiddenColumns="{Binding ApplyRatesHiddenColumns}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicablePeriod}" IsReadOnly="True" Binding="{Binding ApplicablePeriod}"/>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.Rates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.Rates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.OriginalRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.OriginalRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="110" Header="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="110" Header="{x:Static coreConsts:TransactionColumnName.ApplyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.ApplyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </controls:DataGridEx>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Grid.Column="3" Style="{StaticResource TransactionInfoRatesGroupBox}" Visibility="{Binding BuyRatesVisibility}" Header="{x:Static coreConsts:TransactionColumnName.BuyRates}">
                     <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding FundInfo.TransactionInfo.BuyRates}" HiddenColumns="{Binding BuyRatesHiddenColumns}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicableAmount}" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
@@ -409,10 +517,152 @@
                                     </MultiBinding>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
+                            <DataGridTextColumn Width="110" Header="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.BuyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.BuyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
                         </DataGrid.Columns>
                     </controls:DataGridEx>
                 </GroupBox>
-                <GroupBox Grid.Row="1" Grid.Column="2" Style="{StaticResource TransactionInfoRatesGroupBox}" Header="{x:Static coreConsts:TransactionColumnName.SellRates}">
+                <GroupBox Grid.Row="1" Grid.Column="4" Style="{StaticResource TransactionInfoRatesGroupBox}" Visibility="{Binding FrontEndBuyRatesVisibility}">
+                    <GroupBox.Header>
+                        <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                            <Binding Source="{x:Static coreConsts:TransactionColumnName.BuyRates}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.LeftBracket}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.FrontEnd}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.RightBracket}"/>
+                        </MultiBinding>
+                    </GroupBox.Header>
+                    <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding FundInfo.TransactionInfo.BuyRates}" HiddenColumns="{Binding BuyRatesHiddenColumns}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicableAmount}" IsReadOnly="True" Binding="{Binding ApplicableAmount}"/>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.Rates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.Rates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.OriginalRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.OriginalRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.CardBuyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.CardBuyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.CurrentBuyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.CurrentBuyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="110" Header="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.BuyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.BuyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </controls:DataGridEx>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Grid.Column="5" Style="{StaticResource TransactionInfoRatesGroupBox}" Visibility="{Binding BackEndBuyRatesVisibility}">
+                    <GroupBox.Header>
+                        <MultiBinding Converter="{StaticResource SeparatorConvert}">
+                            <Binding Source="{x:Static coreConsts:TransactionColumnName.BuyRates}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.LeftBracket}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.BackEnd}"/>
+                            <Binding Source="{x:Static coreConsts:CommonName.RightBracket}"/>
+                        </MultiBinding>
+                    </GroupBox.Header>
+                    <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding FundInfo.TransactionInfo.BuyRates}" HiddenColumns="{Binding BuyRatesHiddenColumns}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicablePeriod}" IsReadOnly="True" Binding="{Binding ApplicablePeriod}"/>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.Rates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.Rates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.OriginalRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.OriginalRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.CardBuyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.CardBuyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.CurrentBuyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.CurrentBuyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="110" Header="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.EastMoneyPreferredRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="100" Header="{x:Static coreConsts:TransactionColumnName.BuyRates}" IsReadOnly="True" Visibility="Collapsed">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding Converter="{StaticResource DictRateConverter}">
+                                        <Binding Path="Rate"/>
+                                        <Binding Source="{x:Static coreConsts:TransactionColumnName.BuyRates}"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </controls:DataGridEx>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Grid.Column="6" Style="{StaticResource TransactionInfoRatesGroupBox}" Header="{x:Static coreConsts:TransactionColumnName.SellRates}">
                     <controls:DataGridEx Loaded="DataGridEx_Loaded" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding FundInfo.TransactionInfo.SellRates}" HiddenColumns="{Binding SellRatesHiddenColumns}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Width="200" Header="{x:Static coreConsts:TransactionColumnName.ApplicablePeriod}" IsReadOnly="True" Binding="{Binding ApplicablePeriod}"/>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -22,16 +23,19 @@ namespace FundSearcher.Views
     {
         private readonly string[] applyRateColumnNames = new string[]
         {
+            TransactionColumnName.ApplyRates,
             TransactionColumnName.Rates,
             TransactionColumnName.OriginalRates,
             TransactionColumnName.EastMoneyPreferredRates,
         };
         private readonly string[] buyRateColumnNames = new string[]
         {
+            TransactionColumnName.BuyRates,
             TransactionColumnName.Rates,
             TransactionColumnName.OriginalRates,
             TransactionColumnName.CardBuyRates,
             TransactionColumnName.CurrentBuyRates,
+            TransactionColumnName.EastMoneyPreferredRates,
         };
         private readonly string[] sellRateColumnNames = new string[]
         {
@@ -590,25 +594,41 @@ namespace FundSearcher.Views
 
             if (model.TransactionInfo == null) return model;
 
-            var rateNames = GetRateNames(model.TransactionInfo.ApplyRates);
+            var rateNames = GetRateNames(model.TransactionInfo.ApplyRates, t => true);
             model.ApplyRatesHiddenColumns = applyRateColumnNames.Except(rateNames).ToList();
 
-            rateNames = GetRateNames(model.TransactionInfo.BuyRates);
+            rateNames = GetRateNames(model.TransactionInfo.ApplyRates, t => t.IsFront == true);
+            model.FrontEndApplyRatesHiddenColumns = applyRateColumnNames.Except(rateNames).ToList();
+
+            rateNames = GetRateNames(model.TransactionInfo.ApplyRates, t => t.IsFront == false);
+            model.BackEndApplyRatesHiddenColumns = applyRateColumnNames.Except(rateNames).ToList();
+
+            rateNames = GetRateNames(model.TransactionInfo.BuyRates, t => true);
             model.BuyRatesHiddenColumns = buyRateColumnNames.Except(rateNames).ToList();
 
-            rateNames = GetRateNames(model.TransactionInfo.SellRates);
+            rateNames = GetRateNames(model.TransactionInfo.BuyRates, t => t.IsFront == true);
+            model.FrontEndBuyRatesHiddenColumns = buyRateColumnNames.Except(rateNames).ToList();
+
+            rateNames = GetRateNames(model.TransactionInfo.BuyRates, t => t.IsFront == false);
+            model.BackEndBuyRatesHiddenColumns = buyRateColumnNames.Except(rateNames).ToList();
+
+            rateNames = GetRateNames(model.TransactionInfo.SellRates, t => true);
             model.SellRatesHiddenColumns = sellRateColumnNames.Except(rateNames).ToList();
             return model;
         }
 
-        private List<string> GetRateNames(List<TransactionRate> list)
+        private List<string> GetRateNames(List<TransactionRate> list, Func<TransactionRate, bool> func)
         {
             var result = new List<string>();
             if (list?.Count > 0)
             {
-                foreach (var item in list[0].Rate.Keys)
+                var info = list.FirstOrDefault(func);
+                if (info != null)
                 {
-                    result.Add(item);
+                    foreach (var item in info.Rate.Keys)
+                    {
+                        result.Add(item);
+                    }
                 }
             }
             return result;

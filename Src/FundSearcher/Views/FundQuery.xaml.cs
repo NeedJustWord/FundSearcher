@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Fund.Core.Consts;
@@ -18,6 +19,10 @@ namespace FundSearcher.Views
     {
         private readonly Dictionary<string, FundInfo> dictRefreshDetail = new Dictionary<string, FundInfo>();
         private readonly IEventAggregator aggregator;
+        private const string FrontEndApplyRates = TransactionColumnName.ApplyRates + CommonName.LeftBracket + CommonName.FrontEnd + CommonName.RightBracket;
+        private const string BackEndApplyRates = TransactionColumnName.ApplyRates + CommonName.LeftBracket + CommonName.BackEnd + CommonName.RightBracket;
+        private const string FrontEndBuyRates = TransactionColumnName.BuyRates + CommonName.LeftBracket + CommonName.FrontEnd + CommonName.RightBracket;
+        private const string BackEndBuyRates = TransactionColumnName.BuyRates + CommonName.LeftBracket + CommonName.BackEnd + CommonName.RightBracket;
 
         public FundQuery(IEventAggregator aggregator)
         {
@@ -100,6 +105,10 @@ namespace FundSearcher.Views
                 dictRefreshDetail[$"{info.OrderNumber},{TransactionColumnName.ApplyRates}"] = info;
                 dictRefreshDetail[$"{info.OrderNumber},{TransactionColumnName.BuyRates}"] = info;
                 dictRefreshDetail[$"{info.OrderNumber},{TransactionColumnName.SellRates}"] = info;
+                dictRefreshDetail[$"{info.OrderNumber},{FrontEndApplyRates}"] = info;
+                dictRefreshDetail[$"{info.OrderNumber},{BackEndApplyRates}"] = info;
+                dictRefreshDetail[$"{info.OrderNumber},{FrontEndBuyRates}"] = info;
+                dictRefreshDetail[$"{info.OrderNumber},{BackEndBuyRates}"] = info;
             }
         }
 
@@ -112,9 +121,25 @@ namespace FundSearcher.Views
                     item.HiddenColumns = info.ApplyRatesHiddenColumns;
                     item.ItemsSource = info.TransactionInfo?.ApplyRates;
                     break;
+                case FrontEndApplyRates:
+                    item.HiddenColumns = info.FrontEndApplyRatesHiddenColumns;
+                    item.ItemsSource = info.TransactionInfo?.ApplyRates.Where(t => t.IsFront == true).ToList();
+                    break;
+                case BackEndApplyRates:
+                    item.HiddenColumns = info.BackEndApplyRatesHiddenColumns;
+                    item.ItemsSource = info.TransactionInfo?.ApplyRates.Where(t => t.IsFront == false).ToList();
+                    break;
                 case TransactionColumnName.BuyRates:
                     item.HiddenColumns = info.BuyRatesHiddenColumns;
                     item.ItemsSource = info.TransactionInfo?.BuyRates;
+                    break;
+                case FrontEndBuyRates:
+                    item.HiddenColumns = info.FrontEndBuyRatesHiddenColumns;
+                    item.ItemsSource = info.TransactionInfo?.BuyRates.Where(t => t.IsFront == true).ToList();
+                    break;
+                case BackEndBuyRates:
+                    item.HiddenColumns = info.BackEndBuyRatesHiddenColumns;
+                    item.ItemsSource = info.TransactionInfo?.BuyRates.Where(t => t.IsFront == false).ToList();
                     break;
                 case TransactionColumnName.SellRates:
                     item.HiddenColumns = info.SellRatesHiddenColumns;

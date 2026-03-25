@@ -28,6 +28,7 @@
     <converters:CompareRateDisplayConverter x:Key="CompareRateDisplayConverter"/>
     <converters:DictCommandParameterConverter x:Key="DictCommandParameterConverter"/>
     <converters:SpecialDictDisplayConverter x:Key="SpecialDictDisplayConverter"/>
+    <converters:RatesToVisibilityConverter x:Key="RatesToVisibilityConverter"/>
     <converters:ValueToPercentConverter x:Key="ValueToPercentConverter"/>
     <converters:DictRateConverter x:Key="DictRateConverter"/>
     <converters:FundSizeConverter x:Key="FundSizeConverter"/>
