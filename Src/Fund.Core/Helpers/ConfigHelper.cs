@@ -114,6 +114,11 @@ namespace Fund.Core.Helpers
         /// 缓存目录
         /// </summary>
         public static string CachePath => "Cache";
+
+        /// <summary>
+        /// 单位净值更新时间
+        /// </summary>
+        public static TimeSpan PriceUpdateTime => new TimeSpan(20, 0, 0);
         #endregion
 
         private static readonly XmlDocument document;

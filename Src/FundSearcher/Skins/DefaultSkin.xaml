@@ -167,7 +167,6 @@
 
     <Style TargetType="ProgressBar" x:Key="StatusCrawlingProgress">
         <Setter Property="Minimum" Value="0"/>
-        <Setter Property="Width" Value="500"/>
         <Setter Property="Height" Value="20"/>
     </Style>
 

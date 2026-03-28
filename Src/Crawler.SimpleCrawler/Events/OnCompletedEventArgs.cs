@@ -16,10 +16,16 @@ namespace Crawler.SimpleCrawler.Events
         /// </summary>
         public TimeSpan Elapsed { get; }
 
-        public OnCompletedEventArgs(Uri uri, int threadId, TimeSpan elapsed, string pageSource) : base(uri, threadId)
+        /// <summary>
+        /// 缓存是否有效
+        /// </summary>
+        public bool CacheValid { get; }
+
+        public OnCompletedEventArgs(Uri uri, int threadId, TimeSpan elapsed, string pageSource, bool cacheValid) : base(uri, threadId)
         {
             Elapsed = elapsed;
             PageSource = pageSource;
+            CacheValid = cacheValid;
         }
     }
 }

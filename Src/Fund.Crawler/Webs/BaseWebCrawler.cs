@@ -125,7 +125,7 @@ namespace Fund.Crawler.Webs
                 info.CrawlerInfo = new CrawlerInfo
                 {
                     Name = key.Name,
-                    UseCache = crawler.IsCacheValid(args.Uri),
+                    UseCache = args.CacheValid,
                 };
                 if (key.Index != 0 && info.CrawlerInfo.UseCache == false)
                 {
@@ -151,7 +151,7 @@ namespace Fund.Crawler.Webs
                 {
                     WriteLog($"{keyStr}爬取结束，开始处理");
                     action?.Invoke(args.PageSource, info);
-                    crawler.WritePageSourceToCache(args.Uri, args.PageSource);
+                    crawler.WritePageSourceToCache(args);
                     handleSuccess = true;
                 }
                 catch (Exception ex)

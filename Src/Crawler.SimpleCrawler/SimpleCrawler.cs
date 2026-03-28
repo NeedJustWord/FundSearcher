@@ -39,13 +39,15 @@ namespace Crawler.SimpleCrawler
                     {
                         return pageSource;
                     }
-                    OnStart(new OnStartEventArgs(uri, threadId));
+
+                    var cacheValid = ReadPageSourceFromCache(uri, out pageSource, out var elapsed);
+                    OnStart(new OnStartEventArgs(uri, threadId, cacheValid));
                     if (IsCancel(token, uri, threadId, "爬取任务开始事件执行后取消任务"))
                     {
                         return pageSource;
                     }
 
-                    if (ReadPageSourceFromCache(uri, out pageSource, out var elapsed) == false)
+                    if (cacheValid == false)
                     {
                         if (GetPageSourceFromWeb(uri, token, proxy, threadId, out pageSource, out elapsed) == false)
                         {
@@ -57,7 +59,7 @@ namespace Crawler.SimpleCrawler
                     {
                         return pageSource;
                     }
-                    OnCompleted(new OnCompletedEventArgs(uri, threadId, elapsed, pageSource));
+                    OnCompleted(new OnCompletedEventArgs(uri, threadId, elapsed, pageSource, cacheValid));
                 }
                 catch (Exception ex)
                 {

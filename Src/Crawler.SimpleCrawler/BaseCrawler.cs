@@ -93,12 +93,12 @@ namespace Crawler.SimpleCrawler
         }
 
         #region 页面源代码缓存
-        public void WritePageSourceToCache(Uri uri, string pageSource)
+        public void WritePageSourceToCache(OnCompletedEventArgs args)
         {
-            var filePath = GetPageSourceCacheFilePath(uri);
-            if (ConfigHelper.CachePageSource && IsCacheValid(filePath) == false)
+            var filePath = GetPageSourceCacheFilePath(args.Uri);
+            if (ConfigHelper.CachePageSource && args.CacheValid == false)
             {
-                File.WriteAllText(filePath, pageSource);
+                File.WriteAllText(filePath, args.PageSource);
             }
         }
 
@@ -125,22 +125,21 @@ namespace Crawler.SimpleCrawler
         /// <summary>
         /// 缓存是否有效
         /// </summary>
-        /// <param name="uri"></param>
-        /// <returns></returns>
-        public bool IsCacheValid(Uri uri)
-        {
-            var filePath = GetPageSourceCacheFilePath(uri);
-            return ConfigHelper.CachePageSource && IsCacheValid(filePath);
-        }
-
-        /// <summary>
-        /// 缓存是否有效
-        /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
         private bool IsCacheValid(string filePath)
         {
-            return File.Exists(filePath) && File.GetLastWriteTime(filePath) >= DateTime.Today.AddDays(-ConfigHelper.CacheOverDay);
+            if (File.Exists(filePath) == false) return false;
+
+            var now = DateTime.Now;
+            var lastWriteTime = File.GetLastWriteTime(filePath);
+            if (lastWriteTime < now.Date.AddDays(-ConfigHelper.CacheOverDay)) return false;
+            if (now.DayOfWeek >= DayOfWeek.Monday
+                && now.DayOfWeek <= DayOfWeek.Friday
+                && now.TimeOfDay >= ConfigHelper.PriceUpdateTime
+                && lastWriteTime.TimeOfDay < ConfigHelper.PriceUpdateTime) return false;
+
+            return true;
         }
 
         /// <summary>

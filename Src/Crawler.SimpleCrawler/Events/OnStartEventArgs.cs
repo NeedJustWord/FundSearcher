@@ -7,8 +7,14 @@ namespace Crawler.SimpleCrawler.Events
     /// </summary>
     public class OnStartEventArgs : BaseEventArgs
     {
-        public OnStartEventArgs(Uri uri, int threadId) : base(uri, threadId)
+        /// <summary>
+        /// 缓存是否有效
+        /// </summary>
+        public bool CacheValid { get; }
+
+        public OnStartEventArgs(Uri uri, int threadId, bool cacheValid) : base(uri, threadId)
         {
+            CacheValid = cacheValid;
         }
     }
 }
