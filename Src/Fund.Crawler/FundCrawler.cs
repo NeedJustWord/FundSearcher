@@ -32,7 +32,7 @@ namespace Fund.Crawler
         {
             return await Task.Run(() =>
             {
-                List<FundInfo> result = new List<FundInfo>();
+                List<FundInfo> result = new List<FundInfo>(fundIds.Length);
                 if (fundIds != null)
                 {
                     WebCrawler.InitFundTotal(fundIds.Length);
@@ -85,7 +85,7 @@ namespace Fund.Crawler
         {
             return await Task.Run(() =>
             {
-                List<IndexInfo> result = new List<IndexInfo>();
+                List<IndexInfo> result = new List<IndexInfo>(indexCodes.Length);
                 if (indexCodes != null)
                 {
                     WebCrawler.InitIndexTotal(indexCodes.Length);

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows;
+using Fund.Core.Helpers;
 using Fund.DataBase;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -15,6 +17,7 @@ namespace FundSearcher
     {
         protected override Window CreateShell()
         {
+            Config.ConfigPath = $"{Assembly.GetEntryAssembly().GetName().Name}.exe.config";
             return Container.Resolve<Shell>();
         }
 

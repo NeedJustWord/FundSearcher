@@ -13,7 +13,9 @@ namespace Fund.Crawler.Extensions
             var list = source.Where(t => t != null).OrderBy(t => t.Name).ToList();
             var sb = new StringBuilder();
             var sumTicks = list.Sum(t => t.HandleTime.Ticks);
-            sb.AppendLine($"总数：{list.Count}，总处理耗时：{sumTicks}，平均处理耗时：{(list.Count == 0 ? 0 : sumTicks / list.Count)}");
+            var minTicks = list.Min(t => t.HandleTime.Ticks);
+            var maxTicks = list.Max(t => t.HandleTime.Ticks);
+            sb.AppendLine($"总数：{list.Count}，总处理耗时：{sumTicks}，最少耗时：{minTicks}，最多耗时：{maxTicks}，平均处理耗时：{(list.Count == 0 ? 0 : sumTicks / list.Count)}");
             sb.AppendLine(list.ToJson());
             return sb.ToString();
         }

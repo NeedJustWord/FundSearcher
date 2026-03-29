@@ -36,5 +36,17 @@ namespace System
         {
             return JsonConvert.DeserializeObject<T>(json);
         }
+
+        /// <summary>
+        /// 通过Json复制
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static T Copy<T>(this T t)
+        {
+            var json = t.ToJson();
+            return json.FromJson<T>();
+        }
     }
 }

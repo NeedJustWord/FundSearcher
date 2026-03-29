@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Fund.Core.Helpers;
-using Fund.Crawler;
-using Fund.Crawler.Extensions;
 using Fund.Crawler.Models;
-using Fund.Crawler.PubSubEvents;
-using Fund.Crawler.Webs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prism.Events;
 
 namespace UnitTest
 {
     [TestClass]
-    public class EastMoneyCrawlerTest
+    public class EastMoneyCrawlerTest : BaseTest
     {
         [TestMethod]
         public void GetAllIndexInfoTest()
@@ -71,28 +64,6 @@ namespace UnitTest
                 var infos = crawler.StartIndex(CancellationToken.None).Result;
                 action(infos);
             });
-        }
-
-        private void WriteJson<T>(T t)
-        {
-            Debug.WriteLine(t.ToJson());
-        }
-
-        private void WriteFundId(IndexInfo info)
-        {
-            Debug.WriteLine(string.Join(",", info.FundBaseInfos.Select(t => t.FundId)));
-        }
-
-        private FundCrawler GetCrawler()
-        {
-            var aggregator = new EventAggregator();
-            aggregator.Subscribe<CrawlingProgressEvent, CrawlingProgressModel>(HandleCrawleProgress);
-            return new FundCrawler(new EastMoneyCrawler(aggregator));
-        }
-
-        private void HandleCrawleProgress(CrawlingProgressModel model)
-        {
-            Console.WriteLine($"{model.Message} 进度：{(double)model.Current / model.Total:P2}");
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Xml;
 using Fund.Core.Extensions;
 
@@ -128,7 +127,7 @@ namespace Fund.Core.Helpers
 
         static ConfigHelper()
         {
-            configPath = $"{Assembly.GetEntryAssembly().GetName().Name}.exe.config";
+            configPath = Config.ConfigPath;
             document = new XmlDocument();
             document.Load(configPath);
             appSettings = GetOrCreateXmlNode(document, "configuration", "appSettings");
@@ -257,5 +256,10 @@ namespace Fund.Core.Helpers
             }
             return findNode;
         }
+    }
+
+    public static class Config
+    {
+        public static string ConfigPath;
     }
 }

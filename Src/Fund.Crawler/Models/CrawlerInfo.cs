@@ -41,5 +41,18 @@ namespace Fund.Crawler.Models
         /// 处理是否成功
         /// </summary>
         public bool HandleSuccess { get; set; }
+
+        public CrawlerInfo()
+        {
+        }
+
+        public CrawlerInfo(CrawlerInfo info)
+        {
+            Name = info.Name;
+            CrawlerTime = info.CrawlerTime;
+            HandleTime = info.HandleTime;
+            UseCache = info.UseCache;
+            HandleSuccess = info.HandleSuccess;
+        }
     }
 }
