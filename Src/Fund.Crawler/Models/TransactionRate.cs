@@ -47,5 +47,23 @@ namespace Fund.Crawler.Models
             get { return rate; }
             set { SetProperty(ref rate, value); }
         }
+
+        /// <summary>
+        /// 设置适用金额/适用期限
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void SetApplicableValue(string name, string value)
+        {
+            switch (name)
+            {
+                case "适用金额":
+                    ApplicableAmount = value;
+                    break;
+                case "适用期限":
+                    ApplicablePeriod = value;
+                    break;
+            }
+        }
     }
 }

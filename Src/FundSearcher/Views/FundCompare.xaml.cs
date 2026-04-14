@@ -22,6 +22,44 @@ namespace FundSearcher.Views
     {
         private readonly IEventAggregator aggregator;
 
+        //取最大值的列，null当作最大值
+        private readonly string[] maxColumnsNullAsMaxValue = new string[]
+        {
+                TransactionColumnName.BuyUpperLimitAmountWithUnit,
+                FundColumnName.AssetWithUnit,
+                FundColumnName.ShareWithUnit,
+        };
+        //取最大值的列，null当作最小值
+        private readonly string[] maxColumnsNullAsMinValue = new string[]
+        {
+                SpecialColumnName.SharpeRatioInThePastYear1,
+                SpecialColumnName.SharpeRatioInThePastYear2,
+                SpecialColumnName.SharpeRatioInThePastYear3,
+                SpecialColumnName.InfoRatioInThePastYear1,
+                SpecialColumnName.InfoRatioInThePastYear2,
+                SpecialColumnName.InfoRatioInThePastYear3,
+        };
+        //取最小值的列，null当作最大值
+        private readonly string[] minColumnsNullAsMaxValue = new string[]
+        {
+                FundColumnName.BirthDay,
+                SpecialColumnName.VolatilityInThePastYear1,
+                SpecialColumnName.VolatilityInThePastYear2,
+                SpecialColumnName.VolatilityInThePastYear3,
+                SpecialColumnName.AnnualizedTrackingError,
+                SpecialColumnName.AverageTrackingErrorOfTheSameType,
+        };
+        //取最小值的列，null当作最小值
+        private readonly string[] minColumnsNullAsMinValue = new string[]
+        {
+                TransactionColumnName.Price,
+                TransactionColumnName.NormalBuyRates,
+                TransactionColumnName.ManageRateWithUnit,
+                TransactionColumnName.HostingRateWithUnit,
+                TransactionColumnName.SalesServiceRateWithUnit,
+                TransactionColumnName.RunningRateWithUnit,
+        };
+
         public FundCompare(IEventAggregator aggregator)
         {
             InitializeComponent();
@@ -59,42 +97,6 @@ namespace FundSearcher.Views
 
         private void SetColumnHightLight()
         {
-            //取最大值的列，null当作最大值
-            var maxColumnsNullAsMaxValue = new string[]
-            {
-                TransactionColumnName.BuyUpperLimitAmountWithUnit,
-                FundColumnName.AssetWithUnit,
-                FundColumnName.ShareWithUnit,
-            };
-            //取最大值的列，null当作最小值
-            var maxColumnsNullAsMinValue = new string[]
-            {
-                SpecialColumnName.SharpeRatioInThePastYear1,
-                SpecialColumnName.SharpeRatioInThePastYear2,
-                SpecialColumnName.SharpeRatioInThePastYear3,
-                SpecialColumnName.InfoRatioInThePastYear1,
-                SpecialColumnName.InfoRatioInThePastYear2,
-                SpecialColumnName.InfoRatioInThePastYear3,
-            };
-            //取最小值的列，null当作最大值
-            var minColumnsNullAsMaxValue = new string[]
-            {
-                SpecialColumnName.VolatilityInThePastYear1,
-                SpecialColumnName.VolatilityInThePastYear2,
-                SpecialColumnName.VolatilityInThePastYear3,
-                SpecialColumnName.AnnualizedTrackingError,
-                SpecialColumnName.AverageTrackingErrorOfTheSameType,
-            };
-            //取最小值的列，null当作最小值
-            var minColumnsNullAsMinValue = new string[]
-            {
-                TransactionColumnName.Price,
-                TransactionColumnName.NormalBuyRates,
-                TransactionColumnName.ManageRateWithUnit,
-                TransactionColumnName.HostingRateWithUnit,
-                TransactionColumnName.SalesServiceRateWithUnit,
-                TransactionColumnName.RunningRateWithUnit,
-            };
             string header;
             var allCells = new List<DataGridCell>(dgCompare.Items.Count);
             var resultCells = new List<DataGridCell>(dgCompare.Items.Count);

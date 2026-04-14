@@ -130,6 +130,11 @@
         <Setter Property="Foreground" Value="Red"/>
     </Style>
 
+    <Style TargetType="TextBlock" x:Key="FundCompareGroupTextBlock">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="Red"/>
+    </Style>
+
     <Style TargetType="Label" x:Key="FundDetailKeyLabel">
         <Setter Property="HorizontalContentAlignment" Value="Right"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>

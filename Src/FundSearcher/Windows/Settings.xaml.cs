@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace FundSearcher.Windows
 {
@@ -10,6 +11,15 @@ namespace FundSearcher.Windows
         public Settings()
         {
             InitializeComponent();
+            KeyDown += Settings_KeyDown;
+        }
+
+        private void Settings_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                Close();
+            }
         }
     }
 }

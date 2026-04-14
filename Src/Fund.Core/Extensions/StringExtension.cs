@@ -45,6 +45,11 @@
 
         private static bool TryParseDouble(this string str, ref double value)
         {
+            if (str.IndexOf("年") > 0 || str.IndexOf("月") > 0)
+            {
+                value = double.Parse(str.Substring(0, 10).Replace("-", ""));
+                return true;
+            }
             if (str.EndsWith("%"))
             {
                 value = double.Parse(str.Substring(0, str.Length - 1)) / 100;

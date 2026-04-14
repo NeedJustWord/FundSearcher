@@ -402,14 +402,14 @@ namespace Fund.Crawler.Webs
             }
 
             var headerContents = input.GetHtmlTagValue("th").Select(t => t.GetHtmlTagContent()).ToArray();
-            var applicableName = headerContents[0];
+            var firstColumn = headerContents[1] == "适用期限" ? 2 : 1;
             var sgyh = input.GetHtmlTagValueByAttri("div", "class", "sgyh").FirstOrDefault();
             string[] columns;
             if (sgyh == null)
             {
                 columns = new string[]
                 {
-                     headerContents[1].GetHtmlTagContent(true),
+                     headerContents[firstColumn].GetHtmlTagContent(true),
                 };
             }
             else
@@ -432,34 +432,24 @@ namespace Fund.Crawler.Webs
                 columns = list.ToArray();
             }
 
-            Action<TransactionRate, string> action = null;
-            if (applicableName == "适用金额")
-            {
-                action = (rate, value) =>
-                {
-                    rate.ApplicableAmount = value;
-                    rate.ApplicablePeriod = "---";
-                };
-            }
-            else if (applicableName == "适用期限")
-            {
-                action = (rate, value) =>
-                {
-                    rate.ApplicableAmount = "---";
-                    rate.ApplicablePeriod = value;
-                };
-            }
-
             var rows = input.GetFirstHtmlTagValue("tbody").GetHtmlTagValue("tr");
             foreach (var row in rows)
             {
-                var rate = new TransactionRate() { IsFront = isFront };
+                var rate = new TransactionRate()
+                {
+                    IsFront = isFront,
+                    ApplicableAmount = "---",
+                    ApplicablePeriod = "---",
+                    Rate = new Dictionary<string, string>(),
+                };
 
                 var tds = row.GetHtmlTagValue("td").ToList();
-                action?.Invoke(rate, tds[0].GetHtmlTagContent());
+                for (int i = 0; i < firstColumn; i++)
+                {
+                    rate.SetApplicableValue(headerContents[i], tds[i].GetHtmlTagContent());
+                }
 
-                rate.Rate = new Dictionary<string, string>();
-                var temp = tds[1].GetHtmlTagContent().Replace("&nbsp;", "").Replace("</strike>", "");
+                var temp = tds[firstColumn].GetHtmlTagContent().Replace("&nbsp;", "").Replace("</strike>", "");
                 var index = temp.IndexOf(">");
                 if (index > -1)
                 {

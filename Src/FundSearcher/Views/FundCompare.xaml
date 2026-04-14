@@ -37,7 +37,7 @@
 
                 <DataGridTextColumn IsReadOnly="True">
                     <DataGridTextColumn.Header>
-                        <TextBlock Text="{x:Static coreConsts:CommonName.FundInfo}" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static coreConsts:CommonName.FundInfo}" Style="{StaticResource FundCompareGroupTextBlock}"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.BirthDay}" IsReadOnly="True" Binding="{Binding BirthDay,Converter={StaticResource BirthDayConverter}}"/>
@@ -59,15 +59,15 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.FundClass}" IsReadOnly="True" Binding="{Binding FundClass}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.TrackingTarget}" IsReadOnly="True" Binding="{Binding TrackingTarget}"/>
-                <DataGridTextColumn Header="{x:Static coreConsts:CommonName.InfoSource}" IsReadOnly="True" Binding="{Binding InfoSource}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:CommonName.UpdateTime}" IsReadOnly="True" Binding="{Binding UpdateTime,StringFormat=yyyy-MM-dd HH:mm:ss}"/>
 
                 <DataGridTextColumn IsReadOnly="True">
                     <DataGridTextColumn.Header>
-                        <TextBlock Text="{x:Static coreConsts:CommonName.TransactionInfo}" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static coreConsts:CommonName.TransactionInfo}" Style="{StaticResource FundCompareGroupTextBlock}"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="{x:Static coreConsts:FundColumnName.Counter}" IsReadOnly="True" Binding="{Binding Counter}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.BuyStatus}" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyStatus}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.Price}" IsReadOnly="True" Binding="{Binding TransactionInfo.Price,StringFormat=F4}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.BuyUpperLimitAmountWithUnit}" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyUpperLimitAmount,Converter={StaticResource BuyUpperLimitAmountConverter}}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.NormalBuyRates}" IsReadOnly="True">
@@ -84,6 +84,7 @@
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.SalesServiceRateWithUnit}" IsReadOnly="True" Binding="{Binding TransactionInfo.SalesServiceRate,StringFormat=0.00%}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.RunningRateWithUnit}" IsReadOnly="True" Binding="{Binding TransactionInfo.RunningRate,StringFormat=0.00%}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.BuyConfirmDate}" IsReadOnly="True" Binding="{Binding TransactionInfo.BuyConfirmDate}"/>
+                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.SellConfirmDate}" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
                 <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.SellRates}" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource CompareRateDisplayConverter}">
@@ -92,11 +93,10 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="{x:Static coreConsts:TransactionColumnName.SellConfirmDate}" IsReadOnly="True" Binding="{Binding TransactionInfo.SellConfirmDate}"/>
 
                 <DataGridTextColumn IsReadOnly="True">
                     <DataGridTextColumn.Header>
-                        <TextBlock Text="{x:Static coreConsts:CommonName.SpecialInfo}" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static coreConsts:CommonName.SpecialInfo}" Style="{StaticResource FundCompareGroupTextBlock}"/>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="{x:Static coreConsts:SpecialColumnName.VolatilityInThePastYear1}" IsReadOnly="True">

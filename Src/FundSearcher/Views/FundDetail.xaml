@@ -715,7 +715,7 @@
                             <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                                 <Binding Path="FundInfo.SpecialInfo.SharpeRatio"/>
                                 <Binding Source="{StaticResource Number1}"/>
-                                <Binding Source="{StaticResource StringFormatP2}"/>
+                                <Binding Source="{StaticResource StringFormatF2}"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -734,7 +734,7 @@
                             <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                                 <Binding Path="FundInfo.SpecialInfo.InfoRatio"/>
                                 <Binding Source="{StaticResource Number1}"/>
-                                <Binding Source="{StaticResource StringFormatP2}"/>
+                                <Binding Source="{StaticResource StringFormatF2}"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -773,7 +773,7 @@
                             <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                                 <Binding Path="FundInfo.SpecialInfo.SharpeRatio"/>
                                 <Binding Source="{StaticResource Number2}"/>
-                                <Binding Source="{StaticResource StringFormatP2}"/>
+                                <Binding Source="{StaticResource StringFormatF2}"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -792,7 +792,7 @@
                             <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                                 <Binding Path="FundInfo.SpecialInfo.InfoRatio"/>
                                 <Binding Source="{StaticResource Number2}"/>
-                                <Binding Source="{StaticResource StringFormatP2}"/>
+                                <Binding Source="{StaticResource StringFormatF2}"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -831,7 +831,7 @@
                             <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                                 <Binding Path="FundInfo.SpecialInfo.SharpeRatio"/>
                                 <Binding Source="{StaticResource Number3}"/>
-                                <Binding Source="{StaticResource StringFormatP2}"/>
+                                <Binding Source="{StaticResource StringFormatF2}"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -850,7 +850,7 @@
                             <MultiBinding Converter="{StaticResource SpecialDictDisplayConverter}">
                                 <Binding Path="FundInfo.SpecialInfo.InfoRatio"/>
                                 <Binding Source="{StaticResource Number3}"/>
-                                <Binding Source="{StaticResource StringFormatP2}"/>
+                                <Binding Source="{StaticResource StringFormatF2}"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
