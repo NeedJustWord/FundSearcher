@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:attacheds="clr-namespace:FundSearcher.Attacheds"
                     xmlns:converters="clr-namespace:FundSearcher.Converters"
                     xmlns:localModels="clr-namespace:FundSearcher.Models"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
@@ -186,9 +187,12 @@
         <Setter Property="Margin" Value="0 0 3 0"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate>
+                <ControlTemplate TargetType="TextBox">
                     <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                        <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        <Grid>
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Margin="6 0 6 0"/>
+                            <TextBlock x:Name="PART_WaterMark" Focusable="False" Visibility="Collapsed" Text="{TemplateBinding attacheds:TextBoxAttached.WaterMark}" VerticalAlignment="Center" Margin="6 0 6 0" Opacity="0.5"/>
+                        </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsFocused" Value="false">
@@ -196,7 +200,15 @@
                         </Trigger>
                         <Trigger Property="IsFocused" Value="true">
                             <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource QueryTextBoxBorderColorBrush}"/>
+                            <Setter Property="Visibility" TargetName="PART_WaterMark" Value="Collapsed"/>
                         </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value=""/>
+                                <Condition Property="IsFocused" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Visibility" TargetName="PART_WaterMark" Value="Visible"/>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

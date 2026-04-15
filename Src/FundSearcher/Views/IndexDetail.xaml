@@ -35,7 +35,9 @@
             <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource QueryLabelBorder}">
                 <Label Content="关键字：" Style="{StaticResource KeyValueLabel}"/>
             </Border>
-            <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding KeyWord}" attacheds:IsFocusedAttached.IsFocused="{Binding KeyWordIsFocused}">
+            <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource QueryTextBox}" Text="{Binding KeyWord}"
+                     attacheds:IsFocusedAttached.IsFocused="{Binding KeyWordIsFocused}"
+                     attacheds:TextBoxAttached.WaterMark="请输入基金代码或基金简称，支持模糊搜索">
                 <TextBox.InputBindings>
                     <KeyBinding Command="{Binding DictCommand}" CommandParameter="{x:Static consts:CommandName.Query}" Key="Enter"/>
                 </TextBox.InputBindings>
