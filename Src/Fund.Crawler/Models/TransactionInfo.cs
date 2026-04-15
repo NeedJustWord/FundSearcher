@@ -167,12 +167,5 @@ namespace Fund.Crawler.Models
         /// </summary>
         [JsonIgnore]
         public int? FreeSellDays { get; private set; }
-
-        public TransactionInfo()
-        {
-            ApplyRates = new List<TransactionRate>();
-            BuyRates = new List<TransactionRate>();
-            SellRates = new List<TransactionRate>();
-        }
     }
 }

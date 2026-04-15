@@ -238,7 +238,11 @@ namespace Fund.Crawler.Webs
 
         private void HandleTransactionInfoSource(string pageSource, FundInfo fundInfo)
         {
-            var info = new TransactionInfo();
+            var info = new TransactionInfo()
+            {
+                ApplyRates = new List<TransactionRate>(),
+                BuyRates = new List<TransactionRate>(),
+            };
             var priceStr = pageSource.GetFirstHtmlTagValueByAttri("p", "class", "row row1");
             var price = priceStr.GetFirstHtmlTagValue("b").GetHtmlTagContent();
             info.Price = price.Substring(0, price.IndexOf('(')).Trim().AsDouble(0);
@@ -299,7 +303,7 @@ namespace Fund.Crawler.Webs
                         }
                         else if (item.Key.Contains(TransactionColumnName.SellRates))
                         {
-                            info.SellRates.AddRange(GetTransactionRates(item.Value));
+                            info.SellRates = GetTransactionRates(item.Value);
                         }
                         break;
                 }

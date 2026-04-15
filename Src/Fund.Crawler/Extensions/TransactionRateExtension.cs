@@ -18,7 +18,7 @@ namespace Fund.Crawler.Extensions
             {
                 t.ApplicablePeriod,
                 Rate = t.Rate.Values.First().AsDouble(1),
-            }).FirstOrDefault(t => t.Rate == 0);
+            }).LastOrDefault(t => t.Rate == 0);
 
             if (info == null) return null;
 
