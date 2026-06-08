@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 using Fund.Core.Helpers;
 using Fund.DataBase;
+using FundSearcher.Controls;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
@@ -15,6 +17,28 @@ namespace FundSearcher
     /// </summary>
     public partial class App : PrismApplication
     {
+        private Mutex mutex;
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            mutex = new Mutex(true, "FundSearcher_Mutex", out var createdNew);
+            if (createdNew)
+            {
+                base.OnStartup(e);
+            }
+            else
+            {
+                MessageBoxEx.ShowError("程序已在运行，请检查任务栏");
+                Shutdown();
+            }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            mutex?.Dispose();
+            base.OnExit(e);
+        }
+
         protected override Window CreateShell()
         {
             Config.ConfigPath = $"{Assembly.GetEntryAssembly().GetName().Name}.exe.config";
