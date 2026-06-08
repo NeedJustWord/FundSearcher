@@ -24,6 +24,8 @@ namespace FundSearcher.Converters
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
+            if (values.Any(t => t == DependencyProperty.UnsetValue)) return "";
+
             var str = (string)values[0];
             var obj = str == TransactionColumnName.SellRates || str == "场内交易" ? values[1] : values[2];
             if (obj == DependencyProperty.UnsetValue) return "";
